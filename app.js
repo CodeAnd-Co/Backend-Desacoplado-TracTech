@@ -23,7 +23,7 @@ app.use("/formulas", formulasRutas);
 
 app.get("/", (pet, res) => {
     res.status(200).json({
-      message: "¡Bienvenido a Saca la Bici!",
+      message: "¡Bienvenido a Harvester!",
     });
   });
 
