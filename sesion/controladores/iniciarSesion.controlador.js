@@ -1,4 +1,6 @@
 const conexion = require('../../util/db.js');
+const bcrypt = require('bcrypt'); // Importa bcrypt
+
 exports.iniciarSesion = async (pet, res) => {
     const { correo, contrasena } = pet.body;
     if (!correo || !contrasena) {
@@ -7,10 +9,10 @@ exports.iniciarSesion = async (pet, res) => {
         });
     }
     
-    const usuarioRegistrado = await obtenerUsuario(correo, contrasena, (err, usuario) => {
+    const usuarioRegistrado = await obtenerUsuario(correo, (err, usuario) => {
         console.error('Error al ejecutar la consulta:', err); // Solo en el servidor
         if (err) {
-            return res.status(500).json({
+            return res.status(401).json({
                 message: "Usuario o contraseña incorrectos",
             });
         }
@@ -31,10 +33,10 @@ exports.iniciarSesion = async (pet, res) => {
     });
 }
 
-async function obtenerUsuario(correo, contrasena) {
+async function obtenerUsuario(correo) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM usuario WHERE correo = ?';
-        conexion.query(query, [correo, contrasena], (err, resultados) => {
+        conexion.query(query, [correo], (err, resultados) => {
             if (err) {
                 console.error('Error al ejecutar la consulta:', err);
                 return reject(err);
@@ -44,6 +46,11 @@ async function obtenerUsuario(correo, contrasena) {
     });
 }
 
-function verificarContrasena(contrasenaAlmacenada, contrasenaIngresada) {
-    return contrasenaAlmacenada == contrasenaIngresada;
+async function verificarContrasena(contrasenaAlmacenada, contrasenaIngresada) {
+    try {
+        return await bcrypt.compare(contrasenaIngresada, contrasenaAlmacenada);
+    } catch (error) {
+        console.error('Error al verificar la contraseña:', error);
+        return false;
+    }
 }
