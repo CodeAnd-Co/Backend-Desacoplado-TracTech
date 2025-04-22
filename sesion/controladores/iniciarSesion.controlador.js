@@ -34,14 +34,14 @@ exports.iniciarSesion = async (pet, res) => {
 }
 
 async function obtenerUsuario(correo) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM usuario WHERE correo = ?';
-        conexion.query(query, [correo], (err, resultados) => {
+    return new Promise((resolver, rechazar) => {
+        const consulta = 'SELECT * FROM usuario WHERE correo = ?';
+        conexion.query(consulta, [correo], (err, resultados) => {
             if (err) {
                 console.error('Error al ejecutar la consulta:', err);
-                return reject(err);
+                return rechazar(err);
             }
-            resolve(resultados); // Retorna el primer resultado de la consulta
+            resolver(resultados); // Retorna el primer resultado de la consulta
         });
     });
 }
@@ -50,7 +50,7 @@ async function verificarContrasena(contrasenaAlmacenada, contrasenaIngresada) {
     try {
         return await bcrypt.compare(contrasenaIngresada, contrasenaAlmacenada);
     } catch (error) {
-        console.error('Error al verificar la contraseña:', error);
+        console.error('Error al iniciar sesión', error);
         return false;
     }
 }
