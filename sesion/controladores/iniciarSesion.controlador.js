@@ -1,6 +1,5 @@
 const conexion = require('../../util/db.js');
 exports.iniciarSesion = async (pet, res) => {
-    console.log("pet", pet.body);
     const { correo, contrasena } = pet.body;
     if (!correo || !contrasena) {
         return res.status(400).json({
@@ -9,20 +8,19 @@ exports.iniciarSesion = async (pet, res) => {
     }
     
     const usuarioRegistrado = await obtenerUsuario(correo, contrasena, (err, usuario) => {
+        console.error('Error al ejecutar la consulta:', err); // Solo en el servidor
         if (err) {
             return res.status(500).json({
-                message: "Error al obtener el usuario",
+                message: "Usuario o contraseña incorrectos",
             });
         }
         return usuario;
     });
 
-    console.log("usuarioRegistrado", usuarioRegistrado[0]);
     const contrasenaVerificada = verificarContrasena(usuarioRegistrado[0].Contrasenia, contrasena);
-    console.log("contrasenaVerificada", contrasenaVerificada);
     if (!contrasenaVerificada) {
         return res.status(401).json({
-            message: "Contraseña incorrecta",
+            message: "Usuario o contraseña incorrectos",
         });
     }
 
@@ -35,7 +33,7 @@ exports.iniciarSesion = async (pet, res) => {
 
 async function obtenerUsuario(correo, contrasena) {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM usuario WHERE correo = ? AND contrasenia = ?';
+        const query = 'SELECT * FROM usuario WHERE correo = ?';
         conexion.query(query, [correo, contrasena], (err, resultados) => {
             if (err) {
                 console.error('Error al ejecutar la consulta:', err);
@@ -47,7 +45,5 @@ async function obtenerUsuario(correo, contrasena) {
 }
 
 function verificarContrasena(contrasenaAlmacenada, contrasenaIngresada) {
-    console.log("contrasenaAlmacenada", contrasenaAlmacenada);
-    console.log("contrasenaIngresada", contrasenaIngresada);
     return contrasenaAlmacenada == contrasenaIngresada;
 }
