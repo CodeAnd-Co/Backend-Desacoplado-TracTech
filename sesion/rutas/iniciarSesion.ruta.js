@@ -1,8 +1,8 @@
 const express = require('express');
 const ruteador = express.Router();
 
-const iniciarSesionController = require("../controladores/iniciarSesion.controlador");
+const iniciarSesionControlador = require("../controladores/iniciarSesion.controlador");
 
-ruteador.post("/", iniciarSesionController.iniciarSesion);
+ruteador.post("/", iniciarSesionControlador.iniciarSesion);
 
 module.exports = ruteador;
