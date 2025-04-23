@@ -15,10 +15,12 @@ app.use(bodyParser.json());
 
 const sesionRutas = require("./sesion/rutas/sesionIndice.rutas");
 const reportesRutas = require("./reportes/rutas/reportesIndice.rutas");
+const plantillasRutas = require("./plantillas/rutas/plantillasIndice.rutas");
 const formulasRutas = require("./formulas/rutas/formulasIndice.rutas");
 
 app.use("/sesion", sesionRutas);
 app.use("/reportes", reportesRutas);
+app.use("/plantillas", plantillasRutas);
 app.use("/formulas", formulasRutas);
 
 app.get("/", (pet, res) => {
