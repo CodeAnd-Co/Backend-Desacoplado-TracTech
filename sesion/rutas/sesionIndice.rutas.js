@@ -1,9 +1,9 @@
 const express = require('express');
 const ruteador = express.Router();
 
-const iniciarSesionRoute = require("./iniciarSesion.ruta");
+const iniciarSesionRuta = require("./iniciarSesion.ruta");
 
-ruteador.use("/iniciar-sesion", iniciarSesionRoute);
+ruteador.use("/iniciar-sesion", iniciarSesionRuta);
 
 ruteador.get("/", (pet, res) => {
     res.status(200).json({
