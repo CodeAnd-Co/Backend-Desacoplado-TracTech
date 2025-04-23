@@ -1,9 +1,9 @@
 const express = require('express');
 const ruteador = express.Router();
 
-const consultarPlantillasRuta = require("./consultarPlantillas.ruta");
+const seleccionarPlantillaRuta = require("./seleccionarPlantilla.ruta");
 
-ruteador.use("/consultar-plantillas", consultarPlantillasRuta);
+ruteador.use("/seleccionar", seleccionarPlantillaRuta);
 
 ruteador.get("/", (pet, res) => {
     res.status(200).json({
