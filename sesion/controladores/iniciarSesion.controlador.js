@@ -1,4 +1,4 @@
-const conexion = require('../../util/db.js');
+const conexion = require('../../util/bd.js');
 const bcrypt = require('bcrypt'); // Importa bcrypt
 
 exports.iniciarSesion = async (pet, res) => {

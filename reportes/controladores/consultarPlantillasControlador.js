@@ -1,5 +1,5 @@
 // Se importa un módulo personalizado que establece la conexión con la base de datos
-const conexion = require('../../util/db.js');
+const conexion = require('../../util/bd.js');
 
 // Se exporta una función asíncrona que maneja la consulta de plantillas
 exports.consultarPlantillas = async (pet, res) => {
