@@ -4,7 +4,7 @@ const conexion = require('../../util/bd.js');
 // Se exporta una función asíncrona que maneja la consulta de plantillas
 exports.seleccionarPlantilla = async (pet, res) => {
     // Se extrae el idPlantilla del cuerpo de la petición
-    const { idPlantilla } = pet.body;
+    const { idPlantilla } = pet.params;
 
     // Si no se proporciona idPlantilla, se devuelve un error 400 (Bad Request)
     if (!idPlantilla) {
