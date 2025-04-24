@@ -14,7 +14,7 @@ app.use(
 app.use(bodyParser.json());
 
 const sesionRutas = require('./sesion/rutas/sesionIndice.rutas');
-const reportesRutas = require("./reportes/rutas/reportesIndice.rutas");
+//const reportesRutas = require("./reportes/rutas/reportesIndice.rutas");
 const plantillasRutas = require("./plantillas/rutas/plantillasIndice.rutas");
 const formulasRutas = require("./formulas/rutas/formulasIndice.rutas");
 
