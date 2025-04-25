@@ -8,7 +8,6 @@ exports.iniciarSesion = async (pet, res) => {
         message: "Faltan datos requeridos",
         });
     }
-    
     const usuarioRegistrado = await obtenerUsuario(correo, (err, usuario) => {
         console.error('Error al ejecutar la consulta:', err); // Solo en el servidor
         if (err) {
