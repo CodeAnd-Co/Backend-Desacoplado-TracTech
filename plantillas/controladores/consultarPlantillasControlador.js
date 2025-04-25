@@ -22,7 +22,7 @@ exports.consultarPlantillas = async (pet, res) => {
 async function obtenerPlantillas() {
     // Se retorna una promesa que ejecuta una consulta SQL para obtener todas las plantillas
     return new Promise((resolver, rechazar) => {
-        const consulta = 'SELECT * FROM plantillas';
+        const consulta = 'SELECT * FROM plantillareporte';
 
         // Se ejecuta la consulta
         conexion.query(consulta, (err, resultados) => {
