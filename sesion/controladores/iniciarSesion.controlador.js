@@ -8,6 +8,11 @@ exports.iniciarSesion = async (pet, res) => {
         message: "Faltan datos requeridos",
         });
     }
+
+    if (!validarCorreo(correo)) {
+        throw new Error("Correo inválido");
+      }
+    
     const usuarioRegistrado = await obtenerUsuario(correo, (err, usuario) => {
         console.error('Error al ejecutar la consulta:', err); // Solo en el servidor
         if (err) {
@@ -31,6 +36,11 @@ exports.iniciarSesion = async (pet, res) => {
         message: "Usuario inició sesión con éxito",
     });
 }
+
+function validarCorreo(correo) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(correo);
+  }
 
 async function obtenerUsuario(correo) {
     return new Promise((resolver, rechazar) => {
