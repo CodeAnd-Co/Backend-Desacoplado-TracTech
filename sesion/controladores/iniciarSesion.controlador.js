@@ -20,8 +20,11 @@ exports.iniciarSesion = async (pet, res) => {
             message: "Faltan datos requeridos",
         });
     }
+
+    if (!validarCorreo(correo)) {
+        throw new Error("Correo inválido");
+      }
     
-    // Busca al usuario en la base de datos usando su correo
     const usuarioRegistrado = await obtenerUsuario(correo, (err, usuario) => {
         if (usuario.length === 0) {
             return res.status(401).json({
@@ -69,6 +72,12 @@ function generarToken(usuarioRegistrado) {
         { expiresIn: process.env.DURACION_JWT } // Duración del token
     );
 }
+
+
+function validarCorreo(correo) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(correo);
+  }
 
 /**
  * Obtiene un usuario de la base de datos mediante su correo.
