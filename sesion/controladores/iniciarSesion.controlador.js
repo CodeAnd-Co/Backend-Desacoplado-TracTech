@@ -1,3 +1,5 @@
+// RF2 Usuario registrado inicia sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF2
+
 const conexion = require('../../util/bd.js');
 const bcrypt = require('bcrypt'); // Importa bcrypt
 const jwt = require('jsonwebtoken'); // Importa jsonwebtoken
