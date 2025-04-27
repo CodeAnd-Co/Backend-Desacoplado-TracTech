@@ -17,21 +17,22 @@ const sesionRutas = require('./sesion/rutas/sesionIndice.rutas');
 //const reportesRutas = require("./reportes/rutas/reportesIndice.rutas");
 const plantillasRutas = require("./plantillas/rutas/plantillasIndice.rutas");
 const formulasRutas = require("./formulas/rutas/formulasIndice.rutas");
+const usuariosRutas = require("./usuarios/rutas/usuariosIndice.rutas");
 
 app.use("/sesion", sesionRutas);
 //app.use("/reportes", reportesRutas);
 app.use("/plantillas", plantillasRutas);
 app.use("/formulas", formulasRutas);
+app.use("/usuarios", usuariosRutas);
 
-app.get("/", (pet, res) => {
-    res.status(200).json({
+app.get("/", (peticion, respuesta) => {
+    respuesta.status(200).json({
       message: "¡Bienvenido a Harvester!",
     });
   });
 
-
-app.use((pet, res) => {
-    res.status(404).json({
+app.use((peticion, respuesta) => {
+    respuesta.status(404).json({
       message: "No se encuentra el endpoint o ruta que estas buscando",
     });
   });
