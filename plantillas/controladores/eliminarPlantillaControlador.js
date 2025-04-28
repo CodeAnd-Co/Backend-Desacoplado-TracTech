@@ -4,7 +4,7 @@
 const conexion = require('../../util/bd.js');
 
 // Se exporta una función asíncrona que maneja la consulta de plantillas
-exports.eleminarPlantilla = async (pet, res) => {
+exports.eliminarPlantilla = async (pet, res) => {
     // Se extrae el idPlantilla del cuerpo de la petición
     const { idPlantilla } = pet.body;
 
