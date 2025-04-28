@@ -5,6 +5,6 @@ const ruteador = express.Router();
 
 const eliminarPlantillaControlador = require("../controladores/eliminarPlantillaControlador");
 
-ruteador.post("/", eliminarPlantillaControlador.eleminiarPlantilla);
+ruteador.post("/", eliminarPlantillaControlador.eleminarPlantilla);
 
 module.exports = ruteador;

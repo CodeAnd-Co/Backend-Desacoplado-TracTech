@@ -4,7 +4,7 @@
 const conexion = require('../../util/bd.js');
 
 // Se exporta una función asíncrona que maneja la consulta de plantillas
-exports.eleminiarPlantilla = async (pet, res) => {
+exports.eleminarPlantilla = async (pet, res) => {
     // Se extrae el idPlantilla del cuerpo de la petición
     const { idPlantilla } = pet.body;
 
@@ -16,17 +16,16 @@ exports.eleminiarPlantilla = async (pet, res) => {
     }
 
     // Se llama a una función auxiliar para obtener la plantilla desde la base de datos
-    const plantillaConsultada = await obtenerPlantilla(idPlantilla);
+    const plantillaConsultada = await eliminarPlantilla(idPlantilla);
 
     // Se responde con un mensaje de éxito y se devuelve la primera plantilla encontrada
     res.status(200).json({
         message: "Eliminacion de plantilla exitosa",
-        //plantilla: plantillaConsultada[0]
     });
 }
 
 // Función auxiliar que realiza la consulta a la base de datos
-async function obtenerPlantilla(idPlantilla) {
+async function eliminarPlantilla(idPlantilla) {
     // Se retorna una promesa que ejecuta una consulta SQL usando el idPlantilla
     return new Promise((resolver, rechazar) => {
         const consulta = 'DELETE FROM plantillareporte WHERE idPlantillaReporte = ?';
