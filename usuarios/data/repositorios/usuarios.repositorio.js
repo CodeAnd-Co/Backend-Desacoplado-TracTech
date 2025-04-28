@@ -1,29 +1,31 @@
 const conexion = require('../../../util/bd.js');
 const { Usuario } = require('../modelos/usuarios.js');
 
-async function consultarUsuariosRepositorio() {
-    const consulta = 'SELECT idUsuario, Nombre, Correo FROM usuarios';
+function consultarUsuariosRepositorio() {
+    const consulta = 'SELECT idUsuario, Nombre, Correo FROM usuario';
 
-    try {
-        const [filas] = await conexion.query(consulta);
+    return new Promise((resolver, rechazar) => {
+        conexion.query(consulta, (error, resultados) => {
+            if (error) {
+                console.error('Error al ejecutar la consulta:', error);
+                return rechazar(error);
+            }
 
-        if (!filas.length) {
-            throw new Error('No se encontraron usuarios');
-        }
+            if (!resultados.length) {
+                return rechazar(new Error('No se encontraron usuarios'));
+            }
 
-        const usuarios = filas
-            .filter(usuario => usuario.idUsuario && usuario.Nombre && usuario.Correo)
-            .map(usuario => new Usuario({
-                id: usuario.idUsuario,
-                nombre: usuario.Nombre,
-                correo: usuario.Correo
-            }));
+            const usuarios = resultados
+                .filter(usuario => usuario.idUsuario && usuario.Nombre && usuario.Correo)
+                .map(usuario => new Usuario({
+                    id: usuario.idUsuario,
+                    nombre: usuario.Nombre,
+                    correo: usuario.Correo
+                }));
 
-        return usuarios;
-    } catch (error) {
-        console.error('Error al obtener usuarios:', error);
-        throw error;
-    }
+            resolver(usuarios);
+        });
+    });
 }
 
 module.exports = consultarUsuariosRepositorio;
