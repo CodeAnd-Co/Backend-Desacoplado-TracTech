@@ -1,3 +1,5 @@
+//RF21 Usuario elimina plantilla de reporte. - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF21
+
 // Se importa un módulo personalizado que establece la conexión con la base de datos
 const conexion = require('../../util/bd.js');
 
