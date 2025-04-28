@@ -36,6 +36,7 @@ const verificarToken = (pet, res, siguiente) => {
         }
 
         pet.usuario = decodificado; // Agrega los datos del usuario decodificados al request
+        console.log("Token verificado:", pet.usuario); // Muestra el usuario decodificado en la consola
         siguiente(); // Llama al siguiente middleware
     });
 };
