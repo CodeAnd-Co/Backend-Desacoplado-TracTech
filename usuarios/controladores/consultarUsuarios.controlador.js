@@ -3,7 +3,7 @@ const consultarUsuariosRepositorio = require('../data/repositorios/usuarios.repo
 exports.consultarUsuariosControlador = async (peticion, respuesta) => {
 
     try {
-        const usuarios = await consultarUsuariosRepositorio.consultarUsuarios();
+        const usuarios = await consultarUsuariosRepositorio();
 
         if (!usuarios || usuarios.length === 0) {
             return respuesta.status(404).json({
