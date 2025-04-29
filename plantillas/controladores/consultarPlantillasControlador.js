@@ -1,3 +1,5 @@
+//RF23 Usuario consulta plantillas de reporte. - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF23
+
 // Se importa un módulo personalizado que establece la conexión con la base de datos
 const conexion = require('../../util/bd.js');
 
@@ -22,7 +24,7 @@ exports.consultarPlantillas = async (pet, res) => {
 async function obtenerPlantillas() {
     // Se retorna una promesa que ejecuta una consulta SQL para obtener todas las plantillas
     return new Promise((resolver, rechazar) => {
-        const consulta = 'SELECT * FROM plantillas';
+        const consulta = 'SELECT * FROM plantillareporte';
 
         // Se ejecuta la consulta
         conexion.query(consulta, (err, resultados) => {
