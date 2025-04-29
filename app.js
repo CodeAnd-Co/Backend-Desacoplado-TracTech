@@ -24,11 +24,13 @@ app.use("/plantillas", plantillasRutas);
 app.use("/formulas", formulasRutas);
 
 const verificarToken = require("./util/middlewareAutenticacion");
+const verificarPermisos = require("./util/middlewarePermisos");
 
-app.get("/", verificarToken, (pet, res) => {
+app.get("/", verificarToken, verificarPermisos, (pet, res) => {
     res.status(200).json({
       message: "¡Bienvenido a Harvester!",
       valido: true,
+      permisos: pet.permisos,
     });
   });
 

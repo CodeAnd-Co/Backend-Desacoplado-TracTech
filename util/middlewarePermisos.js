@@ -2,19 +2,17 @@ const jwt = require('jsonwebtoken');
 const conexion = require("../util/bd");
 
 const verificarPermisos = (pet, res, siguiente) => {
-    console.log("si", pet.usuario)
-    const idUsuario = pet.usuario.idUsuario; // Obtiene el ID del usuario desde el token decodificado
+    const idUsuario = pet.usuario.id; // Obtiene el ID del usuario desde el token decodificado
 
     try {
-        const query = `CALL nombre_del_stored_procedure(?)`; // Reemplaza con el nombre de tu stored procedure
+        const query = `CALL obtener_permisos_usuario(?)`; // Reemplaza con el nombre de tu stored procedure
         conexion.query(query, [idUsuario], (error, resultados) => {
             if (error) {
                 console.error('Error al ejecutar el stored procedure:', error);
                 return res.status(500).json({ message: "Error interno del servidor" });
             }
 
-            // Procesa los resultados del stored procedure
-            console.log('Resultados del stored procedure:', resultados);
+            pet.permisos = resultados[0]; // Asigna los permisos al objeto de solicitud
 
             // Continúa con el siguiente middleware
             siguiente();
@@ -25,6 +23,4 @@ const verificarPermisos = (pet, res, siguiente) => {
     }
 }
 
-module.exports = {
-    verificarPermisos,
-};
+module.exports = verificarPermisos;
