@@ -14,10 +14,10 @@ const verificarPermisos = (pet, res, siguiente) => {
 
     try {
         // Definir la consulta al procedimiento almacenado para obtener permisos
-        const query = `CALL obtener_permisos_usuario(?)`; // Nombre del stored procedure
+        const consulta = `CALL obtener_permisos_usuario(?)`; // Nombre del stored procedure
 
         // Ejecutar la consulta a la base de datos
-        conexion.query(query, [idUsuario], (error, resultados) => {
+        conexion.query(consulta, [idUsuario], (error, resultados) => {
             if (error) {
                 // Si ocurre un error al ejecutar el stored procedure, retornar error 500
                 console.error('Error al ejecutar el stored procedure:', error);
