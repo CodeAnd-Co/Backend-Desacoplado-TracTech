@@ -1,7 +1,7 @@
 // RF2 Usuario registrado inicia sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF2
 
 const jwt = require('jsonwebtoken');
-const listaNegra = require("./listaNegra");
+const listaNegra = require('./listaNegra');
 
 /**
  * Middleware para verificar el token JWT en la cabecera de autorización.
@@ -15,12 +15,12 @@ const verificarToken = (pet, res, siguiente) => {
     let token = pet.headers.authorization; // Obtiene el token desde la cabecera
 
     if (!token) {
-        return res.status(403).json({ message: "Token no proporcionado" }); // Sin token: acceso prohibido
+        return res.status(403).json({ message: 'Token no proporcionado' }); // Sin token: acceso prohibido
     }
-    // Extrae el token eliminando el prefijo "Bearer"
+    // Extrae el token eliminando el prefijo 'Bearer'
     token = token.split(' ')[1];
     if (!token) {
-        return res.status(403).json({ message: "Token no proporcionado" });
+        return res.status(403).json({ message: 'Token no proporcionado' });
     }
 
     // Verifica si el token está en la lista negra (revocado)
@@ -32,7 +32,7 @@ const verificarToken = (pet, res, siguiente) => {
     // Verifica si el token es válido
     jwt.verify(token, process.env.SECRETO_JWT, (err, decodificado) => {
         if (err) {
-            return res.status(401).json({ message: "Token inválido o expirado" }); // Token incorrecto o caducado
+            return res.status(401).json({ message: 'Token inválido o expirado' }); // Token incorrecto o caducado
         }
 
         pet.usuario = decodificado; // Agrega los datos del usuario decodificados al request
