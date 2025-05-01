@@ -10,10 +10,4 @@ const cerrarSesionRuta = require('./cerrarSesion.ruta');
 ruteador.use('/iniciar-sesion', iniciarSesionRuta);
 ruteador.use('/cerrar-sesion', cerrarSesionRuta);
 
-ruteador.get('/', (pet, res) => {
-    res.status(200).json({
-        message: '¡Bienvenido a sesión!',
-    });
-});
-
 module.exports = ruteador;
