@@ -1,7 +1,7 @@
 // RF2 Usuario registrado inicia sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF2
 // RF3 Usuario cierra sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF3
 
-const jwt = require('jsonwebtoken');
+const { verify } = require('jsonwebtoken');
 const listaNegra = require('./listaNegra');
 
 /**
@@ -31,7 +31,7 @@ const verificarToken = (peticion, respuesta, siguiente) => {
     }
 
     // Verifica si el token es válido
-    jwt.verify(token, process.env.SECRETO_JWT, (err, decodificado) => {
+    verify(token, process.env.SECRETO_JWT, (err, decodificado) => {
         if (err) {
             return respuesta.status(401).json({ mensaje: 'Token inválido o expirado' }); // Token incorrecto o caducado
         }
