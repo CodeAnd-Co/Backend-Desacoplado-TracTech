@@ -10,7 +10,7 @@ const listaNegra = require('./listaNegra');
  * @param {import('express').Request} peticion - Objeto de solicitud HTTP.
  * @param {import('express').Response} respuesta - Objeto de respuesta HTTP.
  * @param {Function} siguiente - Función para continuar con el siguiente middleware.
- * @returns {void}
+ * @returns {json} Respuesta JSON con el mensaje de error o continúa con el siguiente middleware.
  */
 const verificarToken = (peticion, respuesta, siguiente) => {
     let token = peticion.headers.authorization; // Obtiene el token desde la cabecera
