@@ -1,11 +1,12 @@
-// RF3 Ususario cierra sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF3
+// RF3 Usuario cierra sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF3
 
-const express = require('express');
-const ruteador = express.Router();
-const verificarToken = require("../../util/middlewareAutenticacion");
+const { Router } = require('express');
+const verificarToken = require('../../util/middlewareAutenticacion');
 
-const cerrarSesionControlador = require("../controladores/cerrarSesion.controlador");
+const cerrarSesionControlador = require('../controladores/cerrarSesion.controlador');
 
-ruteador.post("/", verificarToken, cerrarSesionControlador.cerrarSesion);
+const ruteador = Router();
+
+ruteador.post('/', verificarToken, cerrarSesionControlador.cerrarSesion);
 
 module.exports = ruteador;
