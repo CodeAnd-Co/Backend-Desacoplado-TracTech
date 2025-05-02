@@ -18,7 +18,7 @@ const verificarToken = (peticion, respuesta, siguiente) => {
     // Extrae el token eliminando el prefijo 'Bearer'
     token = token.split(' ')[1];
     if (!token) {
-        return respuesta.status(403).json({ mensaje: 'Token no proporcionado' });
+        return respuesta.status(401).json({ mensaje: 'Token no proporcionado' });
     }
 
     // Verifica si el token está en la lista negra (revocado)
