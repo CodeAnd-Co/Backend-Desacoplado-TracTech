@@ -52,6 +52,7 @@ exports.iniciarSesion = async (pet, res) => {
 
     // Genera un token de sesión para el usuario autenticado
     const token = generarToken(usuarioRegistrado);
+    console.log("Token generado:", token);
 
     // Responde con éxito y envía el token
     res.status(200).json({
