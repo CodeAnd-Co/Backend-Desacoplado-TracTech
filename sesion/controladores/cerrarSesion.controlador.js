@@ -7,6 +7,7 @@ const listaNegra = require('../../util/listaNegra'); // Importar la lista negra 
  * Agrega el token del usuario a la lista negra para invalidarlo en futuras solicitudes.
  * @param {object} peticion - Objeto de la petición (request) que contiene los encabezados
  * @param {object} respuesta - Objeto de la respuesta (response) para enviar el resultado al cliente
+ * @return {json} Respuesta JSON con el mensaje de éxito o error
  */
 exports.cerrarSesion = (peticion, respuesta) => {
     try {
