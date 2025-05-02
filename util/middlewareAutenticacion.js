@@ -15,9 +15,6 @@ const listaNegra = require('./listaNegra');
 const verificarToken = (peticion, respuesta, siguiente) => {
     let token = peticion.headers.authorization; // Obtiene el token desde la cabecera
 
-    if (!token) {
-        return respuesta.status(403).json({ mensaje: 'Token no proporcionado' }); // Sin token: acceso prohibido
-    }
     // Extrae el token eliminando el prefijo 'Bearer'
     token = token.split(' ')[1];
     if (!token) {
