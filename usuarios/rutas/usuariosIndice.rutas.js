@@ -1,11 +1,11 @@
 const express = require('express');
 const ruteador = express.Router();
 
-const consultarUsuariosRuta = require("./consultarUsuarios.ruta");
+const consultarUsuariosRuta = require('./consultarUsuarios.ruta');
 
-ruteador.use("/consultar-usuarios", consultarUsuariosRuta);
+ruteador.use('/consultar-usuarios', consultarUsuariosRuta);
 
-ruteador.get("/", (peticion, respuesta) => {
+ruteador.get('/', (peticion, respuesta) => {
   respuesta.sendStatus(200);
 });
 
