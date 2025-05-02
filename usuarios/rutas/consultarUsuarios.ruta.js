@@ -8,7 +8,7 @@ const consultarUsuariosControlador = require('../controladores/consultarUsuarios
 const { verificarPermisos, checarPermisos } = require('../../util/middlewarePermisos');
 
 ruteador.get(
-  "/",
+  '/',
   verificarToken,
   verificarPermisos,
   checarPermisos('ADMIN'),
