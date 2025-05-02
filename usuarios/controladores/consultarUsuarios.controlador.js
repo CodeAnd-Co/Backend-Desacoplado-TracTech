@@ -1,3 +1,5 @@
+// RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
+
 const consultarUsuariosRepositorio = require('../data/repositorios/usuarios.repositorio.js');
 
 /**

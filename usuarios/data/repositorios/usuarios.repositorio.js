@@ -1,3 +1,5 @@
+// RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
+
 const conexion = require('../../../util/bd.js');
 const { Usuario } = require('../modelos/usuarios.js');
 
