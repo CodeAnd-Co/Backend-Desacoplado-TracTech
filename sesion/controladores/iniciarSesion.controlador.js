@@ -24,12 +24,15 @@ exports.iniciarSesion = async (pet, res) => {
         });
     }
 
+    // Valida que el correo tenga un formato correcto
     if (!validarCorreo(correo)) {
         return res.status(400).json({
             mensaje: 'Correo inválido',
         });
       }
     
+    // Sanitiza la entrada del correo y la contraseña
+    // para evitar inyecciones SQL y otros ataques
     const { correoSanitizado, contrasenaSanitizada } = sanitizarEntrada(correo, contrasena);
     
     try {
@@ -83,16 +86,37 @@ function generarToken(usuarioRegistrado) {
     );
 }
 
+/**
+ * Sanitiza los datos de entrada del usuario, como correo y contraseña.
+ *
+ * Utiliza `validator.normalizeEmail` para normalizar el correo electrónico y 
+ * `validator.escape` para proteger contra inyecciones en la contraseña escapando caracteres especiales.
+ *
+ * @function sanitizarEntrada
+ * @param {string} correo - Correo electrónico ingresado por el usuario.
+ * @param {string} contrasena - Contraseña ingresada por el usuario.
+ * @returns {{correoSanitizado: string, contrasenaSanitizada: string}} Objeto con el correo y la contraseña sanitizados.
+ */
 function sanitizarEntrada(correo, contrasena) {
     const correoSanitizado = validator.normalizeEmail(correo);
     const contrasenaSanitizada = validator.escape(contrasena); // Escapa caracteres peligrosos
     return { correoSanitizado, contrasenaSanitizada };
-}
+}  
 
+/**
+ * Valida el formato de un correo electrónico usando una expresión regular.
+ *
+ * La expresión regular verifica que el correo tenga una estructura estándar,
+ * incluyendo nombre de usuario, símbolo '@' y dominio válido.
+ *
+ * @function validarCorreo
+ * @param {string} correo - Correo electrónico a validar.
+ * @returns {boolean} `true` si el correo tiene un formato válido, de lo contrario `false`.
+ */
 function validarCorreo(correo) {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(correo);
-  }
+}
 
 /**
  * Obtiene un usuario de la base de datos mediante su correo.
