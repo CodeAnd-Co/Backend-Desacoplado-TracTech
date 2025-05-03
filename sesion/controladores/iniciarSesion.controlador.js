@@ -19,45 +19,50 @@ exports.iniciarSesion = async (pet, res) => {
     // Valida que ambos campos estén presentes
     if (!correo || !contrasena) {
         return res.status(400).json({
-            message: "Faltan datos requeridos",
+            mensaje: 'Faltan datos requeridos',
         });
     }
 
     if (!validarCorreo(correo)) {
-        throw new Error("Correo inválido");
+        return res.status(400).json({
+            mensaje: 'Correo inválido',
+        });
       }
     
-    const usuarioRegistrado = await obtenerUsuario(correo, (err, usuario) => {
-        if (usuario.length === 0) {
-            return res.status(401).json({
-                message: "Usuario o contraseña incorrectos",
-            });
-        }
+    try {
         
-        if (err) {
+        // Obten el usuario de la base de datos
+        const usuarioRegistrado = await obtenerUsuario(correo);
+
+        // Verifica si el usuario existe
+        if (usuarioRegistrado.length === 0) {
             return res.status(401).json({
-                message: "Usuario o contraseña incorrectos",
+                mensaje: 'Usuario o contraseña incorrectos',
             });
         }
-        return usuario;
-    });
 
-    // Verifica que la contraseña ingresada coincida con la almacenada
-    const contrasenaVerificada = verificarContrasena(usuarioRegistrado[0].Contrasenia, contrasena);
-    if (!contrasenaVerificada) {
-        return res.status(401).json({
-            message: "Usuario o contraseña incorrectos",
+        // Verifica que la contraseña ingresada coincida con la almacenada
+        const contrasenaVerificada = await verificarContrasena(usuarioRegistrado[0].Contrasenia, contrasena);
+        if (!contrasenaVerificada) {
+            return res.status(401).json({
+                mensaje: 'Usuario o contraseña incorrectos',
+            });
+        }
+
+        // Genera un token de sesión para el usuario autenticado
+        const token = generarToken(usuarioRegistrado);
+
+        // Responde con éxito y envía el token
+        res.status(200).json({
+            mensaje: 'Usuario inició sesión con éxito',
+            token,
+        });
+    } catch (err) {
+        console.error('Error al iniciar sesión:', err);
+        res.status(500).json({
+            mensaje: 'Error interno del servidor',
         });
     }
-
-    // Genera un token de sesión para el usuario autenticado
-    const token = generarToken(usuarioRegistrado);
-
-    // Responde con éxito y envía el token
-    res.status(200).json({
-        message: "Usuario inició sesión con éxito",
-        token,
-    });
 }
 
 /**
@@ -77,7 +82,7 @@ function generarToken(usuarioRegistrado) {
 
 
 function validarCorreo(correo) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(correo);
   }
 
