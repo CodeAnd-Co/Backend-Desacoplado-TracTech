@@ -1,5 +1,6 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 
+const bcrypt = require('bcrypt'); // Importa bcrypt
 const { crearUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
 const { Usuario } = require('../data/modelos/usuarios.js');
 
@@ -15,14 +16,19 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
     const { nombre, correo, contrasenia, idRol_FK } = peticion.body;
     console.log('Datos recibidos:', { nombre, correo, contrasenia, idRol_FK });
 
-    if (!nombre || !correo || !contrasenia || !idRol_FK)   {
+    if (!nombre || !correo || !contrasenia || !idRol_FK) {
       return respuesta.status(400).json({
         mensaje: 'Un campo requerido está vacío',
       });
     }
 
-    //const nuevoUsuario = new Usuario({ nombre, correo, contrasenia, idRol_FK });
-    const idInsertado = await crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK);
+    // Cifrar la contraseña antes de guardarla
+    const saltRounds = 12; // Número de rondas de sal
+    const contraseniaCifrada = await bcrypt.hash(contrasenia, saltRounds);
+    console.log('Contraseña cifrada:', contraseniaCifrada);
+
+    // Llamar al repositorio con la contraseña cifrada
+    const idInsertado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRol_FK);
     console.log('ID del usuario insertado:', idInsertado);
 
     respuesta.status(201).json({
