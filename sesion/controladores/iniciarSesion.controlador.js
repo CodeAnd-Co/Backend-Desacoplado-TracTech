@@ -3,6 +3,7 @@
 const conexion = require('../../util/bd.js');
 const bcrypt = require('bcrypt'); // Importa bcrypt
 const jwt = require('jsonwebtoken'); // Importa jsonwebtoken
+const validator = require('validator');
 
 /**
  * Controlador para iniciar sesión de un usuario.
@@ -29,10 +30,12 @@ exports.iniciarSesion = async (pet, res) => {
         });
       }
     
+    const { correoSanitizado, contrasenaSanitizada } = sanitizarEntrada(correo, contrasena);
+    
     try {
         
         // Obten el usuario de la base de datos
-        const usuarioRegistrado = await obtenerUsuario(correo);
+        const usuarioRegistrado = await obtenerUsuario(correoSanitizado);
 
         // Verifica si el usuario existe
         if (usuarioRegistrado.length === 0) {
@@ -42,7 +45,7 @@ exports.iniciarSesion = async (pet, res) => {
         }
 
         // Verifica que la contraseña ingresada coincida con la almacenada
-        const contrasenaVerificada = await verificarContrasena(usuarioRegistrado[0].Contrasenia, contrasena);
+        const contrasenaVerificada = await verificarContrasena(usuarioRegistrado[0].Contrasenia, contrasenaSanitizada);
         if (!contrasenaVerificada) {
             return res.status(401).json({
                 mensaje: 'Usuario o contraseña incorrectos',
@@ -80,6 +83,11 @@ function generarToken(usuarioRegistrado) {
     );
 }
 
+function sanitizarEntrada(correo, contrasena) {
+    const correoSanitizado = validator.normalizeEmail(correo);
+    const contrasenaSanitizada = validator.escape(contrasena); // Escapa caracteres peligrosos
+    return { correoSanitizado, contrasenaSanitizada };
+}
 
 function validarCorreo(correo) {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -101,7 +109,7 @@ async function obtenerUsuario(correo) {
         // Ejecuta la consulta en la base de datos
         conexion.query(consulta, [correo], (err, resultados) => {
             if (err) {
-                console.error('Error al ejecutar la consulta:', err);
+                console.error('Error interno del servidor:', err);
                 return rechazar(err);
             }
             // Resuelve la promesa con los resultados de la consulta
