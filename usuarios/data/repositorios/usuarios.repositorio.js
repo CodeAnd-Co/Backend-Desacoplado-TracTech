@@ -43,7 +43,6 @@ function consultarUsuariosRepositorio() {
  * @throws {Error} Error si no se puede insertar el usuario
  */
 function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
-  console.log('Datos a insertar:', nombre, correo, contrasenia, idRol_FK);
   const consulta = 'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)';
   const valores = [nombre, correo, contrasenia, idRol_FK];
 
