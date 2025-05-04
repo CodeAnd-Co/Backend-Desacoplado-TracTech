@@ -10,7 +10,12 @@ const { Usuario } = require('../modelos/usuarios.js');
  * @throws {Error} Error si no se pueden recuperar los usuarios o no existen
  */
 function consultarUsuariosRepositorio() {
-  const consulta = 'SELECT idUsuario, Nombre, Correo FROM usuario';
+  const consulta = `
+    SELECT u.idUsuario, u.Nombre, u.Correo
+    FROM usuario u
+    JOIN rol r ON u.idRol_FK = r.idRol
+    WHERE r.Nombre <> 'SUPER ADMIN'
+    `;
 
   return new Promise((resolver, rechazar) => {
     conexion.query(consulta, (error, resultados) => {
