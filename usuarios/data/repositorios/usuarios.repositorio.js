@@ -1,6 +1,7 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 // RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
 
+require('dotenv').config();
 const conexion = require('../../../util/bd.js');
 const { Usuario } = require('../modelos/usuarios.js');
 
@@ -10,10 +11,18 @@ const { Usuario } = require('../modelos/usuarios.js');
  * @throws {Error} Error si no se pueden recuperar los usuarios o no existen
  */
 function consultarUsuariosRepositorio() {
-  const consulta = 'SELECT idUsuario, Nombre, Correo FROM usuario';
+
+  const rolAExcluir = process.env.SU;
+
+  const consulta = `
+    SELECT u.idUsuario, u.Nombre, u.Correo
+    FROM usuario u
+    JOIN rol r ON u.idRol_FK = r.idRol
+    WHERE r.Nombre <> ?
+    `;
 
   return new Promise((resolver, rechazar) => {
-    conexion.query(consulta, (error, resultados) => {
+    conexion.query(consulta, [rolAExcluir], (error, resultados) => {
       if (error) {
         console.error('Error al ejecutar la consulta:', error);
         return rechazar(error);
