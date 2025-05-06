@@ -1,5 +1,6 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 // RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
+// RF41 Administrador modifica usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF41
 
 require('dotenv').config();
 const conexion = require('../../../util/bd.js');
@@ -67,7 +68,31 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
   });
 }
 
+/**
+ * Modifica un usuario en la base de datos
+ * @param {number} idUsuario - ID del usuario a modificar
+ * @param {string} nombre - Nuevo nombre del usuario
+ * @param {string} correo - Nuevo correo del usuario
+ * @param {string} contrasenia - Nueva contraseña del usuario
+ * @returns {Promise<Object>} Promesa con el resultado de la operación
+ */
+function modificarUsuario(idUsuario, nombre, correo, contrasenia) {
+  const consulta = 'UPDATE usuario SET Nombre = ?, Correo = ?, Contrasenia = ? WHERE idUsuario = ?';
+  const valores = [nombre, correo, contrasenia, idUsuario];
+
+  return new Promise((resolver, rechazar) => {
+    conexion.query(consulta, valores, (error, resultado) => {
+      if (error) {
+        return rechazar(error);
+      }
+
+      resolver(resultado);
+    });
+  });
+}
+
 module.exports = {
   consultarUsuarios,
-  crearUsuarioRepositorio
+  crearUsuarioRepositorio,
+  modificarUsuario
 };
