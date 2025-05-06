@@ -25,8 +25,8 @@ exports.modificarUsuario = async (peticion, respuesta) => {
       
         const { idUsuario, nombre, correo, contrasenia } = datosSanitizados;
     
-        // TODO: Asegurarme de que el número de salt sea el correcto
-        const hashContrasenia = await bcrypt.hash(contrasenia, 10);
+        // Son 12 rondas de sal
+        const hashContrasenia = await bcrypt.hash(contrasenia, 12);
     
         await modificarUsuarioRepositorio(idUsuario, nombre, correo, hashContrasenia);
     
