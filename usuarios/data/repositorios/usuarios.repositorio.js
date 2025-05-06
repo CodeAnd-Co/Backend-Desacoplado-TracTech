@@ -68,6 +68,18 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
   });
 }
 
+/**
+ * Elimina un usuario de la base de datos según su ID.
+ *
+ * Ejecuta una consulta SQL para eliminar el registro del usuario identificado por `idUsuario`.
+ * Retorna una promesa que se resuelve si el usuario fue eliminado correctamente,
+ * o se rechaza si ocurrió un error o no se encontró el usuario.
+ *
+ * @function eliminarUsuario
+ * @param {number} id - ID del usuario que se desea eliminar.
+ * @returns {Promise<boolean>} Promesa que se resuelve en `true` si la eliminación fue exitosa.
+ * @throws {Error} Si ocurre un error en la consulta o el usuario no existe.
+ */
 function eliminarUsuario(id) {
   const consulta = 'DELETE FROM usuario WHERE idUsuario = ?';
 

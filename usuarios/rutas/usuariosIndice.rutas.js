@@ -3,11 +3,11 @@
 // RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
 const express = require('express');
-const ruteador = express.Router();
-
 const consultarUsuariosRuta = require('./consultarUsuarios.ruta');
 const crearUsuarioRuta = require('./crearUsuario.ruta');
 const eliminarUsuarioRuta = require('./eliminarUsuario.ruta');
+
+const ruteador = express.Router();
 
 ruteador.use('/consultar-usuarios', consultarUsuariosRuta);
 ruteador.use('/crear-usuario', crearUsuarioRuta);
