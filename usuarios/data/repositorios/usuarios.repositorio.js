@@ -68,7 +68,6 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
   });
 }
 
-<<<<<<< HEAD
 function eliminarUsuario(id) {
   const consulta = 'DELETE FROM usuario WHERE idUsuario = ?';
 
@@ -89,12 +88,7 @@ function eliminarUsuario(id) {
 }
 
 module.exports = {
-  consultarUsuariosRepositorio,
+  consultarUsuarios,
   crearUsuarioRepositorio,
   eliminarUsuario,
-=======
-module.exports = {
-  consultarUsuarios,
-  crearUsuarioRepositorio
->>>>>>> e784d4d89f19524a7601c2643d1d7c8c7c176347
 };
