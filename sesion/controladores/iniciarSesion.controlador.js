@@ -3,7 +3,7 @@
 const conexion = require('../../util/bd.js'); // Importa la conexión a la base de datos
 const bcrypt = require('bcrypt'); // Importa bcrypt
 const jwt = require('jsonwebtoken'); // Importa jsonwebtoken
-const validador = require('validator');
+const validador = require('validator'); // Importa el validador de correos electrónicos
 
 /**
  * Controlador para iniciar sesión de un usuario.
