@@ -5,6 +5,6 @@ const ruteador = express.Router();
 
 const seleccionarPlantillaControlador = require("../controladores/seleccionarPlantillaControlador");
 
-ruteador.get("/:idPlantillaReporte", seleccionarPlantillaControlador.seleccionarPlantilla);
+ruteador.post("/", seleccionarPlantillaControlador.seleccionarPlantilla);
 
 module.exports = ruteador;
