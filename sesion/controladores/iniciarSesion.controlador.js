@@ -114,7 +114,7 @@ function sanitizarEntrada(correo, contrasenia) {
  * @returns {boolean} `true` si el correo tiene un formato válido, de lo contrario `false`.
  */
 function validarCorreo(correo) {
-    const regex = /^[a-z0-9!#$%&'*+\=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+    const regex = /^[a-z0-9!#$%&'*+?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
     return regex.test(correo);
 }
 
