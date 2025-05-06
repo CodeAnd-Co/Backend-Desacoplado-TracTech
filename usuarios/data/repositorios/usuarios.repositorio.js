@@ -1,5 +1,7 @@
+// RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 // RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
 
+require('dotenv').config();
 const conexion = require('../../../util/bd.js');
 const { Usuario } = require('../modelos/usuarios.js');
 
@@ -9,10 +11,18 @@ const { Usuario } = require('../modelos/usuarios.js');
  * @throws {Error} Error si no se pueden recuperar los usuarios o no existen
  */
 function consultarUsuariosRepositorio() {
-  const consulta = 'SELECT idUsuario, Nombre, Correo FROM usuario';
+
+  const rolAExcluir = process.env.SU;
+
+  const consulta = `
+    SELECT u.idUsuario, u.Nombre, u.Correo
+    FROM usuario u
+    JOIN rol r ON u.idRol_FK = r.idRol
+    WHERE r.Nombre <> ?
+    `;
 
   return new Promise((resolver, rechazar) => {
-    conexion.query(consulta, (error, resultados) => {
+    conexion.query(consulta, [rolAExcluir], (error, resultados) => {
       if (error) {
         console.error('Error al ejecutar la consulta:', error);
         return rechazar(error);
@@ -35,4 +45,32 @@ function consultarUsuariosRepositorio() {
   });
 }
 
-module.exports = consultarUsuariosRepositorio;
+/**
+ * Agrega un nuevo usuario a la base de datos
+ * @param {Usuario} usuario Objeto Usuario con los datos del nuevo usuario
+ * @returns {Promise<number>} Promesa que resuelve con el ID del usuario insertado
+ * @throws {Error} Error si no se puede insertar el usuario
+ */
+function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
+  const consulta = 'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)';
+  const valores = [nombre, correo, contrasenia, idRol_FK];
+
+  return new Promise((resolver, rechazar) => {
+    conexion.query(consulta, valores, (error, resultado) => {
+      if (error) {
+        console.error('Error al insertar el usuario:', error);
+        return rechazar(error);
+      }
+
+      resolver(resultado.insertId);
+    });
+  });
+}
+
+
+//module.exports = consultarUsuariosRepositorio;
+
+module.exports = {
+  consultarUsuariosRepositorio,
+  crearUsuarioRepositorio
+};
