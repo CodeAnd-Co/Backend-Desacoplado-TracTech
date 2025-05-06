@@ -11,7 +11,7 @@ const { Usuario } = require('../modelos/usuarios.js');
   * @returns {Promise<Array<Usuario>>} Promesa que resuelve con un array de objetos Usuario
  * @throws {Error} Error si no se pueden recuperar los usuarios o no existen
  */
-function consultarUsuariosRepositorio() {
+function consultarUsuarios() {
 
   const rolAExcluir = process.env.SU;
 
@@ -68,6 +68,7 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
   });
 }
 
+<<<<<<< HEAD
 function eliminarUsuario(id) {
   const consulta = 'DELETE FROM usuario WHERE idUsuario = ?';
 
@@ -91,4 +92,9 @@ module.exports = {
   consultarUsuariosRepositorio,
   crearUsuarioRepositorio,
   eliminarUsuario,
+=======
+module.exports = {
+  consultarUsuarios,
+  crearUsuarioRepositorio
+>>>>>>> e784d4d89f19524a7601c2643d1d7c8c7c176347
 };

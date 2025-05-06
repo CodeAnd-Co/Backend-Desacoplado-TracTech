@@ -1,6 +1,6 @@
 // RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
 
-const { consultarUsuariosRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { consultarUsuarios: consultarUsuariosRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
 
 /**
  * Controlador para consultar todos los usuarios
@@ -9,7 +9,7 @@ const { consultarUsuariosRepositorio } = require('../data/repositorios/usuarios.
  * @returns {object} Respuesta JSON con los usuarios o mensaje de error
  * @throws {Error} Error interno del servidor al procesar la petición
  */
-exports.consultarUsuariosControlador = async (peticion, respuesta) => {
+exports.consultarUsuarios = async (peticion, respuesta) => {
   try {
     const usuarios = await consultarUsuariosRepositorio();
 

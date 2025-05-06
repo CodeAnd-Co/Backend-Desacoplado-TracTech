@@ -4,12 +4,12 @@ const conexion = require('../../util/bd.js');
 // Se exporta una función asíncrona que maneja la consulta de plantillas
 exports.seleccionarPlantilla = async (pet, res) => {
     // Se extrae el idPlantilla del cuerpo de la petición
-    const { idPlantilla } = pet.params;
+    const { idPlantilla } = pet.body;
 
     // Si no se proporciona idPlantilla, se devuelve un error 400 (Bad Request)
     if (!idPlantilla) {
         return res.status(400).json({
-            message: "Faltan datos requeridos",
+            message: 'Faltan datos requeridos',
         });
     }
 
@@ -18,7 +18,7 @@ exports.seleccionarPlantilla = async (pet, res) => {
 
     // Se responde con un mensaje de éxito y se devuelve la primera plantilla encontrada
     res.status(200).json({
-        message: "Consulta de plantilla exitosa",
+        message: 'Consulta de plantilla exitosa',
         plantilla: plantillaConsultada[0], // Se asume que solo se necesita el primer resultado
     });
 }
@@ -27,7 +27,7 @@ exports.seleccionarPlantilla = async (pet, res) => {
 async function obtenerPlantilla(idPlantilla) {
     // Se retorna una promesa que ejecuta una consulta SQL usando el idPlantilla
     return new Promise((resolver, rechazar) => {
-        const consulta = 'SELECT * FROM plantillas WHERE idPlantilla = ?';
+        const consulta = 'SELECT * FROM plantillareporte WHERE idPlantillaReporte = ?';
 
         // Se ejecuta la consulta con el valor de idPlantilla como parámetro para evitar inyecciones SQL
         conexion.query(consulta, [idPlantilla], (err, resultados) => {

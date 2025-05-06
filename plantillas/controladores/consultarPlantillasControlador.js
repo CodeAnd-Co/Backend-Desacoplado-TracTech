@@ -10,13 +10,13 @@ exports.consultarPlantillas = async (pet, res) => {
     if (plantillasConsultadas.length === 0) {
         // Si no se encontraron plantillas, se responde con un mensaje de error
         return res.status(404).json({
-            message: "No se encontraron plantillas",
+            message: 'No se encontraron plantillas',
         });
     }
 
     // Se responde con un mensaje de éxito y se devuelve la lista de plantillas
     res.status(200).json({
-        message: "Consulta de plantillas exitosa",
+        message: 'Consulta de plantillas exitosa',
         plantillas: plantillasConsultadas,
     });
 }
