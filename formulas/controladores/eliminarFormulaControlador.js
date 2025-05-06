@@ -24,6 +24,14 @@ exports.eliminarFormula = async (peticion, respuesta) => {
             message: "Error al eliminar la fórmula",
         });
     }
+    // Verifica si la fórmula existe
+    else if (formulaEliminada.affectedRows === 0) {
+        return respuesta.status(404).json({
+            message: "La fórmula no existe",
+        });
+    }
+
+
     // Mensaje de éxito
     respuesta.status(200).json({
         message: "Fórmula eliminada con éxito",
