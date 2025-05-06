@@ -9,7 +9,7 @@ exports.seleccionarPlantilla = async (pet, res) => {
     // Si no se proporciona idPlantilla, se devuelve un error 400 (Bad Request)
     if (!idPlantilla) {
         return res.status(400).json({
-            message: "Faltan datos requeridos",
+            message: 'Faltan datos requeridos',
         });
     }
 
@@ -18,7 +18,7 @@ exports.seleccionarPlantilla = async (pet, res) => {
 
     // Se responde con un mensaje de éxito y se devuelve la primera plantilla encontrada
     res.status(200).json({
-        message: "Consulta de plantilla exitosa",
+        message: 'Consulta de plantilla exitosa',
         plantilla: plantillaConsultada[0], // Se asume que solo se necesita el primer resultado
     });
 }

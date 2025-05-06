@@ -9,9 +9,9 @@ exports.eliminarPlantilla = async (pet, res) => {
     const { idPlantilla } = pet.body;
 
     // Si no se proporciona idPlantilla, se devuelve un error 400 (Bad Request)
-    if (!idPlantilla || idPlantilla == "null") {
+    if (!idPlantilla || idPlantilla == 'null') {
         return res.status(400).json({
-            message: "Faltan datos requeridos",
+            message: 'Faltan datos requeridos',
         });
     }
 
@@ -20,7 +20,7 @@ exports.eliminarPlantilla = async (pet, res) => {
 
     // Se responde con un mensaje de éxito y se devuelve la primera plantilla encontrada
     res.status(200).json({
-        message: "Eliminacion de plantilla exitosa",
+        message: 'Eliminacion de plantilla exitosa',
     });
 }
 
