@@ -10,7 +10,7 @@ const { Usuario } = require('../modelos/usuarios.js');
   * @returns {Promise<Array<Usuario>>} Promesa que resuelve con un array de objetos Usuario
  * @throws {Error} Error si no se pueden recuperar los usuarios o no existen
  */
-function consultarUsuariosRepositorio() {
+function consultarUsuarios() {
 
   const rolAExcluir = process.env.SU;
 
@@ -67,10 +67,7 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
   });
 }
 
-
-//module.exports = consultarUsuariosRepositorio;
-
 module.exports = {
-  consultarUsuariosRepositorio,
+  consultarUsuarios,
   crearUsuarioRepositorio
 };
