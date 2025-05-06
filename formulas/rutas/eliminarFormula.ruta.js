@@ -3,8 +3,8 @@
 const express = require('express');
 const ruteador = express.Router();
 
-const eliminarFormulaControlador = require("../controladores/eliminarFormulaControlador");
+const eliminarFormulaControlador = require('../controladores/eliminarFormulaControlador');
 
-ruteador.delete("/", eliminarFormulaControlador.eliminarFormula);
+ruteador.delete('/', eliminarFormulaControlador.eliminarFormula);
 
 module.exports = ruteador;

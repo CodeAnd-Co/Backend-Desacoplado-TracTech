@@ -6,14 +6,14 @@ exports.eliminarFormula = async (peticion, respuesta) => {
     const { id } = peticion.body;
     if (!id) {
         return respuesta.status(400).json({
-            message: "Faltan datos requeridos",
+            mensaje: 'Faltan datos requeridos',
         });
     }
     // Hace la consulta a la base de datos para eliminar la fórmula
     const formulaEliminada = await eliminarFormula(id, (err, resultado) => {
         if (err) {
             return respuesta.status(500).json({
-                message: "Error al eliminar la fórmula",
+                mensaje: 'Error al eliminar la fórmula',
             });
         }
         return resultado;
@@ -21,20 +21,20 @@ exports.eliminarFormula = async (peticion, respuesta) => {
     // Verifica si la fórmula fue eliminada correctamente
     if (!formulaEliminada) {
         return respuesta.status(500).json({
-            message: "Error al eliminar la fórmula",
+            mensaje: 'Error al eliminar la fórmula',
         });
     }
     // Verifica si la fórmula existe
     else if (formulaEliminada.affectedRows === 0) {
         return respuesta.status(404).json({
-            message: "La fórmula no existe",
+            mensaje: 'La fórmula no existe',
         });
     }
 
 
     // Mensaje de éxito
     respuesta.status(200).json({
-        message: "Fórmula eliminada con éxito",
+        mensaje: 'Fórmula eliminada con éxito',
     });
 }
 
