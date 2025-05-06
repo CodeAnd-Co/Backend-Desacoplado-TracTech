@@ -17,6 +17,7 @@
     "eslint": "^9.25.1",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.14.0"
+    "mysql2": "^3.14.0",
+    "validator": "^13.15.0"
   }
 }

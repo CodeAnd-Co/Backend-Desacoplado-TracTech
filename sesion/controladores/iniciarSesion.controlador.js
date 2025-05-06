@@ -1,63 +1,74 @@
 // RF2 Usuario registrado inicia sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF2
 
-const conexion = require('../../util/bd.js');
+const conexion = require('../../util/bd.js'); // Importa la conexión a la base de datos
 const bcrypt = require('bcrypt'); // Importa bcrypt
 const jwt = require('jsonwebtoken'); // Importa jsonwebtoken
+const validador = require('validator'); // Importa el validador de correos electrónicos
 
 /**
  * Controlador para iniciar sesión de un usuario.
  *
  * @async
- * @param {import('express').Request} pet - Objeto de solicitud HTTP.
- * @param {import('express').Response} res - Objeto de respuesta HTTP.
+ * @param {import('express').Request} peticion - Objeto de solicitud HTTP.
+ * @param {import('express').Response} respuesta - Objeto de respuesta HTTP.
  * @returns {Promise<void>}
  */
-exports.iniciarSesion = async (pet, res) => {
+exports.iniciarSesion = async (peticion, respuesta) => {
     // Extrae correo y contraseña del cuerpo de la solicitud
-    const { correo, contrasena } = pet.body;
+    const { correo, contrasenia } = peticion.body;
 
     // Valida que ambos campos estén presentes
-    if (!correo || !contrasena) {
-        return res.status(400).json({
-            message: "Faltan datos requeridos",
+    if (!correo || !contrasenia) {
+        return respuesta.status(400).json({
+            mensaje: 'Faltan datos requeridos',
         });
     }
 
+    // Valida que el correo tenga un formato correcto
     if (!validarCorreo(correo)) {
-        throw new Error("Correo inválido");
+        return respuesta.status(400).json({
+            mensaje: 'Correo inválido',
+        });
       }
     
-    const usuarioRegistrado = await obtenerUsuario(correo, (err, usuario) => {
-        if (usuario.length === 0) {
-            return res.status(401).json({
-                message: "Usuario o contraseña incorrectos",
-            });
-        }
+    // Sanitiza la entrada del correo y la contraseña
+    // para evitar inyecciones SQL y otros ataques
+    const { correoSanitizado, contraseniaSanitizada } = sanitizarEntrada(correo, contrasenia);
+    
+    try {
         
-        if (err) {
-            return res.status(401).json({
-                message: "Usuario o contraseña incorrectos",
+        // Obten el usuario de la base de datos
+        const usuarioRegistrado = await obtenerUsuario(correoSanitizado);
+
+        // Verifica si el usuario existe
+        if (usuarioRegistrado.length === 0) {
+            return respuesta.status(401).json({
+                mensaje: 'Usuario o contraseña incorrectos',
             });
         }
-        return usuario;
-    });
 
-    // Verifica que la contraseña ingresada coincida con la almacenada
-    const contrasenaVerificada = verificarContrasena(usuarioRegistrado[0].Contrasenia, contrasena);
-    if (!contrasenaVerificada) {
-        return res.status(401).json({
-            message: "Usuario o contraseña incorrectos",
+        // Verifica que la contraseña ingresada coincida con la almacenada
+        const contraseniaVerificada = await verificarContrasenia(usuarioRegistrado[0].Contrasenia, contraseniaSanitizada);
+        if (!contraseniaVerificada) {
+            return respuesta.status(401).json({
+                mensaje: 'Usuario o contraseña incorrectos',
+            });
+        }
+
+        // Genera un token de sesión para el usuario autenticado
+        const token = generarToken(usuarioRegistrado);
+
+        // Responde con éxito y envía el token
+        respuesta.status(200).json({
+            mensaje: 'Usuario inició sesión con éxito',
+            token,
+        });
+    } catch (err) {
+        console.error('Error al iniciar sesión:', err);
+        respuesta.status(500).json({
+            mensaje: 'Error interno del servidor',
         });
     }
-
-    // Genera un token de sesión para el usuario autenticado
-    const token = generarToken(usuarioRegistrado);
-
-    // Responde con éxito y envía el token
-    res.status(200).json({
-        message: "Usuario inició sesión con éxito",
-        token,
-    });
 }
 
 /**
@@ -75,11 +86,37 @@ function generarToken(usuarioRegistrado) {
     );
 }
 
+/**
+ * Sanitiza los datos de entrada del usuario, como correo y contraseña.
+ *
+ * Utiliza `validador.normalizeEmail` para normalizar el correo electrónico y 
+ * `validador.escape` para proteger contra inyecciones en la contraseña escapando caracteres especiales.
+ *
+ * @function sanitizarEntrada
+ * @param {string} correo - Correo electrónico ingresado por el usuario.
+ * @param {string} contrasenia - Contraseña ingresada por el usuario.
+ * @returns {{correoSanitizado: string, contraseniaSanitizada: string}} Objeto con el correo y la contraseña sanitizados.
+ */
+function sanitizarEntrada(correo, contrasenia) {
+    const correoSanitizado = validador.normalizeEmail(correo);
+    const contraseniaSanitizada = validador.escape(contrasenia); // Escapa caracteres peligrosos
+    return { correoSanitizado, contraseniaSanitizada };
+}  
 
+/**
+ * Valida el formato de un correo electrónico usando una expresión regular.
+ *
+ * La expresión regular verifica que el correo tenga una estructura estándar,
+ * incluyendo nombre de usuario, símbolo '@' y dominio válido.
+ *
+ * @function validarCorreo
+ * @param {string} correo - Correo electrónico a validar.
+ * @returns {boolean} `true` si el correo tiene un formato válido, de lo contrario `false`.
+ */
 function validarCorreo(correo) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[a-z0-9!#$%&'*+\=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
     return regex.test(correo);
-  }
+}
 
 /**
  * Obtiene un usuario de la base de datos mediante su correo.
@@ -96,7 +133,7 @@ async function obtenerUsuario(correo) {
         // Ejecuta la consulta en la base de datos
         conexion.query(consulta, [correo], (err, resultados) => {
             if (err) {
-                console.error('Error al ejecutar la consulta:', err);
+                console.error('Error interno del servidor:', err);
                 return rechazar(err);
             }
             // Resuelve la promesa con los resultados de la consulta
@@ -109,14 +146,14 @@ async function obtenerUsuario(correo) {
  * Verifica si la contraseña ingresada coincide con la contraseña almacenada.
  *
  * @async
- * @param {string} contrasenaAlmacenada - Contraseña cifrada almacenada en la base de datos.
- * @param {string} contrasenaIngresada - Contraseña proporcionada por el usuario.
+ * @param {string} contraseniaAlmacenada - Contraseña cifrada almacenada en la base de datos.
+ * @param {string} contraseniaIngresada - Contraseña proporcionada por el usuario.
  * @returns {Promise<boolean>} `true` si las contraseñas coinciden, de lo contrario `false`.
  */
-async function verificarContrasena(contrasenaAlmacenada, contrasenaIngresada) {
+async function verificarContrasenia(contraseniaAlmacenada, contraseniaIngresada) {
     try {
         // Compara la contraseña ingresada con la almacenada usando bcrypt
-        return await bcrypt.compare(contrasenaIngresada, contrasenaAlmacenada);
+        return await bcrypt.compare(contraseniaIngresada, contraseniaAlmacenada);
     } catch (error) {
         console.error('Error al iniciar sesión', error);
         return false;
