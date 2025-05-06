@@ -1,5 +1,6 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 // RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
+// RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
 require('dotenv').config();
 const conexion = require('../../../util/bd.js');
@@ -67,10 +68,27 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
   });
 }
 
+function eliminarUsuario(id) {
+  const consulta = 'DELETE FROM usuario WHERE idUsuario = ?';
 
-//module.exports = consultarUsuariosRepositorio;
+  return new Promise((resolver, rechazar) => {
+    conexion.query(consulta, [id], (error, resultado) => {
+      if (error) {
+        console.error('Error al eliminar el usuario:', error);
+        return rechazar(error);
+      }
+
+      if (resultado.affectedRows === 0) {
+        return rechazar(new Error('No se encontró el usuario'));
+      }
+
+      resolver(true);
+    });
+  });
+}
 
 module.exports = {
   consultarUsuariosRepositorio,
-  crearUsuarioRepositorio
+  crearUsuarioRepositorio,
+  eliminarUsuario,
 };

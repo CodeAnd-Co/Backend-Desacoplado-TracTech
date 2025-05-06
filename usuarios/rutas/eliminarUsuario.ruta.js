@@ -8,7 +8,7 @@ const eliminarUsuarioControlador = require('../controladores/eliminarUsuario.con
 const ruteador = express.Router();
 
 ruteador.delete(
-  '/',
+  '/:id',
   verificarToken,
   verificarPermisos,
   checarPermisos('ADMIN'),
