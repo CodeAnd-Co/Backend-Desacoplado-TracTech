@@ -6,9 +6,11 @@ const ruteador = express.Router();
 
 const guardarFormulaRuta = require('./guardarFormula.ruta');
 const eliminarFormulaRuta = require('./eliminarFormula.ruta');
+const consultarFormulasRuta = require('./consultarFormulas.ruta');
 
 ruteador.use('/guardarFormula', guardarFormulaRuta);
 ruteador.use('/eliminarFormula', eliminarFormulaRuta);
+ruteador.use('/consultarFormulas', consultarFormulasRuta);
 
 
 module.exports = ruteador;

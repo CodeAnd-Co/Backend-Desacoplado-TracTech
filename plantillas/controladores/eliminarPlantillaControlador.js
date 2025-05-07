@@ -19,9 +19,15 @@ exports.eliminarPlantilla = async (pet, res) => {
     const plantillaConsultada = await eliminarPlantilla(idPlantilla);
 
     // Se responde con un mensaje de éxito y se devuelve la primera plantilla encontrada
-    res.status(200).json({
+    if (!plantillaConsultada) {
+        return res.status(500).json({
+            message: 'Error al eliminar la plantilla',
+        });
+    } else {
+        res.status(200).json({
         message: 'Eliminacion de plantilla exitosa',
     });
+    }
 }
 
 // Función auxiliar que realiza la consulta a la base de datos

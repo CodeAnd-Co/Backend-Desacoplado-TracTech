@@ -27,7 +27,7 @@ exports.consultarFormula = async (pet, res) => {
     }
     res.status(200).json({
         mensaje: 'Fórmulas consultadas con éxito',
-        datos: datos,
+        datos,
     }); 
 
 }
