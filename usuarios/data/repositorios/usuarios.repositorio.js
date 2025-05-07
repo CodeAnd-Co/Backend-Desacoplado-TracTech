@@ -1,6 +1,7 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 // RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
 // RF41 Administrador modifica usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF41
+// RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
 require('dotenv').config();
 const conexion = require('../../../util/bd.js');
@@ -91,8 +92,40 @@ function modificarUsuario(idUsuario, nombre, correo, contrasenia) {
   });
 }
 
+/**
+ * Elimina un usuario de la base de datos según su ID.
+ *
+ * Ejecuta una consulta SQL para eliminar el registro del usuario identificado por `idUsuario`.
+ * Retorna una promesa que se resuelve si el usuario fue eliminado correctamente,
+ * o se rechaza si ocurrió un error o no se encontró el usuario.
+ *
+ * @function eliminarUsuario
+ * @param {number} id - ID del usuario que se desea eliminar.
+ * @returns {Promise<boolean>} Promesa que se resuelve en `true` si la eliminación fue exitosa.
+ * @throws {Error} Si ocurre un error en la consulta o el usuario no existe.
+ */
+function eliminarUsuario(id) {
+  const consulta = 'DELETE FROM usuario WHERE idUsuario = ?';
+
+  return new Promise((resolver, rechazar) => {
+    conexion.query(consulta, [id], (error, resultado) => {
+      if (error) {
+        console.error('Error al eliminar el usuario:', error);
+        return rechazar(error);
+      }
+
+      if (resultado.affectedRows === 0) {
+        return rechazar(new Error('No se encontró el usuario'));
+      }
+
+      resolver(true);
+    });
+  });
+}
+
 module.exports = {
   consultarUsuarios,
   crearUsuarioRepositorio,
-  modificarUsuario
+  modificarUsuario,
+  eliminarUsuario,
 };
