@@ -7,14 +7,14 @@ exports.guardarFormula = async (pet, res) => {
     // Verifica si se recibieron los datos necesarios
     if (!formula || !nombre) {
         return res.status(400).json({
-            message: "Faltan datos requeridos",
+            mensaje: 'Faltan datos requeridos',
         });
     }
     // Hace la consulta a la base de datos para guardar la fórmula
     const formulaGuardada = await guardarFormula(nombre, formula, (err, resultado) => {
         if (err) {
             return res.status(500).json({
-                message: "Error al guardar la fórmula",
+                mensaje: 'Error al guardar la fórmula',
             });
         }
         return resultado;
@@ -22,12 +22,12 @@ exports.guardarFormula = async (pet, res) => {
     // Verifica si la fórmula fue guardada correctamente
     if (!formulaGuardada) {
         return res.status(500).json({
-            message: "Error al guardar la fórmula",
+            mensaje: 'Error al guardar la fórmula',
         });
     }
     // Mensaje de éxito
     res.status(200).json({
-        message: "Fórmula guardada con éxito",
+        mensaje: 'Fórmula guardada con éxito',
     });
 
 }
