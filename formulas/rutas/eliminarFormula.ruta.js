@@ -2,9 +2,16 @@
 
 const express = require('express');
 const ruteador = express.Router();
+const verificarToken = require('../../util/middlewareAutenticacion');
 
 const eliminarFormulaControlador = require('../controladores/eliminarFormulaControlador');
+const { verificarPermisos, checarPermisos } = require('../../util/middlewarePermisos');
 
-ruteador.delete('/', eliminarFormulaControlador.eliminarFormula);
+ruteador.delete(
+    '/', 
+    verificarToken,
+    verificarPermisos,
+    checarPermisos('PUEDEELIMINAR'),
+    eliminarFormulaControlador.eliminarFormula);
 
 module.exports = ruteador;

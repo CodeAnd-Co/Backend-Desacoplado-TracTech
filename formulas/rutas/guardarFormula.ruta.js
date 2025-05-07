@@ -2,9 +2,17 @@
 
 const express = require('express');
 const ruteador = express.Router();
+const verificarToken = require('../../util/middlewareAutenticacion');
 
 const guardarFormulaControlador = require("../controladores/guardarFormulaControlador");
+const { verificarPermisos, checarPermisos } = require("../../util/middlewarePermisos");
 
-ruteador.post("/", guardarFormulaControlador.guardarFormula);
+ruteador.post(
+    "/",
+    verificarToken,
+    verificarPermisos,
+    checarPermisos("PUEDECREAR"),
+    guardarFormulaControlador.guardarFormula,
+);
 
 module.exports = ruteador;
