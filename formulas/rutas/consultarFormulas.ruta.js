@@ -1,18 +1,16 @@
-// RF71 - Eliminar una fórmula - http....
+// RF69 - Guardar fórmula - http...
 
 const express = require('express');
 const ruteador = express.Router();
 const verificarToken = require('../../util/middlewareAutenticacion');
 
-const eliminarFormulaControlador = require('../controladores/eliminarFormulaControlador');
+const consultarFormulasControlador = require('../controladores/consultarFormulaControlador');
 const { verificarPermisos, checarPermisos } = require('../../util/middlewarePermisos');
 
-ruteador.delete(
-    '/', 
+ruteador.get('/', 
     verificarToken,
     verificarPermisos,
-    checarPermisos('PUEDEELIMINAR'),
-    eliminarFormulaControlador.eliminarFormula
-);
+    checarPermisos('PUEDEVER'),
+    consultarFormulasControlador.consultarFormula,);
 
 module.exports = ruteador;
