@@ -11,8 +11,6 @@ ruteador.get('/',
     verificarToken,
     verificarPermisos,
     checarPermisos('PUEDEVER'),
-    consultarFormulasControlador.consultarFormula,
-
-);
+    consultarFormulasControlador.consultarFormula,);
 
 module.exports = ruteador;

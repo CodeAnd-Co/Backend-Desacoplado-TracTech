@@ -12,6 +12,7 @@ ruteador.delete(
     verificarToken,
     verificarPermisos,
     checarPermisos('PUEDEELIMINAR'),
-    eliminarFormulaControlador.eliminarFormula);
+    eliminarFormulaControlador.eliminarFormula
+);
 
 module.exports = ruteador;
