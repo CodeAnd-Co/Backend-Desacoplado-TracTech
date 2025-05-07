@@ -52,9 +52,9 @@ function consultarUsuarios() {
  * @returns {Promise<number>} Promesa que resuelve con el ID del usuario insertado
  * @throws {Error} Error si no se puede insertar el usuario
  */
-function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
+function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
   const consulta = 'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)';
-  const valores = [nombre, correo, contrasenia, idRol_FK];
+  const valores = [nombre, correo, contrasenia, idRol];
 
   return new Promise((resolver, rechazar) => {
     conexion.query(consulta, valores, (error, resultado) => {
