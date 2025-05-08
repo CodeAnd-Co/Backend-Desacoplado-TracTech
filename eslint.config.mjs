@@ -65,4 +65,12 @@ export default [
       globals: globals.node,
     },
   },
+
+  // Configuración para las pruebas con Jest
+  {
+    files: ["**/*.test.js"],
+    languageOptions: {
+      globals: globals.jest,
+    },
+  },
 ];
