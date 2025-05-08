@@ -4,7 +4,7 @@ const conexion = mysql.createConnection({
   host: process.env.ANFITRION_BD, // Dirección del servidor MySQL
   user: process.env.USUARIO_BD,     // Usuario de la base de datos
   password: process.env.CONTRASENA_BD, // Contraseña del usuario
-  database: process.env.NOMBRE_BD // Nombre de la base de datos
+  database: process.env.NOMBRE_BD, // Nombre de la base de datos
 });
 
 conexion.connect((err) => {
