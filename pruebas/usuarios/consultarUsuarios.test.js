@@ -58,7 +58,7 @@ describe('consultarUsuarios', () => {
     // Verifica que las respuestas sean las esperadas
     expect(mockRespuesta.status).toHaveBeenCalledWith(200);
     expect(mockRespuesta.json).toHaveBeenCalledWith({
-      message: 'Consulta de usuarios exitosa',
+      mensaje: 'Consulta de usuarios exitosa',
       usuarios: usuariosMock
     });
   });
@@ -71,7 +71,7 @@ describe('consultarUsuarios', () => {
     // Verifica que las respuestas sean las esperadas
     expect(mockRespuesta.status).toHaveBeenCalledWith(404);
     expect(mockRespuesta.json).toHaveBeenCalledWith({
-      message: 'No se encontraron usuarios'
+      mensaje: 'No se encontraron usuarios'
     });
   });
 
@@ -89,7 +89,7 @@ describe('consultarUsuarios', () => {
     // Verifica que las respuestas sean las esperadas
     expect(mockRespuesta.status).toHaveBeenCalledWith(500);
     expect(mockRespuesta.json).toHaveBeenCalledWith({
-      message: 'Error interno del servidor'
+      mensaje: 'Error interno del servidor'
     });
 
     // Asegúrate que se llamó al console.error dentro del controlador
