@@ -2,7 +2,6 @@
 
 const bcrypt = require('bcrypt'); // Importa bcrypt
 const { crearUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
-const { Usuario } = require('../data/modelos/usuarios.js');
 
 /**
  * Controlador para crear un nuevo usuario
@@ -13,8 +12,9 @@ const { Usuario } = require('../data/modelos/usuarios.js');
  */
 exports.crearUsuarioControlador = async (peticion, respuesta) => {
   try {
+    /* eslint-disable-next-line camelcase */
     const { nombre, correo, contrasenia, idRol_FK } = peticion.body;
-
+    /* eslint-disable-next-line camelcase */
     if (!nombre || !correo || !contrasenia || !idRol_FK) {
       return respuesta.status(400).json({
         mensaje: 'Un campo requerido está vacío',
@@ -27,6 +27,7 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
     console.log('Contraseña cifrada:', contraseniaCifrada);
 
     // Llamar al repositorio con la contraseña cifrada
+     
     const idInsertado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRol_FK);
     console.log('ID del usuario insertado:', idInsertado);
 

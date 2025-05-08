@@ -15,19 +15,19 @@ exports.consultarUsuarios = async (peticion, respuesta) => {
 
     if (!usuarios || usuarios.length === 0) {
       return respuesta.status(404).json({
-        message: 'No se encontraron usuarios',
+        mensaje: 'No se encontraron usuarios',
       });
     }
   
     respuesta.status(200).json({
-      message: 'Consulta de usuarios exitosa',
+      mensaje: 'Consulta de usuarios exitosa',
       usuarios,
     });
     
   } catch (error) {
     console.error('Error al consultar usuarios:', error);
     respuesta.status(500).json({
-      message: 'Error interno del servidor',
+      mensaje: 'Error interno del servidor',
     });
   }
 }
