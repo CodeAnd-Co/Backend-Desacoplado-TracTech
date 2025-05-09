@@ -62,6 +62,7 @@ exports.iniciarSesion = async (peticion, respuesta) => {
         respuesta.status(200).json({
             mensaje: 'Usuario inició sesión con éxito',
             token,
+            csrfToken: peticion.csrfToken(), // Devuelve el token CSRF al cliente
         });
     } catch (err) {
         console.error('Error al iniciar sesión:', err);
