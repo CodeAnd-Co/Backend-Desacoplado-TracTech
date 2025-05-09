@@ -7,7 +7,7 @@ const cerrarSesionRuta = require('./cerrarSesion.ruta');
 
 const ruteador = Router();
 
-ruteador.use('/iniciar-sesion', iniciarSesionRuta);
-ruteador.use('/cerrar-sesion', cerrarSesionRuta);
+ruteador.use('/iniciarSesion', iniciarSesionRuta);
+ruteador.use('/cerrarSesion', cerrarSesionRuta);
 
 module.exports = ruteador;
