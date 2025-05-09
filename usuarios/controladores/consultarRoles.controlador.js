@@ -9,25 +9,24 @@ const { consultarRoles: consultarRolesRepositorio } = require('../data/repositor
  * @throws {Error} Error interno del servidor al procesar la petición
  */
 exports.consultarRoles = async (peticion, respuesta) => {
-  console.log('Entrando a consultarRoles...');
   try {
     const roles = await consultarRolesRepositorio();
 
     if (!roles || roles.length === 0) {
       return respuesta.status(404).json({
-        message: 'No se encontraron roles',
+        mensaje: 'No se encontraron roles',
       });
     }
 
     respuesta.status(200).json({
-      message: 'Consulta de roles exitosa',
+      mensaje: 'Consulta de roles exitosa',
       roles,
     });
 
   } catch (error) {
     console.error('Error al consultar roles:', error);
     respuesta.status(500).json({
-      message: 'Error interno del servidor',
+      mensaje: 'Error interno del servidor',
     });
   }
 };

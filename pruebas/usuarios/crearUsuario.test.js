@@ -8,7 +8,7 @@
  * @see https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
  */
 
-// Mock de la conexión a la base de datos
+// Prueba de la conexión a la base de datos
 jest.mock('../../util/bd', () => {
     return {
       query: jest.fn()
@@ -24,63 +24,63 @@ jest.mock('../../util/bd', () => {
     });
   
     it('debería insertar un usuario y devolver su ID', async () => {
-      const usuarioMock = {
+      const usuarioPrueba = {
         nombre: 'Juan',
         correo: 'juan@example.com',
         contrasenia: '123456',
         idRol: 2
       };
   
-      const resultadoMock = { insertId: 1 };
+      const resultadoPrueba = { insertId: 1 };
   
       // Simula la respuesta de la base de datos
       conexion.query.mockImplementation((sql, params, callback) => {
-        callback(null, resultadoMock);
+        callback(null, resultadoPrueba);
       });
   
       const idUsuario = await crearUsuarioRepositorio(
-        usuarioMock.nombre,
-        usuarioMock.correo,
-        usuarioMock.contrasenia,
-        usuarioMock.idRol
+        usuarioPrueba.nombre,
+        usuarioPrueba.correo,
+        usuarioPrueba.contrasenia,
+        usuarioPrueba.idRol
       );
   
       expect(conexion.query).toHaveBeenCalledWith(
         'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)',
-        [usuarioMock.nombre, usuarioMock.correo, usuarioMock.contrasenia, usuarioMock.idRol],
+        [usuarioPrueba.nombre, usuarioPrueba.correo, usuarioPrueba.contrasenia, usuarioPrueba.idRol],
         expect.any(Function)
       );
   
-      expect(idUsuario).toBe(resultadoMock.insertId);
+      expect(idUsuario).toBe(resultadoPrueba.insertId);
     });
   
     it('debería manejar errores al intentar insertar un usuario', async () => {
-      const usuarioMock = {
+      const usuarioPrueba = {
         nombre: 'Juan',
         correo: 'juan@example.com',
         contrasenia: '123456',
         idRol: 2
       };
   
-      const errorMock = new Error('Error de base de datos');
+      const errorPrueba = new Error('Error de base de datos');
   
       // Simula un error en la base de datos
       conexion.query.mockImplementation((sql, params, callback) => {
-        callback(errorMock, null);
+        callback(errorPrueba, null);
       });
   
       await expect(
         crearUsuarioRepositorio(
-          usuarioMock.nombre,
-          usuarioMock.correo,
-          usuarioMock.contrasenia,
-          usuarioMock.idRol
+          usuarioPrueba.nombre,
+          usuarioPrueba.correo,
+          usuarioPrueba.contrasenia,
+          usuarioPrueba.idRol
         )
       ).rejects.toThrow('Error de base de datos');
   
       expect(conexion.query).toHaveBeenCalledWith(
         'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)',
-        [usuarioMock.nombre, usuarioMock.correo, usuarioMock.contrasenia, usuarioMock.idRol],
+        [usuarioPrueba.nombre, usuarioPrueba.correo, usuarioPrueba.contrasenia, usuarioPrueba.idRol],
         expect.any(Function)
       );
     });

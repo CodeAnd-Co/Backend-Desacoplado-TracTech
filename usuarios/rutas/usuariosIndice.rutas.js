@@ -10,9 +10,9 @@ const consultarRolesRuta = require('./consultarRoles.ruta');
 
 const ruteador = express.Router();
 
-ruteador.use('/consultar-usuarios', consultarUsuariosRuta);
-ruteador.use('/crear-usuario', crearUsuarioRuta);
-ruteador.use('/eliminar-usuario', eliminarUsuarioRuta);
-ruteador.use('/consultar-roles-usuarios', consultarRolesRuta);
+ruteador.use('/consultarUsuarios', consultarUsuariosRuta);
+ruteador.use('/crearUsuario', crearUsuarioRuta);
+ruteador.use('/eliminarUsuario', eliminarUsuarioRuta);
+ruteador.use('/consultarRolesUsuarios', consultarRolesRuta);
 
 module.exports = ruteador;
