@@ -9,8 +9,8 @@ const eliminarUsuarioRuta = require('./eliminarUsuario.ruta');
 
 const ruteador = express.Router();
 
-ruteador.use('/consultar-usuarios', consultarUsuariosRuta);
-ruteador.use('/crear-usuario', crearUsuarioRuta);
-ruteador.use('/eliminar-usuario', eliminarUsuarioRuta);
+ruteador.use('/consultarUsuarios', consultarUsuariosRuta);
+ruteador.use('/crearUsuario', crearUsuarioRuta);
+ruteador.use('/eliminarUsuario', eliminarUsuarioRuta);
 
 module.exports = ruteador;
