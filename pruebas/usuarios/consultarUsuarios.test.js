@@ -6,7 +6,7 @@
  * - Que se maneje correctamente el caso de lista vacía con código 404.
  * - Que los errores internos sean capturados y respondidos con código 500.
  * 
- * @see https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF2
+ * @see https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
  */
 
 
