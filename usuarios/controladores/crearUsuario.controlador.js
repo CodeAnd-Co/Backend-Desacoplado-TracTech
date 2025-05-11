@@ -11,11 +11,12 @@ const { crearUsuarioRepositorio } = require('../data/repositorios/usuarios.repos
  * @throws {Error} Error interno del servidor al procesar la petición
  */
 exports.crearUsuarioControlador = async (peticion, respuesta) => {
+  console.log('controlador crearUsuarioControlador');
   try {
     /* eslint-disable-next-line camelcase */
-    const { nombre, correo, contrasenia, idRol_FK } = peticion.body;
+    const { nombre, correo, contrasenia, idRolFK } = peticion.body;
     /* eslint-disable-next-line camelcase */
-    if (!nombre || !correo || !contrasenia || !idRol_FK) {
+    if (!nombre || !correo || !contrasenia || !idRolFK) {
       return respuesta.status(400).json({
         mensaje: 'Un campo requerido está vacío',
       });
@@ -28,7 +29,7 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
 
     // Llamar al repositorio con la contraseña cifrada
      
-    const idInsertado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRol_FK);
+    const idInsertado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRolFK);
     console.log('ID del usuario insertado:', idInsertado);
 
     respuesta.status(201).json({
