@@ -12,10 +12,8 @@ const { crearUsuarioRepositorio } = require('../data/repositorios/usuarios.repos
  */
 exports.crearUsuarioControlador = async (peticion, respuesta) => {
   try {
-    /* eslint-disable-next-line camelcase */
-    const { nombre, correo, contrasenia, idRol_FK } = peticion.body;
-    /* eslint-disable-next-line camelcase */
-    if (!nombre || !correo || !contrasenia || !idRol_FK) {
+    const { nombre, correo, contrasenia, idRolFK } = peticion.body;
+    if (!nombre || !correo || !contrasenia || !idRolFK) {
       return respuesta.status(400).json({
         mensaje: 'Un campo requerido está vacío',
       });
@@ -24,12 +22,10 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
     // Cifrar la contraseña antes de guardarla
     const rondasSalteadas = 12; // Número de rondas de sal
     const contraseniaCifrada = await bcrypt.hash(contrasenia, rondasSalteadas);
-    console.log('Contraseña cifrada:', contraseniaCifrada);
 
     // Llamar al repositorio con la contraseña cifrada
      
-    const idInsertado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRol_FK);
-    console.log('ID del usuario insertado:', idInsertado);
+    const idInsertado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRolFK);
 
     respuesta.status(201).json({
       mensaje: 'Usuario creado exitosamente',
