@@ -8,12 +8,14 @@ const consultarUsuariosRuta = require('./consultarUsuarios.ruta');
 const crearUsuarioRuta = require('./crearUsuario.ruta');
 const modificarUsuarioRuta = require('./modificarUsuario.ruta');
 const eliminarUsuarioRuta = require('./eliminarUsuario.ruta');
+const consultarRolesRuta = require('./consultarRoles.ruta');
 
 const ruteador = express.Router();
 
-ruteador.use('/consultar-usuarios', consultarUsuariosRuta);
-ruteador.use('/crear-usuario', crearUsuarioRuta);
-ruteador.use('/modificar-usuario', modificarUsuarioRuta);
-ruteador.use('/eliminar-usuario', eliminarUsuarioRuta);
+ruteador.use('/consultarUsuarios', consultarUsuariosRuta);
+ruteador.use('/crearUsuario', crearUsuarioRuta);
+ruteador.use('/modificarUsuario', modificarUsuarioRuta);
+ruteador.use('/eliminarUsuario', eliminarUsuarioRuta);
+ruteador.use('/consultarRolesUsuarios', consultarRolesRuta);
 
 module.exports = ruteador;

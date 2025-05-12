@@ -53,9 +53,9 @@ function consultarUsuarios() {
  * @returns {Promise<number>} Promesa que resuelve con el ID del usuario insertado
  * @throws {Error} Error si no se puede insertar el usuario
  */
-function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol_FK) {
+function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
   const consulta = 'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)';
-  const valores = [nombre, correo, contrasenia, idRol_FK];
+  const valores = [nombre, correo, contrasenia, idRol];
 
   return new Promise((resolver, rechazar) => {
     conexion.query(consulta, valores, (error, resultado) => {
@@ -123,9 +123,36 @@ function eliminarUsuario(id) {
   });
 }
 
+/**
+ * Consulta todos los roles en la base de datos.
+ *
+ * @returns {Promise<Array<{ idRol: number, Nombre: string }>>} Promesa que resuelve con un array de objetos que contienen el ID y el nombre del rol.
+ * @throws {Error} Error si no se pueden recuperar los roles.
+ */
+
+function consultarRoles() {
+  const consulta = 'SELECT idRol, Nombre FROM rol WHERE idRol != 1';
+
+  return new Promise((resolver, rechazar) => {
+    conexion.query(consulta, (error, resultados) => {
+      if (error) {
+        console.error('Error al ejecutar la consulta de roles:', error);
+        return rechazar(error);
+      }
+
+      if (!resultados.length) {
+        return rechazar(new Error('No se encontraron roles'));
+      }
+
+      resolver(resultados);
+    });
+  });
+}
+
 module.exports = {
   consultarUsuarios,
   crearUsuarioRepositorio,
   modificarUsuario,
   eliminarUsuario,
+  consultarRoles,
 };
