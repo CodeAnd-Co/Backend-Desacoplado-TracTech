@@ -27,12 +27,14 @@ app.use('/usuarios', usuariosRutas);
 
 const verificarToken = require('./util/middlewareAutenticacion');
 const { verificarPermisos } = require('./util/middlewarePermisos');
+const { obtenerNombreUsuario }  = require('./util/middlewareNombre');
 
-app.get('/', verificarToken, verificarPermisos, (pet, res) => {
+app.get('/', verificarToken, verificarPermisos, obtenerNombreUsuario, (pet, res) => {
     res.status(200).json({
       message: '¡Bienvenido a Harvester!',
       valido: true,
       permisos: pet.permisos,
+      usuario: pet.usuario,
     });
   });
 
