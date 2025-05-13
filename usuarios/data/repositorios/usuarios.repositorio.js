@@ -17,7 +17,7 @@ function consultarUsuarios() {
   const rolAExcluir = process.env.SU;
 
   const consulta = `
-    SELECT u.idUsuario, u.Nombre, u.Correo
+    SELECT u.idUsuario, u.Nombre, u.Correo, r.Nombre as 'Rol'
     FROM usuario u
     JOIN rol r ON u.idRol_FK = r.idRol
     WHERE r.Nombre <> ?
@@ -35,11 +35,12 @@ function consultarUsuarios() {
       }
 
       const usuarios = resultados
-        .filter(usuario => usuario.idUsuario && usuario.Nombre && usuario.Correo)
+        .filter(usuario => usuario.idUsuario && usuario.Nombre && usuario.Correo && usuario.Rol)
         .map(usuario => new Usuario({
           id: usuario.idUsuario,
           nombre: usuario.Nombre,
-          correo: usuario.Correo
+          correo: usuario.Correo,
+          rol: usuario.Rol,
         }));
 
       resolver(usuarios);
