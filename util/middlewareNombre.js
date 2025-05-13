@@ -23,13 +23,13 @@ const obtenerNombreUsuario = (peticion, respuesta, siguiente) => {
       if (error) {
         // Si ocurre un error al ejecutar la consulta, retornar error 500
         console.error('Error al consultar información del usuario:', error);
-        return respuesta.status(500).json({ message: "Error interno del servidor" });
+        return respuesta.status(500).json({ mensaje: "Error interno del servidor" });
       }
 
       // Verificar si se encontró el usuario
       if (resultados.length === 0) {
         console.error('Usuario no encontrado con ID:', idUsuario);
-        return respuesta.status(404).json({ message: "Usuario no encontrado" });
+        return respuesta.status(404).json({ mensaje: "Usuario no encontrado" });
       }
 
       // Asignar la información obtenida al objeto de solicitud
@@ -41,7 +41,7 @@ const obtenerNombreUsuario = (peticion, respuesta, siguiente) => {
   } catch (error) {
     // Capturar cualquier error inesperado y devolver error 500
     console.error('Error al obtener información del usuario:', error);
-    return respuesta.status(500).json({ message: "Error interno del servidor" });
+    return respuesta.status(500).json({ mensaje: "Error interno del servidor" });
   }
 }
 
