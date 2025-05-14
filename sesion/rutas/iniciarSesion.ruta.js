@@ -2,9 +2,10 @@
 
 const express = require('express');
 const iniciarSesionControlador = require('../controladores/iniciarSesion.controlador');
+const { generarTokenCSRF } = require('../../util/generarCSRF');
 
 const ruteador = express.Router();
 
-ruteador.post('/', iniciarSesionControlador.iniciarSesion);
+ruteador.post('/', generarTokenCSRF, iniciarSesionControlador.iniciarSesion);
 
 module.exports = ruteador;

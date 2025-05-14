@@ -22,6 +22,9 @@ exports.cerrarSesion = (peticion, respuesta) => {
         // Agregar el token a la lista negra para revocarlo
         listaNegra.add(token);
 
+        // Eliminar la cookie del token CSRF
+        respuesta.clearCookie('_csrf');
+
         // Responder exitosamente que la sesión fue cerrada
         return respuesta.status(200).json({ mensaje: 'Sesión cerrada correctamente' });
     } catch (error) {

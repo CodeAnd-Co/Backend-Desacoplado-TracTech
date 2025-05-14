@@ -58,10 +58,16 @@ exports.iniciarSesion = async (peticion, respuesta) => {
         // Genera un token de sesión para el usuario autenticado
         const token = generarToken(usuarioRegistrado);
 
+        const tokenCSRF = peticion.csrfToken(); // Genera el token CSRF
+        respuesta.locals.tokenCSRF = tokenCSRF; // Almacena el token CSRF en la respuesta
+        console.log('Token CSRF:', tokenCSRF); // Imprime el token CSRF en la consola
+        console.log('Token locals:', tokenCSRF); // Imprime el token JWT en la consola
+
         // Responde con éxito y envía el token
         respuesta.status(200).json({
             mensaje: 'Usuario inició sesión con éxito',
             token,
+            tokenCSRF,
         });
     } catch (err) {
         console.error('Error al iniciar sesión:', err);
