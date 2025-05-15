@@ -2,7 +2,7 @@
 
 const { modificarUsuario: modificarUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
 const bcrypt = require('bcrypt');
-const validador = require('validator');
+const validator = require('validator');
 
 /**
  * Esta función valida y sanitiza los datos recibidos desde el cuerpo de la petición HTTP.
