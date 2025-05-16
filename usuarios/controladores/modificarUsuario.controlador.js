@@ -20,12 +20,12 @@ exports.modificarUsuario = async (peticion, respuesta) => {
         const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body);
 
         if (error) {
-            return respuesta.status(400).json({ message: error });
+            return respuesta.status(400).json({ mensaje: error });
         }
       
         const { idUsuario, nombre, correo, contrasenia } = datosSanitizados;
     
-        // Son 12 rondas de sal
+        // 12 iteraciones para el hash
         const hashContrasenia = await bcrypt.hash(contrasenia, 12);
     
         await modificarUsuarioRepositorio(idUsuario, nombre, correo, hashContrasenia);
