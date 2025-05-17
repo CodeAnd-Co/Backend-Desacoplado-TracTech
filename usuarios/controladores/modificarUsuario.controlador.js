@@ -24,6 +24,7 @@ exports.modificarUsuario = async (peticion, respuesta) => {
         }
       
         const { idUsuario, nombre, correo, contrasenia, idRol } = datosSanitizados;
+        console.log(datosSanitizados);
 
         const cambios = {};
         if (nombre) cambios.nombre = nombre;
@@ -58,42 +59,48 @@ function validarYLimpiarUsuario(datos) {
 
     let { idUsuario, nombre, correo, contrasenia, idRol } = datos;
 
-    if(!Number.isInteger(idUsuario) || idUsuario <= numeroMinimoID) {
+    if(!Number.isInteger(idUsuario) || idUsuario < numeroMinimoID) {
       return { error: 'ID inválido', datosSanitizados: null };
     }
 
-    if(![nombre, correo, contrasenia, idRol].some(atributo => atributo != null)) {
-      return { error: 'Faltan datos requeridos para modificar el usuario', datosSanitizados: null };
+    // Validar si hay al menos un campo para modificar
+    const existeNombre = typeof nombre  === 'string' && nombre.trim()  !== '';
+    const existeCorreo = typeof correo === 'string' && correo.trim() !== '';
+    const existeContrasenia = typeof contrasenia === 'string' && contrasenia.trim() !== '';
+    const existeRol = idRol != null;
+
+    if(!existeNombre && !existeCorreo && !existeContrasenia && !existeRol) {
+      return { error: 'No se proporcionaron campos para modificar al usuario', datosSanitizados: null };
     }
 
     const datosSanitizados = { idUsuario: idUsuario };
 
     // TODO: Actualizar en base al máximo de carácteres permitidos
-    if(nombre !== null) {
-      nombreRecortado = nombre.trim();
+    if(existeNombre) {
+      const nombreRecortado = nombre.trim();
       if(nombreRecortado.length < tamañoMinimoNombre || nombreRecortado.length > tamañoMaximoNombre) {
         return { error: 'Nombre inválido', datosSanitizados: null };
       }
       datosSanitizados.nombre = validator.escape(nombreRecortado);
     }
 
-    if(correo !== null) {
-      correoRecortado = correo.trim();
+    if(existeCorreo) {
+      const correoRecortado = correo.trim();
       if(!validator.isEmail(correoRecortado)) {
         return { error: 'Correo inválido', datosSanitizados: null };
       }
       datosSanitizados.correo = validator.normalizeEmail(correoRecortado);
     }
 
-    if(contrasenia !== null) {
-      contraseniaRecortada = contrasenia.trim();
+    if(existeContrasenia) {
+      const contraseniaRecortada = contrasenia.trim();
       if(contraseniaRecortada.length < tamañoMinimoContrasenia || contraseniaRecortada.length > tamañoMaximoContrasenia) {
         return { error: 'Contraseña inválida', datosSanitizados: null };
       }
       datosSanitizados.contrasenia = contraseniaRecortada;
     }
 
-    if(idRol !== null) {
+    if(existeRol) {
       if(!Number.isInteger(idRol) || idRol <= numeroMinimoID) {
         return { error: 'Rol inválido', datosSanitizados: null };
       }
