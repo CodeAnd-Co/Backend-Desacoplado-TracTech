@@ -1,5 +1,4 @@
 // RF67 - Guardar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF67
-const conexion = require('../../util/bd.js');
 const { guardarFormulaRepositorio } = require('../data/repositorios/formulasRepositorio.js');
 
 // Función para guardar una fórmula en la base de datos
