@@ -23,18 +23,24 @@ exports.modificarUsuario = async (peticion, respuesta) => {
             return respuesta.status(400).json({ mensaje: error });
         }
       
-        const { idUsuario, nombre, correo, contrasenia } = datosSanitizados;
+        const { idUsuario, nombre, correo, contrasenia, idRol } = datosSanitizados;
+
+        const cambios = {};
+        if (nombre) cambios.nombre = nombre;
+        if (correo) cambios.correo = correo;
+        if (contrasenia) {
+          // 12 iteraciones para el hash
+          const contraseniaHasheada = await bcrypt.hash(contrasenia, 12);
+          cambios.contrasenia = contraseniaHasheada;
+        }
+        if (idRol) cambios.idRol = idRol;
+
+        await modificarUsuarioRepositorio(idUsuario, cambios);
     
-        // 12 iteraciones para el hash
-        const hashContrasenia = await bcrypt.hash(contrasenia, 12);
-    
-        await modificarUsuarioRepositorio(idUsuario, nombre, correo, hashContrasenia);
-    
-        return respuesta.status(200).json({ message: 'Usuario modificado exitosamente' });
+        return respuesta.status(200).json({ mensaje: 'Usuario modificado exitosamente' });
 
     } catch (error) {
-        console.error('Error al modificar el usuario:', error);
-        return respuesta.status(500).json({ message: 'Error interno del servidor' });
+        return respuesta.status(500).json({ mensaje: error });
     }
 }
 
@@ -44,27 +50,55 @@ exports.modificarUsuario = async (peticion, respuesta) => {
  * @returns {{ error: string|null, datosSanitizados: object|null }}
  */
 function validarYLimpiarUsuario(datos) {
-    let { idUsuario, nombre, correo, contrasenia } = datos;
-  
-    if (!idUsuario || !nombre || !correo || !contrasenia) {
-      return { error: 'Faltan datos requeridos para modificar el usuario', datosSanitizados: null };
-    }
-  
-    if (!validator.isInt(idUsuario.toString())) {
+  const numeroMinimoID = 1;
+  const tamañoMinimoNombre = 3;
+  const tamañoMaximoNombre = 50;
+  const tamañoMinimoContrasenia = 8;
+  const tamañoMaximoContrasenia = 50;
+
+    let { idUsuario, nombre, correo, contrasenia, idRol } = datos;
+
+    if(!Number.isInteger(idUsuario) || idUsuario <= numeroMinimoID) {
       return { error: 'ID inválido', datosSanitizados: null };
     }
-  
-    if (!validator.isEmail(correo)) {
-      return { error: 'Correo inválido', datosSanitizados: null };
+
+    if(![nombre, correo, contrasenia, idRol].some(atributo => atributo != null)) {
+      return { error: 'Faltan datos requeridos para modificar el usuario', datosSanitizados: null };
     }
-  
-    // Sanitización
-    const datosSanitizados = {
-      idUsuario: parseInt(idUsuario),
-      nombre: validator.escape(nombre.trim()),
-      correo: validator.normalizeEmail(correo.trim()),
-      contrasenia: contrasenia.trim() // Hash se hace aparte
-    };
-  
+
+    const datosSanitizados = { idUsuario: idUsuario };
+
+    // TODO: Actualizar en base al máximo de carácteres permitidos
+    if(nombre !== null) {
+      nombreRecortado = nombre.trim();
+      if(nombreRecortado.length < tamañoMinimoNombre || nombreRecortado.length > tamañoMaximoNombre) {
+        return { error: 'Nombre inválido', datosSanitizados: null };
+      }
+      datosSanitizados.nombre = validator.escape(nombreRecortado);
+    }
+
+    if(correo !== null) {
+      correoRecortado = correo.trim();
+      if(!validator.isEmail(correoRecortado)) {
+        return { error: 'Correo inválido', datosSanitizados: null };
+      }
+      datosSanitizados.correo = validator.normalizeEmail(correoRecortado);
+    }
+
+    if(contrasenia !== null) {
+      contraseniaRecortada = contrasenia.trim();
+      if(contraseniaRecortada.length < tamañoMinimoContrasenia || contraseniaRecortada.length > tamañoMaximoContrasenia) {
+        return { error: 'Contraseña inválida', datosSanitizados: null };
+      }
+      datosSanitizados.contrasenia = contraseniaRecortada;
+    }
+
+    if(idRol !== null) {
+      if(!Number.isInteger(idRol) || idRol <= numeroMinimoID) {
+        return { error: 'Rol inválido', datosSanitizados: null };
+      }
+      datosSanitizados.idRol = idRol;
+    }
+
     return { error: null, datosSanitizados };
   }
