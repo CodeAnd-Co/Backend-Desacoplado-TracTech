@@ -1,7 +1,12 @@
-// RF71 - Eliminar una fórmula - http....
+// RF71 - Eliminar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF71
+
 const { eliminarFormulaRepositorio } = require('../data/repositorios/formulasRepositorio.js');
 
-// Función para eliminar una fórmula de la base de datos
+/**
+ * @function eliminarFormula
+ * @description Controlador para eliminar una fórmula de la base de datos.
+ * @returns {Object} Respuesta JSON con el mensaje de éxito o error.
+ */
 exports.eliminarFormula = async (peticion, respuesta) => {
     const { id } = peticion.body;
     if (!id) {

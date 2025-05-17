@@ -1,7 +1,14 @@
-// RF67 - Guardar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF67
+// RF69 - Guardar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF69
 const { guardarFormulaRepositorio } = require('../data/repositorios/formulasRepositorio.js');
 
-// Función para guardar una fórmula en la base de datos
+
+/**
+ * @function guardarFormula
+ * @description Controlador para guardar una fórmula en la base de datos.
+ * @param {Object} pet - Objeto de la petición HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Object} Respuesta JSON con el mensaje de éxito o error.
+ */
 exports.guardarFormula = async (pet, res) => {
     // Recibe los datos desde el cuerpo de la petición
     const {nombre, formula} = pet.body;
