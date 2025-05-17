@@ -71,23 +71,54 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
 }
 
 /**
- * Modifica un usuario en la base de datos
- * @param {number} idUsuario - ID del usuario a modificar
- * @param {string} nombre - Nuevo nombre del usuario
- * @param {string} correo - Nuevo correo del usuario
- * @param {string} contrasenia - Nueva contraseña del usuario
- * @returns {Promise<Object>} Promesa con el resultado de la operación
+ * Modifica un usuario en la base de datos, actualizando sólo los campos que vengan en `cambios`.
+ *
+ * @param {number} userId           - ID del usuario a modificar.
+ * @param {Object} cambios          - Objeto con los campos a modificar.
+ * @returns {Promise<Object>} Resultado de la operación.
  */
-function modificarUsuario(idUsuario, nombre, correo, contrasenia) {
-  const consulta = 'UPDATE usuario SET Nombre = ?, Correo = ?, Contrasenia = ? WHERE idUsuario = ?';
-  const valores = [nombre, correo, contrasenia, idUsuario];
+function modificarUsuario(idUsuario, cambios) {
+  const sets = [];
+  const valores = [];
+
+  // Acumulamos las cláusulas SET y los valores a modificar
+  if (cambios.nombre != null) {
+    sets.push('Nombre = ?');
+    valores.push(cambios.nombre);
+  }
+  if (cambios.correo != null) {
+    sets.push('Correo = ?');
+    valores.push(cambios.correo);
+  }
+  if (cambios.contrasenia != null) {
+    sets.push('Contrasenia = ?');
+    valores.push(cambios.contrasenia);
+  }
+  if (cambios.idRol_FK != null) {
+    sets.push('idRol_FK = ?');
+    valores.push(cambios.idRol_FK);
+  }
+
+  // Asegurar mínimo un campo para validar
+  if (sets.length === 0) {
+    return Promise.reject(new Error('No se proporcionaron campos para actualizar'));
+  }
+
+  const consulta = `
+    UPDATE usuario
+    SET ${sets.join(', ')}
+    WHERE idUsuario = ?
+  `;
+  valores.push(idUsuario);
 
   return new Promise((resolver, rechazar) => {
     conexion.query(consulta, valores, (error, resultado) => {
       if (error) {
         return rechazar(error);
       }
-
+      if (resultado.affectedRows === 0) {
+        return rechazar(new Error('No hubieron cambios que realizar al usuario.'));
+      }
       resolver(resultado);
     });
   });
