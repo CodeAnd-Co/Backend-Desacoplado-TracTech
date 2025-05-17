@@ -9,12 +9,12 @@ exports.modificarFormula = async (pet, res) => {
             mensaje: 'Faltan datos requeridos',
         });
     }
-    if (nombre.length > 30) {
+    if (nombre.length > process.env.LONGITUD_MAXIMA_NOMBRE_FORMULA) {
         return res.status(400).json({
             mensaje: 'El nombre no puede exceder los 50 caracteres',
         });
     }
-    if (formula.length > 512) {
+    if (formula.length > process.env.LONGITUD_MAXIMA_FORMULA) {
         return res.status(400).json({
             mensaje: 'La fórmula no puede exceder los 512 caracteres',
         });

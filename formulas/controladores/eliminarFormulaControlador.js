@@ -1,16 +1,21 @@
 // RF71 - Eliminar una fórmula - http....
-const conexion = require('../../util/bd.js');
+const { eliminarFormulaRepositorio } = require('../data/repositorios/formulasRepositorio.js');
 
 // Función para eliminar una fórmula de la base de datos
 exports.eliminarFormula = async (peticion, respuesta) => {
     const { id } = peticion.body;
     if (!id) {
         return respuesta.status(400).json({
-            mensaje: 'Faltan datos requeridos',
+            mensaje: 'El id de la fórmula es requerido',
+        });
+    }
+    if (isNaN(id)) {
+        return respuesta.status(400).json({
+            mensaje: 'El id de la fórmula debe ser un número',
         });
     }
     // Hace la consulta a la base de datos para eliminar la fórmula
-    const formulaEliminada = await eliminarFormula(id, (err, resultado) => {
+    const formulaEliminada = await eliminarFormulaRepositorio(id, (err, resultado) => {
         if (err) {
             return respuesta.status(500).json({
                 mensaje: 'Error al eliminar la fórmula',
@@ -25,7 +30,7 @@ exports.eliminarFormula = async (peticion, respuesta) => {
         });
     } else if (formulaEliminada.affectedRows === 0) {
         return respuesta.status(404).json({
-            mensaje: 'La fórmula no existe',
+            mensaje: 'La fórmula a eliminar no existe',
         });
     }
 
@@ -36,17 +41,4 @@ exports.eliminarFormula = async (peticion, respuesta) => {
     });
 }
 
-async function eliminarFormula(id) {
-    return new Promise((resolver, rechazar) => {
-        // Consulta SQL para eliminar la fórmula de la base de datos
-        const consulta = 'DELETE FROM formula WHERE idFormula = ?';
-        // Ejecuta la consulta
-        conexion.query(consulta, [id], (err, resultado) => {
-            if (err) {
-                console.error('Error al ejecutar la consulta:', err);
-                return rechazar(err);
-            }
-            resolver(resultado); // Regresa el resultado de la consulta
-        });
-    });
-}
+
