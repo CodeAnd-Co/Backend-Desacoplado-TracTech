@@ -94,9 +94,9 @@ function modificarUsuario(idUsuario, cambios) {
     sets.push('Contrasenia = ?');
     valores.push(cambios.contrasenia);
   }
-  if (cambios.idRol_FK != null) {
+  if (cambios.idRol != null) {
     sets.push('idRol_FK = ?');
-    valores.push(cambios.idRol_FK);
+    valores.push(cambios.idRol);
   }
 
   // Asegurar mínimo un campo para validar
