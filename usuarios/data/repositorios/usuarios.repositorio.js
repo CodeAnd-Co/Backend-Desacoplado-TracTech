@@ -26,7 +26,6 @@ function consultarUsuarios() {
   return new Promise((resolver, rechazar) => {
     conexion.query(consulta, [rolAExcluir], (error, resultados) => {
       if (error) {
-        console.error('Error al ejecutar la consulta:', error);
         return rechazar(error);
       }
 

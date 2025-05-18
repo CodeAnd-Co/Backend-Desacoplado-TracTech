@@ -24,7 +24,6 @@ exports.modificarUsuario = async (peticion, respuesta) => {
         }
       
         const { idUsuario, nombre, correo, contrasenia, idRol } = datosSanitizados;
-        console.log(datosSanitizados);
 
         const cambios = {};
         if (nombre) cambios.nombre = nombre;
