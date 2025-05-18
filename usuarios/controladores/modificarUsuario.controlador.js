@@ -60,7 +60,10 @@ function validarYLimpiarUsuario(datos) {
     let { idUsuario, nombre, correo, contrasenia, idRol } = datos;
 
     if(!Number.isInteger(idUsuario) || idUsuario < numeroMinimoID) {
-      return { error: 'ID inválido', datosSanitizados: null };
+      return {
+        error: 'El identificador de usuario debe ser un número entero mayor o igual a 1.',
+        datosSanitizados: null
+      };
     }
 
     // Validar si hay al menos un campo para modificar
@@ -70,7 +73,10 @@ function validarYLimpiarUsuario(datos) {
     const existeRol = idRol != null;
 
     if(!existeNombre && !existeCorreo && !existeContrasenia && !existeRol) {
-      return { error: 'No se proporcionaron campos para modificar al usuario', datosSanitizados: null };
+      return {
+        error: 'Debes enviar al menos uno de estos campos para modificar: nombre, correo, contraseña o rol.',
+        datosSanitizados: null
+      };
     }
 
     const datosSanitizados = { idUsuario: idUsuario };
@@ -78,12 +84,18 @@ function validarYLimpiarUsuario(datos) {
     if(existeNombre) {
       const nombreRecortado = nombre.trim();
       if(nombreRecortado.length < tamañoMinimoNombre || nombreRecortado.length > tamañoMaximoNombre) {
-        return { error: 'Nombre inválido', datosSanitizados: null };
+        return {
+          error: `El nombre debe tener entre ${tamañoMinimoNombre} y ${tamañoMaximoNombre} caracteres.`,
+          datosSanitizados: null
+        };
       }
 
       const regexNombre = /^[A-Za-zÀ-ÖØ-öø-ÿ\. ]+$/;
       if (!regexNombre.test(nombreRecortado)) {
-        return { error: 'El nombre solo puede contener letras con espacios y/o puntos', datosSanitizados: null };
+        return {
+          error: 'El nombre solo puede contener letras (incluidos acentos), espacios y puntos.',
+          datosSanitizados: null
+        };
       }
 
       datosSanitizados.nombre = validator.escape(nombreRecortado);
@@ -92,7 +104,10 @@ function validarYLimpiarUsuario(datos) {
     if(existeCorreo) {
       const correoRecortado = correo.trim();
       if(!validator.isEmail(correoRecortado)) {
-        return { error: 'Correo inválido', datosSanitizados: null };
+        return {
+          error: 'El correo electrónico no tiene un formato válido (p. ej. usuario@dominio.com).',
+          datosSanitizados: null
+        };
       }
       datosSanitizados.correo = validator.normalizeEmail(correoRecortado);
     }
@@ -100,14 +115,20 @@ function validarYLimpiarUsuario(datos) {
     if(existeContrasenia) {
       const contraseniaRecortada = contrasenia.trim();
       if(contraseniaRecortada.length < tamañoMinimoContrasenia || contraseniaRecortada.length > tamañoMaximoContrasenia) {
-        return { error: 'Contraseña inválida', datosSanitizados: null };
+        return {
+          error: 'El identificador de rol debe ser un número entero mayor o igual a 1.',
+          datosSanitizados: null
+        };
       }
       datosSanitizados.contrasenia = contraseniaRecortada;
     }
 
     if(existeRol) {
       if(!Number.isInteger(idRol) || idRol <= numeroMinimoID) {
-        return { error: 'Rol inválido', datosSanitizados: null };
+        return {
+          error: `La contraseña debe tener entre ${tamañoMinimoContrasenia} y ${tamañoMaximoContrasenia} caracteres.`,
+          datosSanitizados: null
+        };
       }
       datosSanitizados.idRol = idRol;
     }
