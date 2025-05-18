@@ -52,7 +52,7 @@ exports.modificarUsuario = async (peticion, respuesta) => {
  */
 function validarYLimpiarUsuario(datos) {
   const numeroMinimoID = 1;
-  const tamañoMinimoNombre = 3;
+  const tamañoMinimoNombre = 1;
   const tamañoMaximoNombre = 50;
   const tamañoMinimoContrasenia = 8;
   const tamañoMaximoContrasenia = 50;
@@ -75,12 +75,17 @@ function validarYLimpiarUsuario(datos) {
 
     const datosSanitizados = { idUsuario: idUsuario };
 
-    // TODO: Actualizar en base al máximo de carácteres permitidos
     if(existeNombre) {
       const nombreRecortado = nombre.trim();
       if(nombreRecortado.length < tamañoMinimoNombre || nombreRecortado.length > tamañoMaximoNombre) {
         return { error: 'Nombre inválido', datosSanitizados: null };
       }
+
+      const regexNombre = /^[A-Za-zÀ-ÖØ-öø-ÿ\. ]+$/;
+      if (!regexNombre.test(nombreRecortado)) {
+        return { error: 'El nombre solo puede contener letras con espacios y/o puntos', datosSanitizados: null };
+      }
+
       datosSanitizados.nombre = validator.escape(nombreRecortado);
     }
 
