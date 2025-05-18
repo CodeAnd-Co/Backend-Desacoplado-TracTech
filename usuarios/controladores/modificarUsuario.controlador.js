@@ -116,7 +116,7 @@ function validarYLimpiarUsuario(datos) {
       const contraseniaRecortada = contrasenia.trim();
       if(contraseniaRecortada.length < tamañoMinimoContrasenia || contraseniaRecortada.length > tamañoMaximoContrasenia) {
         return {
-          error: 'El identificador de rol debe ser un número entero mayor o igual a 1.',
+          error: `La contraseña debe tener entre ${tamañoMinimoContrasenia} y ${tamañoMaximoContrasenia} caracteres.`,
           datosSanitizados: null
         };
       }
@@ -126,7 +126,7 @@ function validarYLimpiarUsuario(datos) {
     if(existeRol) {
       if(!Number.isInteger(idRol) || idRol <= numeroMinimoID) {
         return {
-          error: `La contraseña debe tener entre ${tamañoMinimoContrasenia} y ${tamañoMaximoContrasenia} caracteres.`,
+          error: 'El identificador de rol debe ser un número entero mayor o igual a 1.',
           datosSanitizados: null
         };
       }
