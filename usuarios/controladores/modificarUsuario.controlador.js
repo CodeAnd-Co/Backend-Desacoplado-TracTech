@@ -51,10 +51,10 @@ exports.modificarUsuario = async (peticion, respuesta) => {
  */
 function validarYLimpiarUsuario(datos) {
   const numeroMinimoID = 1;
-  const tamañoMinimoNombre = 1;
-  const tamañoMaximoNombre = 50;
-  const tamañoMinimoContrasenia = 8;
-  const tamañoMaximoContrasenia = 50;
+  const tamanioMinimoNombre = 1;
+  const tamanioMaximoNombre = 50;
+  const tamanioMinimoContrasenia = 8;
+  const tamanioMaximoContrasenia = 50;
 
     let { idUsuario, nombre, correo, contrasenia, idRol } = datos;
 
@@ -82,9 +82,9 @@ function validarYLimpiarUsuario(datos) {
 
     if(existeNombre) {
       const nombreRecortado = nombre.trim();
-      if(nombreRecortado.length < tamañoMinimoNombre || nombreRecortado.length > tamañoMaximoNombre) {
+      if(nombreRecortado.length < tamanioMinimoNombre || nombreRecortado.length > tamanioMaximoNombre) {
         return {
-          error: `El nombre debe tener entre ${tamañoMinimoNombre} y ${tamañoMaximoNombre} caracteres.`,
+          error: `El nombre debe tener entre ${tamanioMinimoNombre} y ${tamanioMaximoNombre} caracteres.`,
           datosSanitizados: null
         };
       }
@@ -113,9 +113,9 @@ function validarYLimpiarUsuario(datos) {
 
     if(existeContrasenia) {
       const contraseniaRecortada = contrasenia.trim();
-      if(contraseniaRecortada.length < tamañoMinimoContrasenia || contraseniaRecortada.length > tamañoMaximoContrasenia) {
+      if(contraseniaRecortada.length < tamanioMinimoContrasenia || contraseniaRecortada.length > tamanioMaximoContrasenia) {
         return {
-          error: `La contraseña debe tener entre ${tamañoMinimoContrasenia} y ${tamañoMaximoContrasenia} caracteres.`,
+          error: `La contraseña debe tener entre ${tamanioMinimoContrasenia} y ${tamanioMaximoContrasenia} caracteres.`,
           datosSanitizados: null
         };
       }
