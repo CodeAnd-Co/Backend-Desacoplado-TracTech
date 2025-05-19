@@ -69,20 +69,28 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
 }
 
 /**
- * Busca si existe un usuario con el correo dado.
+ * Comprueba si ya existe otro usuario (distinto de idAExcluir) con el mismo correo.
  *
- * @param {string} correo - La dirección de correo electrónico a buscar en la base de datos.
- * @returns {Promise<boolean>} - Promesa que se resuelve con `true` si ya existe un usuario con ese correo, o `false` en caso contrario.
- * @throws {Error} - Rechaza la promesa si ocurre un error en la consulta a la base de datos.
+ * @param {string} correo     - Correo a comprobar.
+ * @param {number|null} idAExcluir - ID del usuario que se está modificando (se excluye de la búsqueda). 
+ *                                  Pasa `null` si no aplica (crear).
+ * @returns {Promise<boolean>} - `true` si existe al menos un usuario con ese correo distinto de idAExcluir.
+ * @throws {Error} - Si falla la consulta a la base de datos.
  */
-function existeCorreoRegistrado(correo) {
-  const consulta = 'SELECT idUsuario FROM usuario WHERE Correo = ?';
+function existeCorreoRegistrado(correo, idAExcluir = null) {
+  let consulta = 'SELECT idUsuario FROM usuario WHERE Correo = ?';
+  const parametros = [correo];
+
+  if (idAExcluir != null) {
+    consulta += ' AND idUsuario <> ?';
+    parametros.push(idAExcluir);
+  }
+
   return new Promise((resolver, rechazar) => {
-    conexion.query(consulta, [correo], (error, resultados) => {
+    conexion.query(consulta, parametros, (error, resultados) => {
       if (error) {
         return rechazar(error);
       }
-      //  Si hay registros, el correo ya existia
       resolver(resultados.length > 0);
     });
   });

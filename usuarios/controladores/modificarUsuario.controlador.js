@@ -1,6 +1,6 @@
 // RF41 Administrador modifica usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF41
 
-const { modificarUsuario: modificarUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { modificarUsuario: modificarUsuarioRepositorio, existeCorreoRegistrado } = require('../data/repositorios/usuarios.repositorio.js');
 const { validarYLimpiarUsuario } = require('./validacionesCompartidas.js');
 const bcrypt = require('bcrypt');
 
@@ -26,14 +26,26 @@ exports.modificarUsuario = async (peticion, respuesta) => {
         const { idUsuario, nombre, correo, contrasenia, idRol } = datosSanitizados;
 
         const cambios = {};
-        if (nombre) cambios.nombre = nombre;
-        if (correo) cambios.correo = correo;
+        if (nombre) {
+            cambios.nombre = nombre;
+        }
+        if (correo) {
+            // Checar si el correo ya existe
+            const existe = await existeCorreoRegistrado(correo, idUsuario);
+            if (existe) {
+                return respuesta.status(409).json({ mensaje: 'Ya existe un usuario con ese correo.' });
+            }
+            cambios.correo = correo;
+        }
+
         if (contrasenia) {
           // Ciframos la contraseña
           const rondasDeCifrado = await bcrypt.hash(contrasenia, 12);
           cambios.contrasenia = rondasDeCifrado;
         }
-        if (idRol) cambios.idRol = idRol;
+        if (idRol) {
+            cambios.idRol = idRol;
+        }
 
         await modificarUsuarioRepositorio(idUsuario, cambios);
     
