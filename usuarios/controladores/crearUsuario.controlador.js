@@ -16,7 +16,7 @@ const { validarYLimpiarUsuario }  = require('./validacionesCompartidas.js');
  */
 exports.crearUsuarioControlador = async (peticion, respuesta) => {
   try {
-    // 1) Validamos y limpiamos todos los campos obligatorios
+    // Validamos y limpiamos todos los campos obligatorios
     const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body, true);
     if (error) {
       return respuesta.status(400).json({ mensaje: error });
@@ -38,6 +38,6 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
     return respuesta.status(201).json({ mensaje: 'Usuario creado exitosamente', id: idInsertado });
 
   } catch (error) {
-    return respuesta.status(500).json({ mensaje: 'Error interno del servidor' });
+    return respuesta.status(500).json({ mensaje: error });
   }
 };

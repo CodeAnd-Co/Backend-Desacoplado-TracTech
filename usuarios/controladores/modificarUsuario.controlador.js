@@ -29,9 +29,9 @@ exports.modificarUsuario = async (peticion, respuesta) => {
         if (nombre) cambios.nombre = nombre;
         if (correo) cambios.correo = correo;
         if (contrasenia) {
-          // 12 iteraciones para el hash
-          const contraseniaHasheada = await bcrypt.hash(contrasenia, 12);
-          cambios.contrasenia = contraseniaHasheada;
+          // Ciframos la contraseña
+          const rondasDeCifrado = await bcrypt.hash(contrasenia, 12);
+          cambios.contrasenia = rondasDeCifrado;
         }
         if (idRol) cambios.idRol = idRol;
 
