@@ -69,6 +69,26 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
 }
 
 /**
+ * Busca si existe un usuario con el correo dado.
+ *
+ * @param {string} correo - La dirección de correo electrónico a buscar en la base de datos.
+ * @returns {Promise<boolean>} - Promesa que se resuelve con `true` si ya existe un usuario con ese correo, o `false` en caso contrario.
+ * @throws {Error} - Rechaza la promesa si ocurre un error en la consulta a la base de datos.
+ */
+function existeCorreoRegistrado(correo) {
+  const consulta = 'SELECT idUsuario FROM usuario WHERE Correo = ?';
+  return new Promise((resolver, rechazar) => {
+    conexion.query(consulta, [correo], (error, resultados) => {
+      if (error) {
+        return rechazar(error);
+      }
+      //  Si hay registros, el correo ya existia
+      resolver(resultados.length > 0);
+    });
+  });
+}
+
+/**
  * Modifica un usuario en la base de datos, actualizando sólo los campos que vengan en `cambios`.
  *
  * @param {number} userId           - ID del usuario a modificar.
@@ -182,6 +202,7 @@ function consultarRoles() {
 module.exports = {
   consultarUsuarios,
   crearUsuarioRepositorio,
+  existeCorreoRegistrado,
   modificarUsuario,
   eliminarUsuario,
   consultarRoles,

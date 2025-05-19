@@ -1,7 +1,7 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 
 const bcrypt = require('bcrypt');
-const { crearUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { crearUsuarioRepositorio, existeCorreoRegistrado } = require('../data/repositorios/usuarios.repositorio.js');
 const { validarYLimpiarUsuario }  = require('./validacionesCompartidas.js');
 
 /**
@@ -23,6 +23,12 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
     }
 
     const { nombre, correo, contrasenia, idRol } = datosSanitizados;
+
+    // Checar si el correo ya existe
+    const existeCorreo = await existeCorreoRegistrado(correo);
+    if (existeCorreo) {
+      return respuesta.status(409).json({ mensaje: 'Ya existe un usuario con ese correo.' });
+    }
 
     // Ciframos la contraseña
     const rondasDeCifrado = 12;
