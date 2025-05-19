@@ -66,7 +66,7 @@ function validarYLimpiarUsuario(datos, esCrear = false) {
         const error = validarIDCampo(idUsuario);
         if (error) {
             return {
-                error: error,
+                error,
                 datosSanitizados: null
             };
         }
