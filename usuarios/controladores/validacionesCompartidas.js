@@ -5,9 +5,14 @@ const tamanioMinNombre = 1;
 const tamanioMaxNombre = 50;
 const tamanioMinCorreo = 5;
 const tamanioMaxCorreo = 50;
-const tamanioMinPass = 8;
-const tamanioMaxPass = 50;
+const tamanioMinContrasenia = 8;
+const tamanioMaxContrasenia = 50;
 
+/**
+ * Valida que el identificador sea un número entero mayor o igual a uno.
+ * @param {number} id - Valor a validar como identificador.
+ * @returns {string} - Cadena vacía si es válido, o mensaje de error.
+ */
 function validarIDCampo(id) {
     if (!Number.isInteger(id) || id < numeroMinimoID) {
         return 'El identificador debe ser un número entero mayor o igual a 1.';
@@ -15,6 +20,11 @@ function validarIDCampo(id) {
     return '';
 }
 
+/**
+ * Valida que el nombre cumpla longitud y formato permitido.
+ * @param {string} nombre - Nombre a validar.
+ * @returns {string} - Cadena vacía si es válido, o mensaje de error.
+ */
 function validarNombreCampo(nombre) {
     const valor = nombre.trim();
     if (valor.length < tamanioMinNombre || valor.length > tamanioMaxNombre) {
@@ -26,6 +36,11 @@ function validarNombreCampo(nombre) {
     return '';
 }
 
+/**
+ * Valida que el correo tenga longitud adecuada y formato de correo válido.
+ * @param {string} correo - Dirección de correo a validar.
+ * @returns {string} - Cadena vacía si es válido, o mensaje de error.
+ */
 function validarCorreoCampo(correo) {
     const valor = correo.trim();
     if (valor.length < tamanioMinCorreo || valor.length > tamanioMaxCorreo) {
@@ -37,14 +52,24 @@ function validarCorreoCampo(correo) {
     return '';
 }
 
+/**
+ * Valida que la contraseña cumpla con la longitud mínima y máxima.
+ * @param {string} pass - Contraseña a validar.
+ * @returns {string} - Cadena vacía si es válida, o mensaje de error.
+ */
 function validarContraseniaCampo(pass) {
     const valor = pass.trim();
-    if (valor.length < tamanioMinPass || valor.length > tamanioMaxPass) {
-        return `La contraseña debe tener entre ${tamanioMinPass} y ${tamanioMaxPass} caracteres.`;
+    if (valor.length < tamanioMinContrasenia || valor.length > tamanioMaxContrasenia) {
+        return `La contraseña debe tener entre ${tamanioMinContrasenia} y ${tamanioMaxContrasenia} caracteres.`;
     }
     return '';
 }
 
+/**
+ * Valida que el identificador de rol sea un número entero válido.
+ * @param {number} idRol - Identificador de rol a validar.
+ * @returns {string} - Cadena vacía si es válido, o mensaje de error.
+ */
 function validarRolCampo(idRol) {
     if (!Number.isInteger(idRol) || idRol < numeroMinimoID) {
         return 'El identificador de rol debe ser un número entero mayor o igual a 1.';
