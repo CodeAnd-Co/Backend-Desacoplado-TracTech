@@ -11,7 +11,6 @@ const {modificarFormulaRepositorio} = require('../data/repositorios/formulasRepo
 exports.modificarFormula = async (pet, res) => {
     const { id, nombre, formula } = pet.body;
     if (!id || !nombre || !formula) {
-        console.log(id, nombre, formula);
         return res.status(400).json({
             mensaje: 'Faltan datos requeridos',
         });
