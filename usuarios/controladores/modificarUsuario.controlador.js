@@ -53,6 +53,8 @@ function validarYLimpiarUsuario(datos) {
   const numeroMinimoID = 1;
   const tamanioMinimoNombre = 1;
   const tamanioMaximoNombre = 50;
+  const tamanioMinimoCorreo = 5;
+  const tamanioMaximoCorreo = 50;
   const tamanioMinimoContrasenia = 8;
   const tamanioMaximoContrasenia = 50;
 
@@ -102,6 +104,13 @@ function validarYLimpiarUsuario(datos) {
 
     if(existeCorreo) {
       const correoRecortado = correo.trim();
+      if(correoRecortado.length < tamanioMinimoCorreo || correoRecortado.length > tamanioMaximoCorreo) {
+        return {
+          error: `El correo debe tener entre ${tamanioMinimoCorreo} y ${tamanioMaximoCorreo} caracteres.`,
+          datosSanitizados: null
+        };
+      }
+
       if(!validator.isEmail(correoRecortado)) {
         return {
           error: 'El correo electrónico no tiene un formato válido (p. ej. usuario@dominio.com).',
