@@ -60,7 +60,6 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
   return new Promise((resolver, rechazar) => {
     conexion.query(consulta, valores, (error, resultado) => {
       if (error) {
-        console.error('Error al insertar el usuario:', error);
         return rechazar(error);
       }
 
