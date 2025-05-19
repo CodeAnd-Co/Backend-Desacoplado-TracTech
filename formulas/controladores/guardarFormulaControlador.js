@@ -1,7 +1,14 @@
-// RF67 - Guardar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF67
-const conexion = require('../../util/bd.js');
+// RF69 - Guardar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF69
+const { guardarFormulaRepositorio } = require('../data/repositorios/formulasRepositorio.js');
 
-// Función para guardar una fórmula en la base de datos
+
+/**
+ * @function guardarFormula
+ * @description Controlador para guardar una fórmula en la base de datos.
+ * @param {Object} pet - Objeto de la petición HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Object} Respuesta JSON con el mensaje de éxito o error.
+ */
 exports.guardarFormula = async (pet, res) => {
     // Recibe los datos desde el cuerpo de la petición
     const {nombre, formula} = pet.body;
@@ -11,8 +18,18 @@ exports.guardarFormula = async (pet, res) => {
             mensaje: 'Faltan datos requeridos',
         });
     }
+    if (nombre.length > process.env.LONGITUD_MAXIMA_NOMBRE_FORMULA) {
+        return res.status(400).json({
+            mensaje: 'El nombre no puede exceder los 30 caracteres',
+        });
+    }
+    if (formula.length > process.env.LONGITUD_MAXIMA_FORMULA) {
+        return res.status(400).json({
+            mensaje: 'La fórmula no puede exceder los 512 caracteres',
+        });
+    }
     // Hace la consulta a la base de datos para guardar la fórmula
-    const formulaGuardada = await guardarFormula(nombre, formula, (err, resultado) => {
+    const formulaGuardada = await guardarFormulaRepositorio(nombre, formula, (err, resultado) => {
         if (err) {
             return res.status(500).json({
                 mensaje: 'Error al guardar la fórmula',
@@ -31,22 +48,4 @@ exports.guardarFormula = async (pet, res) => {
         mensaje: 'Fórmula guardada con éxito',
     });
 
-}
-// Función para guardar la fórmula en la base de datos
-async function guardarFormula(nombre, formula) {
-    return new Promise((resolver, rechazar) => {
-        // Consulta SQL para insertar la fórmula en la base de datos
-        // Se utiliza '?' como marcador de posición para evitar inyecciones SQL
-        const consulta = 'INSERT INTO formula (Nombre, Datos) VALUES (?, ?)';
-        // Ejecuta la consulta
-        conexion.query(consulta, [nombre, formula], (err, resultado) => {
-            if (err) {
-                console.error('Error al ejecutar la consulta:', err);
-                return rechazar(err);
-            }
-            resolver(resultado); // Regresa el resultado de la consulta
-            
-        });
-    });
-    
 }

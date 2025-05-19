@@ -1,19 +1,18 @@
-// RF69 - Guardar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF69
-
+// RF68 - Modificar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF68 
 
 const express = require('express');
 const ruteador = express.Router();
 const verificarToken = require('../../util/middlewareAutenticacion');
 
-const guardarFormulaControlador = require('../controladores/guardarFormulaControlador');
+const modificarFormulaControlador = require('../controladores/modificarFormulaControlador');
 const { verificarPermisos, checarPermisos } = require('../../util/middlewarePermisos');
 
-ruteador.post(
+ruteador.put(
     '/',
     verificarToken,
     verificarPermisos,
     checarPermisos('PUEDECREAR'),
-    guardarFormulaControlador.guardarFormula,
+    modificarFormulaControlador.modificarFormula,
 );
 
 module.exports = ruteador;
