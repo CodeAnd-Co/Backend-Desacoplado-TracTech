@@ -5,6 +5,6 @@ const ruteador = express.Router();
 
 const consultarPlantillaCompletaControlador = require('../controladores/consultarPlantillaCompletaControlador');
 
-ruteador.post('/', consultarPlantillaCompletaControlador.consultarPlantillaCompleta);
+ruteador.get('/', consultarPlantillaCompletaControlador.consultarPlantillaCompleta);
 
 module.exports = ruteador;

@@ -6,13 +6,15 @@ const express = require('express');
 const ruteador = express.Router();
 
 const seleccionarPlantillaRuta = require('./seleccionarPlantilla.ruta');
-const consultarPlantillas = require('./consultarPlantillaCompleta.ruta');
+const consultarPlantillas = require('./consultarPlantillas.ruta');
+const consultarTodasPlantillas = require('./consultarTodasPlantillas.ruta');
 const consultarPlantillaCompleta = require('./consultarPlantillaCompleta.ruta');
 const eliminarPlantillas = require('./eliminarPlantillas.ruta');
 const guardarPlantilla = require('./guardarPlantillas.ruta');
 
 ruteador.use('/seleccionar', seleccionarPlantillaRuta);
 ruteador.use('/consultar', consultarPlantillas);
+ruteador.use('/consultarTodas', consultarTodasPlantillas);
 ruteador.use('/consultarCompleta', consultarPlantillaCompleta);
 ruteador.use('/eliminar', eliminarPlantillas);
 ruteador.use('/guardar', guardarPlantilla);
