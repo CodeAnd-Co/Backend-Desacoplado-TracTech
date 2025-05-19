@@ -1,40 +1,15 @@
-// Se importa el módulo de conexión a la base de datos
 const conexion = require('../../../util/bd.js');
 
-/**
- * Guarda una nueva plantilla en la base de datos
- * @param {Object} plantilla - Objeto con los datos de la plantilla
- * @returns {Promise<number>} Promesa que resuelve con el ID de la plantilla insertada
- * @throws {Error} Error si no se puede insertar la plantilla
- */
-function guardarPlantillaRepositorio(plantilla) {
-  const consulta = `
-    INSERT INTO plantillareporte 
-      (idPlantillaReporte, Nombre, Datos, FrecuenciaEnvio, CorreoDestino, NumeroDestino) 
-    VALUES (?, ?, ?, ?, ?, ?)
+async function insertarPlantilla({ NombrePlantilla, FrecuenciaEnvio, CorreoDestino, NumeroDestino }) {
+  const sql = `
+    INSERT INTO plantilla
+      (NombrePlantilla, FrecuenciaEnvio, CorreoDestino, NumeroDestino)
+    VALUES (?, ?, ?, ?)
   `;
-  
-  const valores = [
-    plantilla.idPlantillaReporte,
-    plantilla.Nombre,
-    plantilla.Datos,
-    plantilla.FrecuenciaEnvio,
-    plantilla.CorreoDestino,
-    plantilla.NumeroDestino
-  ];
-
-  return new Promise((resolver, rechazar) => {
-    conexion.query(consulta, valores, (error, resultado) => {
-      if (error) {
-        console.error('Error al insertar la plantilla:', error);
-        return rechazar(error);
-      }
-
-      resolver(resultado.insertId);
-    });
+  const vals = [NombrePlantilla, FrecuenciaEnvio, CorreoDestino, NumeroDestino];
+  return new Promise((res, rej) => {
+    conexion.query(sql, vals, (err, result) => err ? rej(err) : res(result.insertId));
   });
 }
 
-module.exports = {
-  guardarPlantillaRepositorio
-};
+module.exports = { insertarPlantilla };

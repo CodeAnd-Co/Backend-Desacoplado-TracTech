@@ -1,6 +1,3 @@
-/**
- * Clase para representar una plantilla de reporte
- */
 class PlantillaReporte {
     /**
      * Constructor de la clase PlantillaReporte
@@ -22,7 +19,7 @@ class PlantillaReporte {
     }) {
       this.idPlantillaReporte = idPlantillaReporte;
       this.Nombre = Nombre;
-      this.datos = Datos;
+      this.Datos = Datos;
       this.frecuenciaEnvio = FrecuenciaEnvio;
       this.correoDestino = CorreoDestino;
       this.numeroDestino = NumeroDestino;

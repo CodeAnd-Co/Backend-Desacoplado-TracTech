@@ -1,0 +1,19 @@
+const conexion = require('../../../util/bd.js');
+
+async function insertarContenido({ OrdenContenido, TipoContenido, IdPlantilla }) {
+  const sql = `
+    INSERT INTO contenido
+      (OrdenContenido, TipoContenido, IdPlantilla)
+    VALUES (?, ?, ?)
+  `;
+  const vals = [OrdenContenido, TipoContenido, IdPlantilla];
+
+  return new Promise((res, rej) => {
+    conexion.query(sql, vals, (err, result) => {
+      if (err) return rej(err);
+      res(result.insertId);
+    });
+  });
+}
+
+module.exports = { insertarContenido };
