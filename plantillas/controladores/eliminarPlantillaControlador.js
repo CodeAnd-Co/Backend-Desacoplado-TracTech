@@ -31,21 +31,51 @@ exports.eliminarPlantilla = async (pet, res) => {
 }
 
 // Función auxiliar que realiza la consulta a la base de datos
-async function eliminarPlantilla(idPlantilla) {
-    // Se retorna una promesa que ejecuta una consulta SQL usando el idPlantilla
-    return new Promise((resolver, rechazar) => {
-        const consulta = 'DELETE FROM plantillareporte WHERE idPlantillaReporte = ?';
-
-        // Se ejecuta la consulta con el valor de idPlantilla como parámetro para evitar inyecciones SQL
-        conexion.query(consulta, [idPlantilla], (err, resultados) => {
-            if (err) {
-                // En caso de error, se muestra en consola y se rechaza la promesa
-                console.error('Error al ejecutar la consulta:', err);
-                return rechazar(err);
+async function eliminarPlantilla(idPlantillaReporte) {
+  const conn = conexion;
+  return new Promise((resolve, reject) => {
+    conn.beginTransaction(err => {
+      if (err) return reject(err);
+      // 1) Borrar gráficas → texto (si hace falta)
+      conn.query(
+        `DELETE g FROM grafica g
+         JOIN contenido c ON g.IdContenido = c.IdContenido
+         WHERE c.IdPlantilla = ?`,
+        [idPlantillaReporte],
+        err => {
+          if (err) return conn.rollback(() => reject(err));
+          // 2) Borrar texto
+          conn.query(
+            `DELETE t FROM texto t
+             JOIN contenido c ON t.IdContenido = c.IdContenido
+             WHERE c.IdPlantilla = ?`,
+            [idPlantillaReporte],
+            err => {
+              if (err) return conn.rollback(() => reject(err));
+              // 3) Borrar contenido
+              conn.query(
+                `DELETE FROM contenido WHERE IdPlantilla = ?`,
+                [idPlantillaReporte],
+                err => {
+                  if (err) return conn.rollback(() => reject(err));
+                  // 4) Borrar plantilla padre
+                  conn.query(
+                    `DELETE FROM plantillareporte WHERE idPlantillaReporte = ?`,
+                    [idPlantillaReporte],
+                    (err, result) => {
+                      if (err) return conn.rollback(() => reject(err));
+                      conn.commit(cErr => {
+                        if (cErr) return conn.rollback(() => reject(cErr));
+                        resolve(result);
+                      });
+                    }
+                  );
+                }
+              );
             }
-
-            // Si no hay error, se resuelve la promesa con los resultados obtenidos
-            resolver(resultados);
-        });
+          );
+        }
+      );
     });
+  });
 }

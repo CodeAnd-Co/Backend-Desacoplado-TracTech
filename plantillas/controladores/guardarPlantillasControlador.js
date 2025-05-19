@@ -4,6 +4,7 @@ const { insertarContenido }        = require('../data/repositorios/repositorioCo
 const { insertarGrafica }          = require('../data/repositorios/repositorioGrafica');
 const { insertarTexto }            = require('../data/repositorios/repositorioTexto');
 
+
 /**
  * Map JS Chart.js types to the ENUM values in the 'grafica' table.
  * ENUM('Linea','Barras','Pastel','Dona','Radar','Polar')
@@ -25,65 +26,50 @@ function mapChartTypeToEnum(jsType) {
   }
 }
 
+
 exports.guardarPlantilla = async (req, res) => {
   const { plantilla } = req.body;
 
-  if (!plantilla ||!plantilla.nombrePlantilla ) {
-    return res
-      .status(400)
-      .json({ mensaje: 'Faltan campos: nombrePlantilla o contenidos'});
-  }
+  const idPlantilla = await insertarPlantilla({
+    NombrePlantilla: plantilla.nombrePlantilla,
+    FrecuenciaEnvio: plantilla.frecuenciaEnvio,
+    CorreoDestino:   plantilla.correoDestino,
+    NumeroDestino:   plantilla.numeroDestino
+  });
 
-  try {
-    const idPlantilla = await insertarPlantilla({
-      NombrePlantilla: plantilla.nombrePlantilla,
-      FrecuenciaEnvio: plantilla.frecuenciaEnvio,
-      CorreoDestino:   plantilla.correoDestino,
-      NumeroDestino:   plantilla.numeroDestino
+  const idPlantillaReporte = await insertarPlantillaReporte({
+    IdPlantilla:     idPlantilla,
+    Nombre:          plantilla.nombrePlantilla,
+    Datos:           plantilla.htmlString || '', 
+    FrecuenciaEnvio: plantilla.frecuenciaEnvio,
+    CorreoDestino:   plantilla.correoDestino,
+    NumeroDestino:   plantilla.numeroDestino
+  });
+
+  for (const contenido of plantilla.datos) {
+    const idContenido = await insertarContenido({
+      OrdenContenido: contenido.ordenContenido,
+      TipoContenido:  contenido.tipoContenido,
+      IdPlantilla:    idPlantillaReporte  
     });
+    if (contenido.tipoContenido === 'Grafica') {
+            const enumTipo = mapChartTypeToEnum(contenido.tipoGrafica);
+            await insertarGrafica({
+              NombreGrafica: contenido.nombreGrafica,
+              TipoGrafica:   enumTipo,
+              Parametros:    contenido.parametros,
+              IdContenido:   idContenido
+            });
 
-    // Optionally also insert into 'plantillareporte'
-    const idPlantillaReporte = await insertarPlantillaReporte({
-      Nombre:          plantilla.nombrePlantilla,
-      Datos:           plantilla.html || '',
-      FrecuenciaEnvio: plantilla.frecuenciaEnvio,
-      CorreoDestino:   plantilla.correoDestino,
-      NumeroDestino:   plantilla.numeroDestino
-    });
+          } else if (contenido.tipoContenido === 'Texto') {
+            await insertarTexto({
+              TipoTexto:      contenido.tipoTexto,
+              Alineacion:     contenido.alineacion,
+              ContenidoTexto: contenido.contenidoTexto,
+              IdContenido:    idContenido
+            });
+          }
+   }
 
-    // Insert each content item into 'contenido' and its detail table
-    for (const contenido of plantilla.datos) {
-      const idContenido = await insertarContenido({
-        OrdenContenido: contenido.ordenContenido,
-        TipoContenido:  contenido.tipoContenido,
-        IdPlantilla:    idPlantilla
-      });
-
-      if (contenido.tipoContenido === 'Grafica') {
-        const enumTipo = mapChartTypeToEnum(contenido.tipoGrafica);
-        await insertarGrafica({
-          NombreGrafica: contenido.nombreGrafica,
-          TipoGrafica:   enumTipo,
-          Parametros:    contenido.parametros,
-          IdContenido:   idContenido
-        });
-
-      } else if (contenido.tipoContenido === 'Texto') {
-        await insertarTexto({
-          TipoTexto:      contenido.tipoTexto,
-          Alineacion:     contenido.alineacion,
-          ContenidoTexto: contenido.contenidoTexto,
-          IdContenido:    idContenido
-        });
-      }
-    }
-
-    return res
-      .status(201)
-      .json({ mensaje: 'Plantilla y contenidos guardados', id: idPlantillaReporte });
-
-  } catch (error) {
-    console.error('Error interno al guardar plantilla:', error);
-    return res.status(500).json({ mensaje: 'Error interno del servidor' });
-  }
+  return res.status(201).json({ mensaje: 'OK', id: idPlantillaReporte });
 };
