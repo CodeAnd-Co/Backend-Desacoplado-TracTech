@@ -18,7 +18,6 @@ async function modificarFormulaRepositorio(id, nombre, formula) {
         const consulta = 'UPDATE formula SET Nombre = ?, Datos = ? WHERE idFormula = ?';
         conexion.query(consulta, [nombre, formula, id], (err, resultado) => {
             if (err) {
-                console.error('Error al ejecutar la consulta:', err);
                 return rechazar(err);
             }
             resolver(resultado);
@@ -41,7 +40,6 @@ async function guardarFormulaRepositorio(nombre, formula) {
         // Ejecuta la consulta
         conexion.query(consulta, [nombre, formula], (err, resultado) => {
             if (err) {
-                console.error('Error al ejecutar la consulta:', err);
                 return rechazar(err);
             }
             resolver(resultado); // Regresa el resultado de la consulta
@@ -65,7 +63,6 @@ async function eliminarFormulaRepositorio(id) {
         // Ejecuta la consulta
         conexion.query(consulta, [id], (err, resultado) => {
             if (err) {
-                console.error('Error al ejecutar la consulta:', err);
                 return rechazar(err);
             }
             resolver(resultado); // Regresa el resultado de la consulta
