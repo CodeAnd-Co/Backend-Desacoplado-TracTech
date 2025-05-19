@@ -58,7 +58,7 @@ function validarYLimpiarUsuario(datos) {
   const tamanioMinimoContrasenia = 8;
   const tamanioMaximoContrasenia = 50;
 
-    let { idUsuario, nombre, correo, contrasenia, idRol } = datos;
+    const { idUsuario, nombre, correo, contrasenia, idRol } = datos;
 
     if(!Number.isInteger(idUsuario) || idUsuario < numeroMinimoID) {
       return {
@@ -80,7 +80,7 @@ function validarYLimpiarUsuario(datos) {
       };
     }
 
-    const datosSanitizados = { idUsuario: idUsuario };
+    const datosSanitizados = { idUsuario };
 
     if(existeNombre) {
       const nombreRecortado = nombre.trim();
@@ -91,7 +91,7 @@ function validarYLimpiarUsuario(datos) {
         };
       }
 
-      const regexNombre = /^[A-Za-zÀ-ÖØ-öø-ÿ\. ]+$/;
+      const regexNombre = /^[A-Za-zÀ-ÖØ-öø-ÿ][A-Za-zÀ-ÖØ-öø-ÿ. ]*$/;
       if (!regexNombre.test(nombreRecortado)) {
         return {
           error: 'El nombre solo puede contener letras (incluidos acentos), espacios y puntos.',
