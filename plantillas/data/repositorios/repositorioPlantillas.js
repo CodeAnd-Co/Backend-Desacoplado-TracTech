@@ -11,7 +11,7 @@ function guardarPlantillaRepositorio(plantilla) {
   const consulta = `
     INSERT INTO plantillareporte 
       (idPlantillaReporte, Nombre, Datos, FrecuenciaEnvio, CorreoDestino, NumeroDestino) 
-    VALUES (?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
   
   const valores = [

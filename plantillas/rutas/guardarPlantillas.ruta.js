@@ -3,7 +3,7 @@
 const express = require('express');
 const ruteador = express.Router();
 
-const guardarPlantillaControlador = require('../controladores/guardarPlantillaControlador');
+const guardarPlantillaControlador = require('../controladores/guardarPlantillasControlador');
 
 ruteador.post('/', guardarPlantillaControlador.guardarPlantilla);
 

@@ -8,7 +8,7 @@ const ruteador = express.Router();
 const seleccionarPlantillaRuta = require('./seleccionarPlantilla.ruta');
 const consultarPlantillas = require('./consultarPlantillas.ruta');
 const eliminarPlantillas = require('./eliminarPlantillas.ruta');
-const guardarPlantilla = require('./guardarPlantilla.ruta');
+const guardarPlantilla = require('./guardarPlantillas.ruta');
 
 ruteador.use('/seleccionar', seleccionarPlantillaRuta);
 ruteador.use('/consultar', consultarPlantillas);

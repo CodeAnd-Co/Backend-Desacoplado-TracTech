@@ -1,7 +1,7 @@
 //RF22 Usuario guarda plantilla de reporte. - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF22
 
 // Se importa el repositorio y el modelo
-const { guardarPlantillaRepositorio } = require('../data/repositorios/plantillas.repositorio.js');
+const { guardarPlantillaRepositorio } = require('../data/repositorios/repositorioPlantillas.js');
 const { PlantillaReporte } = require('../data/modelos/modeloGuardarPlantilla.js');
 
 /**
