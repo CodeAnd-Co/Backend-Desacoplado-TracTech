@@ -46,7 +46,6 @@ async function consultarFormula() {
         // Ejecuta la consulta
         conexion.query(consulta, (err, resultado) => {
             if (err) {
-                console.error('Error al ejecutar la consulta:', err);
                 return rechazar(err);
             }
             resolver(resultado); // Regresa el resultado de la consulta
