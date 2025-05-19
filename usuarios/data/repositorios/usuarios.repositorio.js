@@ -1,5 +1,6 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 // RF40 Administrador consulta usuarios - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
+// RF41 Administrador modifica usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF41
 // RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
 require('dotenv').config();
@@ -16,7 +17,7 @@ function consultarUsuarios() {
   const rolAExcluir = process.env.SU;
 
   const consulta = `
-    SELECT u.idUsuario, u.Nombre, u.Correo
+    SELECT u.idUsuario, u.Nombre, u.Correo, r.Nombre as 'Rol'
     FROM usuario u
     JOIN rol r ON u.idRol_FK = r.idRol
     WHERE r.Nombre <> ?
@@ -25,7 +26,6 @@ function consultarUsuarios() {
   return new Promise((resolver, rechazar) => {
     conexion.query(consulta, [rolAExcluir], (error, resultados) => {
       if (error) {
-        console.error('Error al ejecutar la consulta:', error);
         return rechazar(error);
       }
 
@@ -34,11 +34,12 @@ function consultarUsuarios() {
       }
 
       const usuarios = resultados
-        .filter(usuario => usuario.idUsuario && usuario.Nombre && usuario.Correo)
+        .filter(usuario => usuario.idUsuario && usuario.Nombre && usuario.Correo && usuario.Rol)
         .map(usuario => new Usuario({
           id: usuario.idUsuario,
           nombre: usuario.Nombre,
-          correo: usuario.Correo
+          correo: usuario.Correo,
+          rol: usuario.Rol,
         }));
 
       resolver(usuarios);
@@ -64,6 +65,60 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
       }
 
       resolver(resultado.insertId);
+    });
+  });
+}
+
+/**
+ * Modifica un usuario en la base de datos, actualizando sólo los campos que vengan en `cambios`.
+ *
+ * @param {number} userId           - ID del usuario a modificar.
+ * @param {Object} cambios          - Objeto con los campos a modificar.
+ * @returns {Promise<Object>} Resultado de la operación.
+ */
+function modificarUsuario(idUsuario, cambios) {
+  const sets = [];
+  const valores = [];
+
+  // Acumulamos las cláusulas SET y los valores a modificar
+  if (cambios.nombre != null) {
+    sets.push('Nombre = ?');
+    valores.push(cambios.nombre);
+  }
+  if (cambios.correo != null) {
+    sets.push('Correo = ?');
+    valores.push(cambios.correo);
+  }
+  if (cambios.contrasenia != null) {
+    sets.push('Contrasenia = ?');
+    valores.push(cambios.contrasenia);
+  }
+  if (cambios.idRol != null) {
+    sets.push('idRol_FK = ?');
+    valores.push(cambios.idRol);
+  }
+
+  // Asegurar mínimo un campo para validar
+  if (sets.length === 0) {
+    return Promise.reject(new Error('No se proporcionaron campos para actualizar'));
+  }
+
+  const consulta = `
+    UPDATE usuario
+    SET ${sets.join(', ')}
+    WHERE idUsuario = ?
+  `;
+  valores.push(idUsuario);
+
+  return new Promise((resolver, rechazar) => {
+    conexion.query(consulta, valores, (error, resultado) => {
+      if (error) {
+        return rechazar(error);
+      }
+      if (resultado.affectedRows === 0) {
+        return rechazar(new Error('No hubieron cambios que realizar al usuario.'));
+      }
+      resolver(resultado);
     });
   });
 }
@@ -128,6 +183,7 @@ function consultarRoles() {
 module.exports = {
   consultarUsuarios,
   crearUsuarioRepositorio,
+  modificarUsuario,
   eliminarUsuario,
   consultarRoles,
 };

@@ -1,13 +1,16 @@
 const mysql = require('mysql2');
 
-const conexion = mysql.createConnection({
-  host: process.env.ANFITRION_BD, // Dirección del servidor MySQL
-  user: process.env.USUARIO_BD,     // Usuario de la base de datos
-  password: process.env.CONTRASENA_BD, // Contraseña del usuario
-  database: process.env.NOMBRE_BD, // Nombre de la base de datos
+const conexion = mysql.createPool({
+  host: process.env.ANFITRION_BD,
+  user: process.env.USUARIO_BD,
+  password: process.env.CONTRASENA_BD,
+  database: process.env.NOMBRE_BD,
+  waitForConnections: true,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0
 });
 
-conexion.connect((err) => {
+conexion.getConnection((err) => {
   if (err) {
     console.error('Error al conectar a la base de datos:', err);
     return;

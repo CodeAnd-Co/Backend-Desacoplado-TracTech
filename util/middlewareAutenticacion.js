@@ -15,11 +15,12 @@ const listaNegra = require('./listaNegra');
 const verificarToken = (peticion, respuesta, siguiente) => {
     let token = peticion.headers.authorization; // Obtiene el token desde la cabecera
 
-    // Extrae el token eliminando el prefijo 'Bearer'
-    token = token.split(' ')[1];
-    if (!token) {
+    if (!token || !token.startsWith('Bearer ')) {
         return respuesta.status(401).json({ mensaje: 'Token no proporcionado' });
     }
+
+    // Extrae el token eliminando el prefijo 'Bearer'
+    token = token.split(' ')[1];
 
     // Verifica si el token está en la lista negra (revocado)
     // Lo que significa que el usuario ha cerrado sesión o el token ha sido invalidado

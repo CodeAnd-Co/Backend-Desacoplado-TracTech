@@ -28,7 +28,6 @@ const obtenerNombreUsuario = (peticion, respuesta, siguiente) => {
 
       // Verificar si se encontró el usuario
       if (resultados.length === 0) {
-        console.error('Usuario no encontrado con ID:', idUsuario);
         return respuesta.status(404).json({ mensaje: 'Usuario no encontrado' });
       }
 
