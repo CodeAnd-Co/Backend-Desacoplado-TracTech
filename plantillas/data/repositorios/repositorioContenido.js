@@ -1,7 +1,6 @@
 const Contenido = require('../modelos/modeloContenido');
 
-async function insertarContenidoRepositorio({ OrdenContenido, TipoContenido, IdPlantilla }) {
-  Contenido.insertarContenido({ OrdenContenido, TipoContenido, IdPlantilla });
+function insertarContenidoRepositorio(props) {
+  return Contenido.insertarContenido(props);    // ← devuelve la promesa, para que `await` funcione
 }
-
 module.exports =  {insertarContenidoRepositorio};

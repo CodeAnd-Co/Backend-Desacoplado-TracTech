@@ -39,10 +39,8 @@ exports.guardarPlantilla = async (req, res) => {
       CorreoDestino: plantilla.correoDestino || '',
       NumeroDestino: plantilla.numeroDestino || ''
     });
-    
-    console.log("ID Plantilla insertada:", idPlantilla);
 
-    // Paso 2: Insertar plantilla de reporte
+    console.log("idplantila ",idPlantilla)
     const idPlantillaReporte = await insertarPlantillaReporte({
       IdPlantilla: idPlantilla,
       Nombre: plantilla.nombrePlantilla,
@@ -51,21 +49,18 @@ exports.guardarPlantilla = async (req, res) => {
       CorreoDestino: plantilla.correoDestino || '',
       NumeroDestino: plantilla.numeroDestino || ''
     });
-    
-    console.log("ID PlantillaReporte insertada:", idPlantillaReporte);
 
-    // Paso 3: Insertar cada contenido
+        console.log(idPlantillaReporte)
     for (const contenido of plantilla.datos) {
       console.log("Procesando contenido:", contenido.tipoContenido);
       
       const idContenido = await insertarContenidoRepositorio({
         OrdenContenido: contenido.ordenContenido,
-        TipoContenido: contenido.tipoContenido,
-        IdPlantilla: idPlantillaReporte
+        TipoContenido:  contenido.tipoContenido,
+        IdPlantilla:    idPlantilla
+        
       });
-      
-      console.log("ID Contenido insertado:", idContenido);
-
+      console.log(idContenido)
       if (contenido.tipoContenido === 'Grafica') {
         const enumTipo = mapChartTypeToEnum(contenido.tipoGrafica);
         await insertarGraficaRepositorio({
@@ -82,6 +77,7 @@ exports.guardarPlantilla = async (req, res) => {
           IdContenido: idContenido
         });
       }
+      
     }
 
     return res.status(201).json({ mensaje: 'OK', id: idPlantillaReporte });
