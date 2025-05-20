@@ -7,7 +7,7 @@ const PlantillaReporte = require('../modelos/modeloGuardarPlantilla.js');
  * @throws {Error} Error si no se puede insertar la plantilla
  */
 function insertarPlantillaReporte(plantilla) {
-  PlantillaReporte.insertar(plantilla);
+  PlantillaReporte.insertarPlantillaReporte(plantilla);
 }
 
 module.exports = {

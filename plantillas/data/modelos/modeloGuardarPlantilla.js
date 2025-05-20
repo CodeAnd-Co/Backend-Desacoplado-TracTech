@@ -12,12 +12,12 @@ class PlantillaReporte {
      * @param {string|null} props.numeroDestino - Número telefónico de destino
      */
     constructor({
-      idPlantillaReporte = null,
+      idPlantillaReporte = "",
       Nombre,
       Datos,
-      FrecuenciaEnvio = null,
-      CorreoDestino = null,
-      NumeroDestino = null
+      FrecuenciaEnvio = "",
+      CorreoDestino = "",
+      NumeroDestino = ""
     }) {
       this.idPlantillaReporte = idPlantillaReporte;
       this.Nombre = Nombre;
@@ -27,7 +27,7 @@ class PlantillaReporte {
       this.numeroDestino = NumeroDestino;
     }
 
-    static insertar(plantilla){
+    static insertarPlantillaReporte(plantilla){
       const consulta = `
         INSERT INTO plantillareporte 
           (idPlantillaReporte, Nombre, Datos, FrecuenciaEnvio, CorreoDestino, NumeroDestino) 
@@ -56,4 +56,4 @@ class PlantillaReporte {
     }
   }
   
-  module.exports = { PlantillaReporte };
+module.exports = PlantillaReporte;

@@ -16,7 +16,7 @@ class Plantilla {
    * Inserta una nueva fila en tabla `plantilla`
    * @returns {Promise<number>} insertId
    */
-  static async insertar(props) {
+  static async insertarPlantilla(props) {
     const sql = `
       INSERT INTO plantilla
         (NombrePlantilla, FrecuenciaEnvio, CorreoDestino, NumeroDestino)
