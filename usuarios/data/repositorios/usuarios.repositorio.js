@@ -60,11 +60,38 @@ function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
   return new Promise((resolver, rechazar) => {
     conexion.query(consulta, valores, (error, resultado) => {
       if (error) {
-        console.error('Error al insertar el usuario:', error);
         return rechazar(error);
       }
 
       resolver(resultado.insertId);
+    });
+  });
+}
+
+/**
+ * Comprueba si ya existe otro usuario (distinto de idAExcluir) con el mismo correo.
+ *
+ * @param {string} correo     - Correo a comprobar.
+ * @param {number|null} idAExcluir - ID del usuario que se está modificando (se excluye de la búsqueda). 
+ *                                  Pasa `null` si no aplica (crear).
+ * @returns {Promise<boolean>} - `true` si existe al menos un usuario con ese correo distinto de idAExcluir.
+ * @throws {Error} - Si falla la consulta a la base de datos.
+ */
+function existeCorreoRegistrado(correo, idAExcluir = null) {
+  let consulta = 'SELECT idUsuario FROM usuario WHERE Correo = ?';
+  const parametros = [correo];
+
+  if (idAExcluir != null) {
+    consulta += ' AND idUsuario <> ?';
+    parametros.push(idAExcluir);
+  }
+
+  return new Promise((resolver, rechazar) => {
+    conexion.query(consulta, parametros, (error, resultados) => {
+      if (error) {
+        return rechazar(error);
+      }
+      resolver(resultados.length > 0);
     });
   });
 }
@@ -183,6 +210,7 @@ function consultarRoles() {
 module.exports = {
   consultarUsuarios,
   crearUsuarioRepositorio,
+  existeCorreoRegistrado,
   modificarUsuario,
   eliminarUsuario,
   consultarRoles,

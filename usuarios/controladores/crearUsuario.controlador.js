@@ -1,40 +1,49 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 
-const bcrypt = require('bcrypt'); // Importa bcrypt
-const { crearUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const bcrypt = require('bcrypt');
+const { crearUsuarioRepositorio, existeCorreoRegistrado } = require('../data/repositorios/usuarios.repositorio.js');
+const { validarYLimpiarUsuario }  = require('./validacionesCompartidas.js');
 
 /**
- * Controlador para crear un nuevo usuario
- * @param {object} peticion - Objeto de petición de Express
- * @param {object} respuesta - Objeto de respuesta de Express
- * @returns {object} Respuesta JSON con el ID del nuevo usuario o mensaje de error
- * @throws {Error} Error interno del servidor al procesar la petición
+ * Controlador para crear un nuevo usuario.
+ * Valida y sanitiza con esCrear = true, cifra la contraseña
+ * y llama al repositorio para insertarlo en BD.
+ *
+ * @async
+ * @function crearUsuarioControlador
+ * @param {import('express').Request}  peticion  - Datos de entrada: { nombre, correo, contrasenia, idRol }
+ * @param {import('express').Response} respuesta - Objeto de respuesta de Express
  */
 exports.crearUsuarioControlador = async (peticion, respuesta) => {
   try {
-    const { nombre, correo, contrasenia, idRolFK } = peticion.body;
-    if (!nombre || !correo || !contrasenia || !idRolFK) {
-      return respuesta.status(400).json({
-        mensaje: 'Un campo requerido está vacío',
-      });
+    // Validamos y limpiamos todos los campos obligatorios
+    const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body, true);
+    if (error) {
+      return respuesta.status(400).json({ mensaje: error });
     }
 
-    // Cifrar la contraseña antes de guardarla
-    const rondasSalteadas = 12; // Número de rondas de sal
-    const contraseniaCifrada = await bcrypt.hash(contrasenia, rondasSalteadas);
+    const { nombre, correo, contrasenia, idRol } = datosSanitizados;
 
-    // Llamar al repositorio con la contraseña cifrada
-     
-    const idInsertado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRolFK);
+    // Checar si el correo ya existe
+    const existeCorreo = await existeCorreoRegistrado(correo);
+    if (existeCorreo) {
+      return respuesta.status(409).json({ mensaje: 'Ya existe un usuario con ese correo.' });
+    }
 
-    respuesta.status(201).json({
-      mensaje: 'Usuario creado exitosamente',
-      id: idInsertado,
-    });
+    // Ciframos la contraseña
+    const rondasDeCifrado = 12;
+    const contraseniaCifrada = await bcrypt.hash(contrasenia, rondasDeCifrado);
+
+    const idInsertado = await crearUsuarioRepositorio(
+      nombre,
+      correo,
+      contraseniaCifrada,
+      idRol
+    );
+
+    return respuesta.status(201).json({ mensaje: 'Usuario creado exitosamente', id: idInsertado });
+
   } catch (error) {
-    console.error('Error al crear usuario:', error);
-    respuesta.status(500).json({
-      mensaje: 'Error interno del servidor',
-    });
+    return respuesta.status(500).json({ mensaje: error });
   }
 };
