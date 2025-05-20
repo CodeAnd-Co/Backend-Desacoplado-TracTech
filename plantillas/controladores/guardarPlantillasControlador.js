@@ -1,17 +1,12 @@
-const { insertarPlantilla }        = require('../data/repositorios/repositorioPlantillas');
-const { insertarPlantillaReporte } = require('../data/repositorios/repositorioPlantillaReporte');
-const { insertarContenido }        = require('../data/repositorios/repositorioContenido');
-const { insertarGrafica }          = require('../data/repositorios/repositorioGrafica');
-const { insertarTexto }            = require('../data/repositorios/repositorioTexto');
-
+const { insertarPlantillaReporte }        = require('../data/repositorios/plantillasRepositorio.js');
+const { insertarPlantillaReporteRepositorio } = require('../data/repositorios/repositorioPlantillaReporte.js');
+const { insertarContenidoRepositorio }        = require('../data/repositorios/repositorioContenido.js');
+const { insertarGraficaRepositorio }          = require('../data/repositorios/repositorioGrafica.js');
+const { insertarTextoRepositorio }            = require('../data/repositorios/repositorioTexto.js');
 
 /**
- * Map JS Chart.js types to the ENUM values in the 'grafica' table.
+ * Convierte tipos de Chart.js al ENUM de la tabla 'grafica'.
  * ENUM('Linea','Barras','Pastel','Dona','Radar','Polar')
- *
- * @param {string} jsType - e.g. 'line','bar','pie','doughnut','radar','polarArea'
- * @returns {string}      - One of 'Linea','Barras','Pastel','Dona','Radar','Polar'
- * @throws {Error}       - If an unknown chart type is provided
  */
 function mapChartTypeToEnum(jsType) {
   switch (jsType) {
@@ -26,50 +21,71 @@ function mapChartTypeToEnum(jsType) {
   }
 }
 
-
+/**
+ * Controlador HTTP para guardar una plantilla completa:
+ * - Inserta en 'plantilla'
+ * - Inserta en 'plantillareporte'
+ * - Recorre y persiste cada contenido, gráfica o texto
+ */
 exports.guardarPlantilla = async (req, res) => {
   const { plantilla } = req.body;
 
-  const idPlantilla = await insertarPlantilla({
-    NombrePlantilla: plantilla.nombrePlantilla,
-    FrecuenciaEnvio: plantilla.frecuenciaEnvio,
-    CorreoDestino:   plantilla.correoDestino,
-    NumeroDestino:   plantilla.numeroDestino
-  });
+  // Validación básica
+  if (
+    !plantilla || !plantilla.nombrePlantilla
+  ) {
+    return res.status(400).json({ mensaje: 'Faltan campos: nombrePlantilla o datos' });
+  }
 
-  const idPlantillaReporte = await insertarPlantillaReporte({
-    IdPlantilla:     idPlantilla,
-    Nombre:          plantilla.nombrePlantilla,
-    Datos:           plantilla.htmlString || '', 
-    FrecuenciaEnvio: plantilla.frecuenciaEnvio,
-    CorreoDestino:   plantilla.correoDestino,
-    NumeroDestino:   plantilla.numeroDestino
-  });
-
-  for (const contenido of plantilla.datos) {
-    const idContenido = await insertarContenido({
-      OrdenContenido: contenido.ordenContenido,
-      TipoContenido:  contenido.tipoContenido,
-      IdPlantilla:    idPlantillaReporte  
+  try {
+    // 1) Insertar en tabla 'plantilla'
+    const idPlantilla = await insertarPlantillaReporte({
+      NombrePlantilla: plantilla.nombrePlantilla,
+      FrecuenciaEnvio: plantilla.frecuenciaEnvio || null,
+      CorreoDestino:   plantilla.correoDestino   || null,
+      NumeroDestino:   plantilla.numeroDestino   || null
     });
-    if (contenido.tipoContenido === 'Grafica') {
-            const enumTipo = mapChartTypeToEnum(contenido.tipoGrafica);
-            await insertarGrafica({
-              NombreGrafica: contenido.nombreGrafica,
-              TipoGrafica:   enumTipo,
-              Parametros:    contenido.parametros,
-              IdContenido:   idContenido
-            });
 
-          } else if (contenido.tipoContenido === 'Texto') {
-            await insertarTexto({
-              TipoTexto:      contenido.tipoTexto,
-              Alineacion:     contenido.alineacion,
-              ContenidoTexto: contenido.contenidoTexto,
-              IdContenido:    idContenido
-            });
-          }
-   }
+    // 2) Insertar en tabla 'plantillareporte'
+    const idPlantillaReporte = await insertarPlantillaReporteRepositorio({
+      IdPlantilla:     idPlantilla,
+      Nombre:          plantilla.nombrePlantilla,
+      Datos:           plantilla.htmlString || '',
+      FrecuenciaEnvio: plantilla.frecuenciaEnvio || null,
+      CorreoDestino:   plantilla.correoDestino   || null,
+      NumeroDestino:   plantilla.numeroDestino   || null
+    });
 
-  return res.status(201).json({ mensaje: 'OK', id: idPlantillaReporte });
+    // 3) Insertar contenidos uno a uno
+    for (const c of plantilla.datos) {
+      const idContenido = await insertarContenidoRepositorio({
+        OrdenContenido: c.ordenContenido,
+        TipoContenido:  c.tipoContenido,
+        IdPlantilla:    idPlantillaReporte
+      });
+
+      if (c.tipoContenido === 'Grafica') {
+        const enumTipo = mapChartTypeToEnum(c.tipoGrafica);
+        await insertarGraficaRepositorio({
+          NombreGrafica: c.nombreGrafica,
+          TipoGrafica:   enumTipo,
+          Parametros:    c.parametros,
+          IdContenido:   idContenido
+        });
+      } else if (c.tipoContenido === 'Texto') {
+        await insertarTextoRepositorio({
+          TipoTexto:      c.tipoTexto,
+          Alineacion:     c.alineacion,
+          ContenidoTexto: c.contenidoTexto,
+          IdContenido:    idContenido
+        });
+      }
+    }
+
+    return res.status(201).json({ mensaje: 'OK', id: idPlantillaReporte });
+
+  } catch (error) {
+    console.error('Error interno al guardar plantilla:', error);
+    return res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
 };

@@ -27,7 +27,7 @@ class PlantillaReporte {
       this.numeroDestino = NumeroDestino;
     }
 
-    static insertarPlantillaReporte(plantilla){
+    static insertar(plantilla){
       const consulta = `
         INSERT INTO plantillareporte 
           (idPlantillaReporte, Nombre, Datos, FrecuenciaEnvio, CorreoDestino, NumeroDestino) 

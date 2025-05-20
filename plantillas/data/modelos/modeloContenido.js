@@ -19,4 +19,4 @@ class Contenido{
     }
 }
 
-   
+module.exports = { Contenido };
