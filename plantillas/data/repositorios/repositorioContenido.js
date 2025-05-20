@@ -1,7 +1,7 @@
-const contenido = require('../modelos/modeloContenido.js');
+const Contenido = require('../modelos/modeloContenido');
 
-async function insertarContenido({ OrdenContenido, TipoContenido, IdPlantilla }) {
-  contenido.insertarContenido({ OrdenContenido, TipoContenido, IdPlantilla });
+async function insertarContenidoRepositorio({ OrdenContenido, TipoContenido, IdPlantilla }) {
+  Contenido.insertarContenido({ OrdenContenido, TipoContenido, IdPlantilla });
 }
 
-module.exports =  insertarContenido ;
+module.exports =  {insertarContenidoRepositorio};
