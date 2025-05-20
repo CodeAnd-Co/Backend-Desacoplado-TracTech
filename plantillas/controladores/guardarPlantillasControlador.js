@@ -41,43 +41,43 @@ exports.guardarPlantilla = async (req, res) => {
     console.log(req.body)
     const idPlantilla = await insertarPlantilla({
       NombrePlantilla: plantilla.nombrePlantilla,
-      FrecuenciaEnvio: plantilla.frecuenciaEnvio || null,
-      CorreoDestino:   plantilla.correoDestino   || null,
-      NumeroDestino:   plantilla.numeroDestino   || null
+      FrecuenciaEnvio: plantilla.frecuenciaEnvio || 0,
+      CorreoDestino:   plantilla.correoDestino   || 0,
+      NumeroDestino:   plantilla.numeroDestino   || 0
     });
 
 
     const idPlantillaReporte = await insertarPlantillaReporte({
       IdPlantilla:     idPlantilla,
       Nombre:          plantilla.nombrePlantilla,
-      Datos:           plantilla.htmlString || '',
-      FrecuenciaEnvio: plantilla.frecuenciaEnvio || null,
-      CorreoDestino:   plantilla.correoDestino   || null,
-      NumeroDestino:   plantilla.numeroDestino   || null
+      Datos:           plantilla.htmlString || 0,
+      FrecuenciaEnvio: plantilla.frecuenciaEnvio || 0,
+      CorreoDestino:   plantilla.correoDestino   || 0,
+      NumeroDestino:   plantilla.numeroDestino   || 0
     });
 
     console.log(idPlantillaReporte)
 
-    for (const c of plantilla.datos) {
+    for (const contenido of plantilla.datos) {
       const idContenido = await insertarContenidoRepositorio({
-        OrdenContenido: c.ordenContenido,
-        TipoContenido:  c.tipoContenido,
+        OrdenContenido: contenido.ordenContenido,
+        TipoContenido:  contenido.tipoContenido,
         IdPlantilla:    idPlantillaReporte
       });
 
-      if (c.tipoContenido === 'Grafica') {
-        const enumTipo = mapChartTypeToEnum(c.tipoGrafica);
+      if (contenido.tipoContenido === 'Grafica') {
+        const enumTipo = mapChartTypeToEnum(contenido.tipoGrafica);
         await insertarGraficaRepositorio({
-          NombreGrafica: c.nombreGrafica,
+          NombreGrafica: contenido.nombreGrafica,
           TipoGrafica:   enumTipo,
-          Parametros:    c.parametros,
+          Parametros:    contenido.parametros,
           IdContenido:   idContenido
         });
-      } else if (c.tipoContenido === 'Texto') {
+      } else if (contenido.tipoContenido === 'Texto') {
         await insertarTextoRepositorio({
-          TipoTexto:      c.tipoTexto,
-          Alineacion:     c.alineacion,
-          ContenidoTexto: c.contenidoTexto,
+          TipoTexto:      contenido.tipoTexto,
+          Alineacion:     contenido.alineacion,
+          ContenidoTexto: contenido.contenidoTexto,
           IdContenido:    idContenido
         });
       }
