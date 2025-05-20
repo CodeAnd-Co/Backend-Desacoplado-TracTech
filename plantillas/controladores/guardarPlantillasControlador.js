@@ -21,64 +21,65 @@ function mapChartTypeToEnum(jsType) {
   }
 }
 
-/**
- * Controlador HTTP para guardar una plantilla completa:
- * - Inserta en 'plantilla'
- * - Inserta en 'plantillareporte'
- * - Recorre y persiste cada contenido, gráfica o texto
- */
 exports.guardarPlantilla = async (req, res) => {
   const { plantilla } = req.body;
 
   // Validación básica
-  if (
-    !plantilla || !plantilla.nombrePlantilla
-  ) {
+  if (!plantilla || !plantilla.nombrePlantilla) {
     return res.status(400).json({ mensaje: 'Faltan campos: nombrePlantilla o datos' });
   }
 
   try {
-    console.log(req.body)
+    console.log("Datos recibidos:", req.body);
+    
+    // Paso 1: Insertar plantilla principal
     const idPlantilla = await insertarPlantilla({
       NombrePlantilla: plantilla.nombrePlantilla,
       FrecuenciaEnvio: plantilla.frecuenciaEnvio || 0,
-      CorreoDestino:   plantilla.correoDestino   || 0,
-      NumeroDestino:   plantilla.numeroDestino   || 0
+      CorreoDestino: plantilla.correoDestino || '',
+      NumeroDestino: plantilla.numeroDestino || ''
     });
+    
+    console.log("ID Plantilla insertada:", idPlantilla);
 
-
+    // Paso 2: Insertar plantilla de reporte
     const idPlantillaReporte = await insertarPlantillaReporte({
-      IdPlantilla:     idPlantilla,
-      Nombre:          plantilla.nombrePlantilla,
-      Datos:           plantilla.htmlString || 0,
+      IdPlantilla: idPlantilla,
+      Nombre: plantilla.nombrePlantilla,
+      Datos: plantilla.htmlString || '',
       FrecuenciaEnvio: plantilla.frecuenciaEnvio || 0,
-      CorreoDestino:   plantilla.correoDestino   || 0,
-      NumeroDestino:   plantilla.numeroDestino   || 0
+      CorreoDestino: plantilla.correoDestino || '',
+      NumeroDestino: plantilla.numeroDestino || ''
     });
+    
+    console.log("ID PlantillaReporte insertada:", idPlantillaReporte);
 
-    console.log(idPlantillaReporte)
-
+    // Paso 3: Insertar cada contenido
     for (const contenido of plantilla.datos) {
+      console.log("Procesando contenido:", contenido.tipoContenido);
+      
       const idContenido = await insertarContenidoRepositorio({
         OrdenContenido: contenido.ordenContenido,
-        TipoContenido:  contenido.tipoContenido,
-        IdPlantilla:    idPlantillaReporte
+        TipoContenido: contenido.tipoContenido,
+        IdPlantilla: idPlantillaReporte
       });
+      
+      console.log("ID Contenido insertado:", idContenido);
 
       if (contenido.tipoContenido === 'Grafica') {
         const enumTipo = mapChartTypeToEnum(contenido.tipoGrafica);
         await insertarGraficaRepositorio({
           NombreGrafica: contenido.nombreGrafica,
-          TipoGrafica:   enumTipo,
-          Parametros:    contenido.parametros,
-          IdContenido:   idContenido
+          TipoGrafica: enumTipo,
+          Parametros: contenido.parametros,
+          IdContenido: idContenido
         });
       } else if (contenido.tipoContenido === 'Texto') {
         await insertarTextoRepositorio({
-          TipoTexto:      contenido.tipoTexto,
-          Alineacion:     contenido.alineacion,
+          TipoTexto: contenido.tipoTexto,
+          Alineacion: contenido.alineacion,
           ContenidoTexto: contenido.contenidoTexto,
-          IdContenido:    idContenido
+          IdContenido: idContenido
         });
       }
     }
