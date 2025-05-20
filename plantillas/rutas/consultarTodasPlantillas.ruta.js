@@ -2,7 +2,7 @@
 const express = require('express');
 const ruteador = express.Router();
 
-const consultarTodasPlantillasControlador = require('../controladores/consultarTodasPlantillasControlador');
+const consultarTodasPlantillasControlador = require('../controladores/controladorTodasPlantillas');
 
 ruteador.get('/', consultarTodasPlantillasControlador.consultarTodasPlantillas);
 
