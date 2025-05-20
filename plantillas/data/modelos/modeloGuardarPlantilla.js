@@ -1,3 +1,5 @@
+const conexion = require('../../../util/bd.js');
+
 class PlantillaReporte {
     /**
      * Constructor de la clase PlantillaReporte
@@ -23,6 +25,34 @@ class PlantillaReporte {
       this.frecuenciaEnvio = FrecuenciaEnvio;
       this.correoDestino = CorreoDestino;
       this.numeroDestino = NumeroDestino;
+    }
+
+    static insertarPlantillaReporte(plantilla){
+      const consulta = `
+        INSERT INTO plantillareporte 
+          (idPlantillaReporte, Nombre, Datos, FrecuenciaEnvio, CorreoDestino, NumeroDestino) 
+        VALUES (?, ?, ?, ?, ?)
+      `;
+  
+      const valores = [
+        plantilla.idPlantillaReporte,
+        plantilla.Nombre,
+        plantilla.Datos,
+        plantilla.FrecuenciaEnvio,
+        plantilla.CorreoDestino,
+        plantilla.NumeroDestino
+      ];
+
+      return new Promise((resolver, rechazar) => {
+        conexion.query(consulta, valores, (error, resultado) => {
+          if (error) {
+            console.error('Error al insertar la plantilla:', error);
+            return rechazar(error);
+          }
+
+          resolver(resultado.insertId);
+        });
+      });
     }
   }
   
