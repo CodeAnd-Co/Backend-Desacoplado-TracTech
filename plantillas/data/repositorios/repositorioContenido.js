@@ -4,4 +4,4 @@ async function insertarContenido({ OrdenContenido, TipoContenido, IdPlantilla })
   contenido.insertarContenido({ OrdenContenido, TipoContenido, IdPlantilla });
 }
 
-module.exports = { insertarContenido };
+module.exports =  insertarContenido ;

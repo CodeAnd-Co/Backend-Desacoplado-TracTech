@@ -1,5 +1,5 @@
 const { insertarPlantillaReporte }        = require('../data/repositorios/plantillasRepositorio.js');
-const { insertarPlantillaReporteRepositorio } = require('../data/repositorios/repositorioPlantillaReporte.js');
+const { insertarPlantilla }        = require('../data/repositorios/repositorioPlantillas.js');
 const { insertarContenidoRepositorio }        = require('../data/repositorios/repositorioContenido.js');
 const { insertarGraficaRepositorio }          = require('../data/repositorios/repositorioGrafica.js');
 const { insertarTextoRepositorio }            = require('../data/repositorios/repositorioTexto.js');
@@ -38,16 +38,16 @@ exports.guardarPlantilla = async (req, res) => {
   }
 
   try {
-    // 1) Insertar en tabla 'plantilla'
-    const idPlantilla = await insertarPlantillaReporte({
+    console.log(req.body)
+    const idPlantilla = await insertarPlantilla({
       NombrePlantilla: plantilla.nombrePlantilla,
       FrecuenciaEnvio: plantilla.frecuenciaEnvio || null,
       CorreoDestino:   plantilla.correoDestino   || null,
       NumeroDestino:   plantilla.numeroDestino   || null
     });
 
-    // 2) Insertar en tabla 'plantillareporte'
-    const idPlantillaReporte = await insertarPlantillaReporteRepositorio({
+
+    const idPlantillaReporte = await insertarPlantillaReporte({
       IdPlantilla:     idPlantilla,
       Nombre:          plantilla.nombrePlantilla,
       Datos:           plantilla.htmlString || '',
@@ -56,7 +56,8 @@ exports.guardarPlantilla = async (req, res) => {
       NumeroDestino:   plantilla.numeroDestino   || null
     });
 
-    // 3) Insertar contenidos uno a uno
+    console.log(idPlantillaReporte)
+
     for (const c of plantilla.datos) {
       const idContenido = await insertarContenidoRepositorio({
         OrdenContenido: c.ordenContenido,
