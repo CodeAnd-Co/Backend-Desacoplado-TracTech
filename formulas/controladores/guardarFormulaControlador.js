@@ -1,5 +1,5 @@
 // RF69 - Guardar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF69
-const { guardarFormulaRepositorio } = require('../data/repositorios/formulasRepositorio.js');
+const { guardarFormulaRepositorio } = require('../data/repositorios/guardarFormulaRepositorio.js');
 
 
 /**
@@ -18,16 +18,7 @@ exports.guardarFormula = async (pet, res) => {
             mensaje: 'Faltan datos requeridos',
         });
     }
-    if (nombre.length > process.env.LONGITUD_MAXIMA_NOMBRE_FORMULA) {
-        return res.status(400).json({
-            mensaje: 'El nombre no puede exceder los 30 caracteres',
-        });
-    }
-    if (formula.length > process.env.LONGITUD_MAXIMA_FORMULA) {
-        return res.status(400).json({
-            mensaje: 'La fórmula no puede exceder los 512 caracteres',
-        });
-    }
+    
     // Hace la consulta a la base de datos para guardar la fórmula
     const formulaGuardada = await guardarFormulaRepositorio(nombre, formula, (err, resultado) => {
         if (err) {

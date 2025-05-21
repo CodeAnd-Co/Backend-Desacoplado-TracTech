@@ -4,7 +4,7 @@
 // RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
 require('dotenv').config();
-const conexion = require('../../../util/bd.js');
+const conexion = require('../../../util/servicios/bd.js');
 const { Usuario } = require('../modelos/usuarios.js');
 
 /**

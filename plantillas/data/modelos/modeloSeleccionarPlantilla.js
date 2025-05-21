@@ -1,4 +1,4 @@
-const conexion = require('../../../util/bd.js');
+const conexion = require('../../../util/servicios/bd.js');
 
 class SeleccionarPlantilla {
   /**

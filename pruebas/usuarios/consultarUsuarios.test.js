@@ -11,7 +11,7 @@
 
 
 // Importa estos módulos antes que cualquier otra cosa
-jest.mock('../../util/bd', () => {
+jest.mock('../../util/servicios/bd', () => {
   return {
     createConnection: jest.fn(() => ({
       connect: jest.fn((callback) => callback(null)),

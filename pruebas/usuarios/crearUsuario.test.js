@@ -9,13 +9,13 @@
  */
 
 // Prueba de la conexión a la base de datos
-jest.mock('../../util/bd', () => {
+jest.mock('../../util/servicios/bd', () => {
     return {
       query: jest.fn()
     };
   });
   
-  const conexion = require('../../util/bd');
+  const conexion = require('../../util/servicios/bd');
   const { crearUsuarioRepositorio } = require('../../usuarios/data/repositorios/usuarios.repositorio.js');
   
   describe('crearUsuarioRepositorio', () => {

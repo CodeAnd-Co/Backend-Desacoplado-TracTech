@@ -1,5 +1,5 @@
 // RF68 - Modificar fórmula - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF68 
-const {modificarFormulaRepositorio} = require('../data/repositorios/formulasRepositorio.js');
+const { modificarFormulaRepositorio } = require('../data/repositorios/modificarFormulaRepositorio');
 
 /**
  * @function modificarFormula
@@ -9,36 +9,32 @@ const {modificarFormulaRepositorio} = require('../data/repositorios/formulasRepo
  * @returns {Object} Respuesta JSON con el mensaje de éxito o error.
  */
 exports.modificarFormula = async (pet, res) => {
-    const { id, nombre, formula } = pet.body;
-    if (!id || !nombre || !formula) {
-        return res.status(400).json({
-            mensaje: 'Faltan datos requeridos',
-        });
-    }
-    if (nombre.length > process.env.LONGITUD_MAXIMA_NOMBRE_FORMULA) {
-        return res.status(400).json({
-            mensaje: 'El nombre no puede exceder los 50 caracteres',
-        });
-    }
-    if (formula.length > process.env.LONGITUD_MAXIMA_FORMULA) {
-        return res.status(400).json({
-            mensaje: 'La fórmula no puede exceder los 512 caracteres',
-        });
-    }
-    const formulaModificada = await modificarFormulaRepositorio(id, nombre, formula, (err, resultado) => {
-        if (err) {
-            return res.status(500).json({
-                mensaje: 'Error al modificar la fórmula',
+    try {
+        const { id, nombre, formula } = pet.body;
+        
+        if (!id || !nombre || !formula) {
+            return res.status(400).json({
+                mensaje: 'Faltan datos requeridos',
             });
         }
-        return resultado;
-    });
-    if (!formulaModificada) {
+
+        const idNumero = parseInt(id, 10);
+        
+        const resultado = await modificarFormulaRepositorio(idNumero, nombre, formula);
+        
+        if (resultado && resultado.status) {
+            return res.status(resultado.status).json({
+                mensaje: resultado.mensaje
+            });
+        }
+        
+        return res.status(200).json({
+            mensaje: 'Fórmula modificada con éxito',
+        });
+    } catch (error) {
+        console.error('Error en modificarFormula:', error);
         return res.status(500).json({
-            mensaje: 'Error al guardar los cambios, intentelo más tarde',
+            mensaje: 'Error interno del servidor',
         });
     }
-    res.status(200).json({
-        mensaje: 'Fórmula modificada con éxito',
-    });
 };

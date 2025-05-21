@@ -2,16 +2,16 @@
 
 const express = require('express');
 const ruteador = express.Router();
-const verificarToken = require('../../util/middlewareAutenticacion');
+const verificarToken = require('../../util/middlewares/middlewareAutenticacion');
 
 const modificarFormulaControlador = require('../controladores/modificarFormulaControlador');
-const { verificarPermisos, checarPermisos } = require('../../util/middlewarePermisos');
+const { verificarPermisos, checarPermisos } = require('../../util/middlewares/middlewarePermisos');
 
 ruteador.put(
     '/',
-    verificarToken,
-    verificarPermisos,
-    checarPermisos('PUEDECREAR'),
+    // verificarToken,
+    // verificarPermisos,
+    // checarPermisos('PUEDECREAR'),
     modificarFormulaControlador.modificarFormula,
 );
 

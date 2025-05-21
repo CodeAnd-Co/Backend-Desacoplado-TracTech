@@ -1,4 +1,4 @@
-const conexion = require('../../../util/bd.js');
+const conexion = require('../../../util/servicios/bd.js');
 
 /**
  * Model: TextoContenido (hija de contenido)

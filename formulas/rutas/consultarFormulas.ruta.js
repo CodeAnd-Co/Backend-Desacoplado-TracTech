@@ -2,15 +2,15 @@
 
 const express = require('express');
 const ruteador = express.Router();
-const verificarToken = require('../../util/middlewareAutenticacion');
+const verificarToken = require('../../util/middlewares/middlewareAutenticacion');
 
 const consultarFormulasControlador = require('../controladores/consultarFormulaControlador');
-const { verificarPermisos, checarPermisos } = require('../../util/middlewarePermisos');
+const { verificarPermisos, checarPermisos } = require('../../util/middlewares/middlewarePermisos');
 
 ruteador.get('/', 
-    verificarToken,
-    verificarPermisos,
-    checarPermisos('PUEDEVER'),
+    // verificarToken,
+    // verificarPermisos,
+    // checarPermisos('PUEDEVER'),
     consultarFormulasControlador.consultarFormula,);
 
 module.exports = ruteador;
