@@ -13,7 +13,7 @@ class Plantilla {
   }
 
   /**
-   * Inserta una nueva fila en tabla `plantilla`
+   * Inserta una nueva fila en tabla plantilla
    * @returns {Promise<number>} insertId
    */
   static async insertarPlantilla(props) {

@@ -1,9 +1,8 @@
-// Archivo: consultarTodasPlantillas.ruta.js
 const express = require('express');
 const ruteador = express.Router();
 
-const consultarTodasPlantillasControlador = require('../controladores/controladorTodasPlantillas');
+const consultarPlantillaCompletaControlador = require('../controladores/consultarPlantillaCompletaControlador');
 
-ruteador.get('/', consultarTodasPlantillasControlador.consultarTodasPlantillas);
+ruteador.get('/', consultarPlantillaCompletaControlador.consultarPlantillaCompleta);
 
 module.exports = ruteador;
