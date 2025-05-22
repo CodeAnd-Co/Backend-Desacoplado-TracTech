@@ -32,9 +32,8 @@ exports.modificarFormula = async (pet, res) => {
             mensaje: 'Fórmula modificada con éxito',
         });
     } catch (error) {
-        console.error('Error en modificarFormula:', error);
         return res.status(500).json({
-            mensaje: 'Error interno del servidor',
+            mensaje: 'Error interno del servidor, intente más tarde',
         });
     }
 };

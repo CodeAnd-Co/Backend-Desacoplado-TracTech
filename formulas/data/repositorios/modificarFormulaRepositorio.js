@@ -1,6 +1,14 @@
 //
 const { modificarFormulaModelo } = require('../modelos/modificarFormulaModelo.js'); 
 
+/**
+ * @function modificarFormulaRepositorio
+ * @description Repositorio para modificar una fórmula
+ * @param {number} id - ID de la fórmula a modificar
+ * @param {string} nombre - Nuevo nombre de la fórmula
+ * @param {string} formula - Nueva fórmula
+ * @returns {Promise<Object>} Objeto con el resultado de la operación
+ */
 async function modificarFormulaRepositorio(id, nombre, formula) {
     if (!id || !nombre || !formula) {
         return {
@@ -8,6 +16,7 @@ async function modificarFormulaRepositorio(id, nombre, formula) {
             mensaje: 'Faltan datos requeridos',
         };
     }
+    
     if (typeof id !== 'number' || typeof nombre !== 'string' || typeof formula !== 'string') {
         return {
             status: 400,
@@ -26,22 +35,29 @@ async function modificarFormulaRepositorio(id, nombre, formula) {
             mensaje: `La fórmula no puede tener más de ${process.env.LONGITUD_MAXIMA_FORMULA} caracteres`,
         };
     }
-    await modificarFormulaModelo(id, nombre, formula, (error, resultado) => {
-        if (error) {
-            return resultado.status(500).json({
-                mensaje: 'Error de conexión, intente más tarde:' + error,
-            });
-        }
-        if (!resultado) {
-            return resultado.status(500).json({
-                mensaje: 'Error al guardar la fórmula',
-            });
-        }
-        return resultado;
-    });
     
-}
+    try {
+        const resultado = await modificarFormulaModelo(id, nombre, formula);
+        
+        if (!resultado || resultado.affectedRows === 0) {
+            return {
+                status: 404,
+                mensaje: 'No se encontró la fórmula o no se realizaron cambios',
+            };
+        }
 
+        return {
+            status: 200,
+            mensaje: 'Fórmula modificada con éxito',
+            resultado
+        };
+    } catch (error) {
+        return {
+            status: 500,
+            mensaje: 'Error de conexión, intente más tarde',
+        };
+    }
+}
 
 module.exports = {
     modificarFormulaRepositorio,
