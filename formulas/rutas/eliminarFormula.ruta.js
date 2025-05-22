@@ -9,9 +9,9 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
 
 ruteador.delete(
     '/', 
-    // verificarToken,
-    // verificarPermisos,
-    // checarPermisos('PUEDEELIMINAR'),
+    verificarToken,
+    verificarPermisos,
+    checarPermisos('PUEDEELIMINAR'),
     eliminarFormulaControlador.eliminarFormula
 );
 

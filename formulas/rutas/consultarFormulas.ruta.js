@@ -8,9 +8,9 @@ const consultarFormulasControlador = require('../controladores/consultarFormulaC
 const { verificarPermisos, checarPermisos } = require('../../util/middlewares/middlewarePermisos');
 
 ruteador.get('/', 
-    // verificarToken,
-    // verificarPermisos,
-    // checarPermisos('PUEDEVER'),
+    verificarToken,
+    verificarPermisos,
+    checarPermisos('PUEDEVER'),
     consultarFormulasControlador.consultarFormula,);
 
 module.exports = ruteador;

@@ -9,9 +9,9 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
 
 ruteador.put(
     '/',
-    // verificarToken,
-    // verificarPermisos,
-    // checarPermisos('PUEDECREAR'),
+    verificarToken,
+    verificarPermisos,
+    checarPermisos('PUEDECREAR'),
     modificarFormulaControlador.modificarFormula,
 );
 
