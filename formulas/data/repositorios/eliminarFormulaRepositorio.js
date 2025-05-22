@@ -20,6 +20,7 @@ async function eliminarFormulaRepositorio(id) {
             return {
                 status: 404,
                 mensaje: 'No se encontró la fórmula o no se realizaron cambios',
+                resultado
             };
         }
         return {
