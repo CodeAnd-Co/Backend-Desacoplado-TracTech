@@ -31,14 +31,12 @@ function eliminarUsuario(id) {
   return modelo.eliminarUsuario(id).then(resultado => resultado.affectedRows > 0);
 }
 
-function consultarRoles() {
-  return modelo.consultarRoles();
-}
+
 
 module.exports = {
   consultarUsuarios,
   crearUsuarioRepositorio,
   modificarUsuario,
   eliminarUsuario,
-  consultarRoles,
+
 };

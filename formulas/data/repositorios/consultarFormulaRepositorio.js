@@ -13,6 +13,7 @@ async function consultarFormulaRepositorio() {
             mensaje: 'Error al consultar las fórmulas: no se encontraron fórmulas',
         };
     }
+    return datos;
 }
 
 module.exports = {

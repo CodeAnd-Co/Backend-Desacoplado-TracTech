@@ -1,6 +1,6 @@
 // RF76 - Consulta fórmulas - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF76
 
-const { consultarFormulaModelo } = require('../data/modelos/consultarFormulaModelo.js');
+const { consultarFormulaRepositorio} = require('../data/repositorios/consultarFormulaRepositorio.js');
 
 /**
  * @async
@@ -12,7 +12,7 @@ const { consultarFormulaModelo } = require('../data/modelos/consultarFormulaMode
  * @throws {Error} Si ocurre un error al consultar las fórmulas.
  */
 exports.consultarFormula = async (pet, res) => {
-    const datos = await consultarFormulaModelo((err, resultado) => {
+    const datos = await consultarFormulaRepositorio((err, resultado) => {
         if (err) {
             return res.status(500).json({
                 mensaje: 'Error de conexión, intente más tarde',
@@ -22,7 +22,7 @@ exports.consultarFormula = async (pet, res) => {
     });
     if (!datos) {
         return res.status(500).json({
-            mensaje: 'Error al consultar las fórmulas: no se encintraron fórmulas',
+            mensaje: 'Error al consultar las fórmulas: no se encontraron fórmulas',
         });
     }
     res.status(200).json({
