@@ -1,6 +1,6 @@
 // RF41 Administrador modifica usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF41
 
-const { modificarUsuario: modificarUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { modificarUsuarioRepositorio: modificarUsuario } = require('../data/repositorios/modificarUsuarioRepositorio.js');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 
@@ -35,7 +35,7 @@ exports.modificarUsuario = async (peticion, respuesta) => {
         }
         if (idRol) cambios.idRol = idRol;
 
-        await modificarUsuarioRepositorio(idUsuario, cambios);
+        await modificarUsuario(idUsuario, cambios);
     
         return respuesta.status(200).json({ mensaje: 'Usuario modificado exitosamente' });
 

@@ -1,6 +1,6 @@
 // RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
-const { eliminarUsuario: eliminarUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { eliminarUsuario: eliminarUsuarioRepositorio } = require('../data/repositorios/eliminarUsuarioRepositorio.js');
 
 /**
  * Controlador para eliminar un usuario.

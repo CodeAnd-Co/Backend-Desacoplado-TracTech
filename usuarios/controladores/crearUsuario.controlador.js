@@ -1,7 +1,7 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 
 const bcrypt = require('bcrypt'); // Importa bcrypt
-const { crearUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { crearUsuarioRepositorio } = require('../data/repositorios/crearUsuarioRepositorio.js');
 
 /**
  * Controlador para crear un nuevo usuario
