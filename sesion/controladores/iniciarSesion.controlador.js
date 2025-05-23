@@ -2,9 +2,12 @@
 const {generarToken} = require('../../util/servicios/generarToken');
 
 const validador = require('validator');
-const repo = require('../data/repositorios/sesionRepositorio');
+const repo = require('../data/repositorios/obtenerUsuarioRepositorio');
 
 exports.iniciarSesion = async (peticion, respuesta) => {
+    if (!peticion.body) {
+        return respuesta.status(400).json({ mensaje: 'Faltan datos requeridos' });
+    }
     const { correo, contrasenia } = peticion.body;
     if (!correo || !contrasenia) {
         return respuesta.status(400).json({ mensaje: 'Faltan datos requeridos' });

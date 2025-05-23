@@ -7,6 +7,9 @@ const cerrarSesionControlador = require('../controladores/cerrarSesion.controlad
 
 const ruteador = Router();
 
-ruteador.post('/', verificarToken, cerrarSesionControlador.cerrarSesion);
+ruteador.post(
+    '/', 
+    verificarToken, 
+    cerrarSesionControlador.cerrarSesion);
 
 module.exports = ruteador;
