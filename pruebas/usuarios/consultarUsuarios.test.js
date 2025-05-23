@@ -26,7 +26,7 @@ const { consultarUsuarios } = require('../../usuarios/controladores/consultarUsu
 const { consultarUsuarios: consultarUsuariosRepositorio } = require('../../usuarios/data/repositorios/consultarUsuariosRepositorio.js');
 
 // Mock del módulo de repositorios, si es necesario
-jest.mock('../../usuarios/data/repositorios/usuarios.repositorio.js');
+jest.mock('../../usuarios/data/repositorios/consultarUsuariosRepositorio.js');
 
 // Mock de los objetos de Express
 const mockPeticion = {};
