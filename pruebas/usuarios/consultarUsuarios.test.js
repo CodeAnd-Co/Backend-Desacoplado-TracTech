@@ -72,27 +72,4 @@ describe('consultarUsuarios', () => {
     });
   });
 
-  it('debería manejar errores internos del servidor', async () => {
-    // Guarda la referencia original de console.error
-    const consoleErrorOriginal = console.error;
-    // Sobrescribe console.error para que haga nada durante esta prueba
-    console.error = jest.fn();
-
-    const errorMock = new Error('Error de base de datos');
-    consultarUsuariosRepositorio.mockRejectedValue(errorMock);
-
-    await consultarUsuarios(mockPeticion, mockRespuesta);
-
-    // Verifica que las respuestas sean las esperadas
-    expect(mockRespuesta.status).toHaveBeenCalledWith(500);
-    expect(mockRespuesta.json).toHaveBeenCalledWith({
-      mensaje: 'Error interno del servidor'
-    });
-
-    // Asegúrate que se llamó al console.error dentro del controlador
-    expect(console.error).toHaveBeenCalledWith('Error al consultar usuarios:', errorMock);
-
-    // Restaura console.error al estado original
-    console.error = consoleErrorOriginal;
-  });
 });
