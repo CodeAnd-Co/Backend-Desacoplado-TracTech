@@ -40,7 +40,11 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
     });
 
   } catch (error) {
-    console.error('Error al crear usuario:', error);
+    if (error.status && error.mensaje) {
+      return respuesta.status(error.status).json({
+        mensaje: error.mensaje,
+      });
+    }
     respuesta.status(500).json({
       mensaje: 'Error interno del servidor, intente más tarde',
     });

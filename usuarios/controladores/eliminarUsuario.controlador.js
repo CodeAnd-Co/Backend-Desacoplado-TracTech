@@ -24,24 +24,30 @@ exports.eliminarUsuario = async (peticion, respuesta) => {
     
         if (!id) {
             return respuesta.status(500).json({
-                mensaje: 'Error interno del servidor',
+                mensaje: 'No se ha proporcionado el ID del usuario',
             });
         }
     
         // Llamar al repositorio para eliminar el usuario
         const resultado = await eliminarUsuarioRepositorio(id);
+
+        if (resultado && resultado.status){
+            return respuesta.status(resultado.status).json({
+                mensaje: resultado.mensaje,
+            });
+        }
     
         if (resultado) {
             respuesta.status(200).json({
                 mensaje: 'Usuario eliminado exitosamente',
             });
-        } else {
-            respuesta.status(404).json({
-                mensaje: 'Usuario no encontrado',
+        } 
+    } catch (error) {
+        if (error.status && error.mensaje) {
+            return respuesta.status(error.status).json({
+                mensaje: error.mensaje,
             });
         }
-    } catch (error) {
-        console.error('Error al eliminar usuario:', error);
         respuesta.status(500).json({
             mensaje: 'Error interno del servidor',
         });
