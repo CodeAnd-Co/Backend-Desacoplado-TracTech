@@ -18,7 +18,6 @@ async function modificarUsuario(idUsuario, cambios) {
   if (cambios.idRol != null) { sets.push('idRol_FK = ?'); valores.push(cambios.idRol); }
   if (sets.length === 0) return Promise.reject(new Error('No se proporcionaron campos para actualizar'));
   const datos = await modelo.modificarUsuario(idUsuario, sets.join(', '), valores);
-  console.log(datos);
   if (datos.affectedRows === 0) {
     return {
       estado: 404,
@@ -26,7 +25,6 @@ async function modificarUsuario(idUsuario, cambios) {
     }
   }
   if (datos.code === 'ER_DUP_ENTRY') {
-    console.log("El correo ya está en uso");
     return {
       estado: 400,
       mensaje: 'El correo ya está en uso',
