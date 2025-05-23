@@ -1,13 +1,17 @@
-const modelo = require('../modelos/consultaRolesModelo');
-
+const modelo = require('../modelos/consultarUsuariosModelo.js');
 
 function consultarUsuarios() {
     const rolAExcluir = process.env.SU;
-    return modelo.consultarUsuarios(rolAExcluir)
-        .then(resultados => resultados.map(usuario => new Usuario({
-          id: usuario.idUsuario,
-          nombre: usuario.Nombre,
-          correo: usuario.Correo,
-          rol: usuario.Rol,
-        })));
+    const datos = modelo.consultarUsuarios(rolAExcluir);
+    if (!datos || datos.length === 0) {
+        return {
+            status: 404,
+            mensaje: 'No se encontraron usuarios',
+        };
+    }
+    return datos;
   }
+
+module.exports = {
+    consultarUsuarios,
+};

@@ -15,4 +15,6 @@ function consultarUsuarios(rolAExcluir) {
     });
 }
 
-module.exports = consultarUsuarios
+module.exports ={
+    consultarUsuarios,
+} 
