@@ -17,8 +17,8 @@ exports.consultarRoles = async (peticion, respuesta) => {
         mensaje: 'No se encontraron roles',
       });
     }
-    if (roles && roles.status) {
-      return respuesta.status(resultados.status).json({
+    if (roles && roles.estado) {
+      return respuesta.status(resultados.estado).json({
         mensaje: resultados.mensaje,
       });
     }

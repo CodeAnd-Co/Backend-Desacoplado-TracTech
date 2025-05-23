@@ -21,26 +21,26 @@ async function modificarUsuario(idUsuario, cambios) {
   console.log(datos);
   if (datos.affectedRows === 0) {
     return {
-      status: 404,
+      estado: 404,
       mensaje: 'El usuario no existe',
     }
   }
   if (datos.code === 'ER_DUP_ENTRY') {
     console.log("El correo ya está en uso");
     return {
-      status: 400,
+      estado: 400,
       mensaje: 'El correo ya está en uso',
     };
   }
 
   if (!datos){
     return {
-      status: 500,
+      estado: 500,
       mensaje: 'Error al modificar el usuario',
     };
   }
   return {
-    status: 200,
+    estado: 200,
     mensaje: 'Usuario modificado exitosamente',
   };
 }

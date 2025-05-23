@@ -1,5 +1,6 @@
 // sesion/controladores/iniciarSesion.controlador.js
-const jwt = require('jsonwebtoken');
+const {generarToken} = require('../../util/servicios/generarToken');
+
 const validador = require('validator');
 const repo = require('../data/repositorios/sesionRepositorio');
 
@@ -8,7 +9,7 @@ exports.iniciarSesion = async (peticion, respuesta) => {
     if (!correo || !contrasenia) {
         return respuesta.status(400).json({ mensaje: 'Faltan datos requeridos' });
     }
-    if (!validarCorreo(correo)) {
+    if (!validador.isEmail(correo)) {
         return respuesta.status(400).json({ mensaje: 'Correo inválido' });
     }
     const correoSanitizado = validador.normalizeEmail(correo);
@@ -26,16 +27,3 @@ exports.iniciarSesion = async (peticion, respuesta) => {
         respuesta.status(500).json({ mensaje: 'Error interno del servidor' });
     }
 };
-
-function generarToken(usuario) {
-    return jwt.sign(
-        { id: usuario.idUsuario, correo: usuario.Correo },
-        process.env.SECRETO_JWT,
-        { expiresIn: process.env.DURACION_JWT }
-    );
-}
-
-function validarCorreo(correo) {
-    const regex = /^[a-z0-9!#$%&'*+?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-    return regex.test(correo);
-}

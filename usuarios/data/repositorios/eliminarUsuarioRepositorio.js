@@ -5,26 +5,26 @@ const modelo = require('../modelos/eliminarUsuarioModelo.js');
 async function eliminarUsuario(id) {
     if (!id) {
         return {
-            status: 500,
+            estado: 500,
             mensaje: 'Falta el ID del usuario',
         };
     }
     if (isNaN(id)) {
         return {
-            status: 400,
+            estado: 400,
             mensaje: 'El ID del usuario debe ser un número',
         };
     }
     const datos = await modelo.eliminarUsuario(id)
     if (datos.affectedRows === 0) {
         return {
-            status: 404,
+            estado: 404,
             mensaje: 'El usuario no existe',
         };
     }
 
     return {
-        status: 200,
+        estado: 200,
         mensaje: 'Usuario eliminado exitosamente',
     };
   }

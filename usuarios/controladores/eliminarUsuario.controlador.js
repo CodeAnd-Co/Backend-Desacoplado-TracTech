@@ -31,8 +31,8 @@ exports.eliminarUsuario = async (peticion, respuesta) => {
         // Llamar al repositorio para eliminar el usuario
         const resultado = await eliminarUsuarioRepositorio(id);
 
-        if (resultado && resultado.status){
-            return respuesta.status(resultado.status).json({
+        if (resultado && resultado.estado){
+            return respuesta.status(resultado.estado).json({
                 mensaje: resultado.mensaje,
             });
         }
@@ -43,8 +43,8 @@ exports.eliminarUsuario = async (peticion, respuesta) => {
             });
         } 
     } catch (error) {
-        if (error.status && error.mensaje) {
-            return respuesta.status(error.status).json({
+        if (error.estado && error.mensaje) {
+            return respuesta.status(error.estado).json({
                 mensaje: error.mensaje,
             });
         }

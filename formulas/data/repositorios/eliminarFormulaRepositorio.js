@@ -5,13 +5,13 @@ const { eliminarFormulaModelo } = require('../modelos/eliminarFormulaModelo.js')
 async function eliminarFormulaRepositorio(id) {
     if (!id) {
         return {
-            status: 400,
+            estado: 400,
             mensaje: 'El id de la fórmula es requerido',
         };
     }
     if (isNaN(id)) {
         return {
-            status: 400,
+            estado: 400,
             mensaje: 'El id de la fórmula debe ser un número',
         };
     }
@@ -19,19 +19,19 @@ async function eliminarFormulaRepositorio(id) {
         const resultado = await eliminarFormulaModelo(id);
         if (!resultado || resultado.affectedRows === 0) {
             return {
-                status: 404,
+                estado: 404,
                 mensaje: 'No se encontró la fórmula o no se realizaron cambios',
                 resultado
             };
         }
         return {
-            status: 200,
+            estado: 200,
             mensaje: 'Fórmula eliminada con éxito',
             resultado
         };
     } catch (error) {
         return {
-            status: 500,
+            estado: 500,
             mensaje: 'Error interno del servidor, intente más tarde',
         };
     }

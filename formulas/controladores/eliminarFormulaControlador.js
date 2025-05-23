@@ -18,8 +18,8 @@ exports.eliminarFormula = async (peticion, respuesta) => {
         const idFormula = parseInt(id, 10);
         // Hace la consulta a la base de datos para eliminar la fórmula
         const resultado = await eliminarFormulaRepositorio(idFormula);
-        if (resultado && resultado.status) {
-            return respuesta.status(resultado.status).json({
+        if (resultado && resultado.estado) {
+            return respuesta.status(resultado.estado).json({
                 mensaje: resultado.mensaje
             });
         }

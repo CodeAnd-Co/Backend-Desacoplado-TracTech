@@ -6,7 +6,7 @@ function crearUsuario(nombre, correo, contrasenia, idRol) {
         conexion.query(consulta, [nombre, correo, contrasenia, idRol], (error, resultado) => {
             if (error.code === 'ER_DUP_ENTRY') {
                 return rechazar({
-                    status: 400,
+                    estado: 400,
                     mensaje: 'El correo ya está registrado',
                 });
             }

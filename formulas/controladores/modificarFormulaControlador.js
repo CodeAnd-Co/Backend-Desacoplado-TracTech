@@ -22,8 +22,8 @@ exports.modificarFormula = async (pet, res) => {
         
         const resultado = await modificarFormulaRepositorio(idNumero, nombre, formula);
         
-        if (resultado && resultado.status) {
-            return res.status(resultado.status).json({
+        if (resultado && resultado.estado) {
+            return res.status(resultado.estado).json({
                 mensaje: resultado.mensaje
             });
         }

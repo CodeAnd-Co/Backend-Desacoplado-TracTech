@@ -44,15 +44,15 @@ exports.modificarUsuario = async (peticion, respuesta) => {
         if (idRol) cambios.idRol = idRol;
 
         const datos = await modificarUsuario(idUsuario, cambios);
-        if (datos && datos.status) {
-          return respuesta.status(datos.status).json({ mensaje: datos.mensaje });
+        if (datos && datos.estado) {
+          return respuesta.status(datos.estado).json({ mensaje: datos.mensaje });
         }
     
         return respuesta.status(200).json({ mensaje: 'Usuario modificado exitosamente' });
 
     } catch (error) {
-      if (error.status && error.mensaje) {
-        return respuesta.status(error.status).json({ mensaje: error.mensaje });
+      if (error.estado && error.mensaje) {
+        return respuesta.status(error.estado).json({ mensaje: error.mensaje });
       }
       if (error.code === 'ER_DUP_ENTRY') {
         return respuesta.status(400).json({ mensaje: 'El correo ya está en uso' });

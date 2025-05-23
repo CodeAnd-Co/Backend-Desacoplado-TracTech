@@ -34,14 +34,14 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
     const resultado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRolFK);
     
     // Siempre retornar con el status y mensaje del repositorio
-    return respuesta.status(resultado.status).json({
+    return respuesta.status(resultado.estado).json({
       mensaje: resultado.mensaje,
       ...(resultado.idUsuario && { idUsuario: resultado.idUsuario })
     });
 
   } catch (error) {
-    if (error.status && error.mensaje) {
-      return respuesta.status(error.status).json({
+    if (error.estado && error.mensaje) {
+      return respuesta.status(error.estado).json({
         mensaje: error.mensaje,
       });
     }

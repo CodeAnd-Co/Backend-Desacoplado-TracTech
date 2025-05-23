@@ -5,7 +5,7 @@ function consultarUsuarios() {
     const datos = modelo.consultarUsuarios(rolAExcluir);
     if (!datos || datos.length === 0) {
         return {
-            status: 404,
+            estado: 404,
             mensaje: 'No se encontraron usuarios',
         };
     }
