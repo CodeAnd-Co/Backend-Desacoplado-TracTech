@@ -1,6 +1,8 @@
+// RF41 Administrador modifica usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF41
+
 const conexion = require("../../../util/servicios/bd");
 
-function modificarUsuario(idUsuario, sets, valores) {
+async function modificarUsuario(idUsuario, sets, valores) {
     const consulta = `
     UPDATE usuario
     SET ${sets}
@@ -14,4 +16,6 @@ function modificarUsuario(idUsuario, sets, valores) {
     });
 }
 
-module.exports = modificarUsuario
+module.exports = {
+    modificarUsuario
+} 
