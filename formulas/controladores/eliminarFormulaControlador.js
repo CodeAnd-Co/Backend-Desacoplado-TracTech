@@ -30,7 +30,7 @@ exports.eliminarFormula = async (peticion, respuesta) => {
         
     } catch (error) {
         respuesta.status(500).json({
-            mensaje: 'Error interno del servidor, intente más tarde',
+            mensaje: `Error interno del servidor, intente más tarde: ${error}`,
         });
     }
     

@@ -55,7 +55,7 @@ async function modificarFormulaRepositorio(id, nombre, formula) {
     } catch (error) {
         return {
             estado: 500,
-            mensaje: 'Error de conexión, intente más tarde',
+            mensaje: `Error de conexión, intente más tarde: ${error}`,
         };
     }
 }

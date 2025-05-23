@@ -10,6 +10,7 @@ const ruteador = Router();
 ruteador.post(
     '/', 
     verificarToken, 
-    cerrarSesionControlador.cerrarSesion);
+    cerrarSesionControlador.cerrarSesion
+);
 
 module.exports = ruteador;

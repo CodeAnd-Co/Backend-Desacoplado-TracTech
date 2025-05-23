@@ -44,7 +44,7 @@ async function guardarFormulaRepositorio(nombre, formula) {
     } catch (error) {
         return {
             estado: 500,
-            mensaje: 'Error interno del servidor, intente más tarde',
+            mensaje: `Error interno del servidor, intente más tarde: ${error}`,
         };
     }
     

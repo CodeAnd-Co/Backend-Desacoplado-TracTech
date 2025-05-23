@@ -18,8 +18,8 @@ exports.consultarRoles = async (peticion, respuesta) => {
       });
     }
     if (roles && roles.estado) {
-      return respuesta.status(resultados.estado).json({
-        mensaje: resultados.mensaje,
+      return respuesta.status(roles.estado).json({
+        mensaje: roles.mensaje,
       });
     }
 

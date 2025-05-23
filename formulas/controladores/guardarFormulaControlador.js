@@ -32,7 +32,7 @@ exports.guardarFormula = async (pet, res) => {
 
     } catch (error) {
         return res.status(500).json({
-            mensaje: 'Error interno del servidor, intente más tarde',
+            mensaje: `Error interno del servidor, intente más tarde: ${error}`,
         });
     }
     
