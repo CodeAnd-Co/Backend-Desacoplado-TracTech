@@ -7,6 +7,19 @@ async function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
       mensaje: 'Un campo requerido está vacío',
     };
   }
+  // verificar que el rol sea un número
+  if (isNaN(idRol)) {
+    return {
+      estado: 400,
+      mensaje: 'El idRol no es un número',
+    };
+  }
+  if (idRol <1 || idRol > 3) {
+    return {
+      estado: 400,
+      mensaje: 'El idRol no es válido',
+    };
+  }
   
   if (nombre.length > process.env.LONGITUD_MAXIMA_NOMBRE_USUARIO) {
     return {

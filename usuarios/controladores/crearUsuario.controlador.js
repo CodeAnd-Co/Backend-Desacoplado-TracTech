@@ -20,6 +20,7 @@ exports.crearUsuarioControlador = async (peticion, respuesta) => {
       });
     }
     
+    
     if (contrasenia.length > process.env.LONGITUD_MAXIMA_CONTRASENIA) {
       return respuesta.status(400).json({
         mensaje: `La contraseña no puede exceder los ${process.env.LONGITUD_MAXIMA_CONTRASENIA} caracteres`,
