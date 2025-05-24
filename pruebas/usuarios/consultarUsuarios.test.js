@@ -9,6 +9,8 @@
  * @see https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF40
  */
 
+// Mock del repositorio antes de las importaciones
+jest.mock('../../usuarios/data/repositorios/consultarUsuariosRepositorio.js');
 
 // Importa estos módulos antes que cualquier otra cosa
 jest.mock('../../util/servicios/bd', () => {
@@ -22,7 +24,7 @@ jest.mock('../../util/servicios/bd', () => {
 });
 
 // Ahora, importa los módulos de prueba a continuación
-const { consultarUsuarios } = require('../../usuarios/controladores/consultarUsuarios.controlador.js'); // Ajusta la ruta según tu estructura de proyecto
+const { consultarUsuarios } = require('../../usuarios/controladores/consultarUsuarios.controlador.js');
 const { consultarUsuarios: consultarUsuariosRepositorio } = require('../../usuarios/data/repositorios/consultarUsuariosRepositorio.js');
 
 // Mock de los objetos de Express
@@ -36,7 +38,6 @@ const mockRespuesta = {
 describe('consultarUsuarios', () => {
 
   // Limpia los mocks antes de cada prueba
-  // Esto asegura que cada prueba comience con un estado limpio
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -47,12 +48,10 @@ describe('consultarUsuarios', () => {
       { id: 2, nombre: 'Ana', correo: 'ana@example.com' }
     ];
 
-    // Simula la respuesta del repositorio de usuarios
     consultarUsuariosRepositorio.mockResolvedValue(usuariosMock);
 
     await consultarUsuarios(mockPeticion, mockRespuesta);
 
-    // Verifica que las respuestas sean las esperadas
     expect(mockRespuesta.status).toHaveBeenCalledWith(200);
     expect(mockRespuesta.json).toHaveBeenCalledWith({
       mensaje: 'Consulta de usuarios exitosa',
@@ -65,11 +64,82 @@ describe('consultarUsuarios', () => {
 
     await consultarUsuarios(mockPeticion, mockRespuesta);
 
-    // Verifica que las respuestas sean las esperadas
     expect(mockRespuesta.status).toHaveBeenCalledWith(404);
     expect(mockRespuesta.json).toHaveBeenCalledWith({
       mensaje: 'No se encontraron usuarios'
     });
   });
 
+  it('debería manejar correctamente cuando el repositorio retorna null', async () => {
+    consultarUsuariosRepositorio.mockResolvedValue(null);
+
+    await consultarUsuarios(mockPeticion, mockRespuesta);
+
+    expect(mockRespuesta.status).toHaveBeenCalledWith(404);
+    expect(mockRespuesta.json).toHaveBeenCalledWith({
+      mensaje: 'No se encontraron usuarios'
+    });
+  });
+
+  it('debería manejar correctamente cuando el repositorio retorna undefined', async () => {
+    consultarUsuariosRepositorio.mockResolvedValue(undefined);
+
+    await consultarUsuarios(mockPeticion, mockRespuesta);
+
+    expect(mockRespuesta.status).toHaveBeenCalledWith(404);
+    expect(mockRespuesta.json).toHaveBeenCalledWith({
+      mensaje: 'No se encontraron usuarios'
+    });
+  });
+
+  it('debería devolver solo un usuario cuando hay uno disponible', async () => {
+    const usuarioUnico = [{ id: 1, nombre: 'Usuario Solo', correo: 'solo@example.com' }];
+    
+    consultarUsuariosRepositorio.mockResolvedValue(usuarioUnico);
+
+    await consultarUsuarios(mockPeticion, mockRespuesta);
+
+    expect(mockRespuesta.status).toHaveBeenCalledWith(200);
+    expect(mockRespuesta.json).toHaveBeenCalledWith({
+      mensaje: 'Consulta de usuarios exitosa',
+      usuarios: usuarioUnico
+    });
+  });
+
+  it('debería manejar errores de conexión a la base de datos', async () => {
+    const consoleErrorOriginal = console.error;
+    console.error = jest.fn();
+
+    const errorConexion = new Error('Connection timeout');
+    consultarUsuariosRepositorio.mockRejectedValue(errorConexion);
+
+    await consultarUsuarios(mockPeticion, mockRespuesta);
+
+    expect(mockRespuesta.status).toHaveBeenCalledWith(500);
+    expect(mockRespuesta.json).toHaveBeenCalledWith({
+      mensaje: 'Error interno del servidor'
+    });
+    expect(console.error).toHaveBeenCalledWith('Error al consultar usuarios:', errorConexion);
+
+    console.error = consoleErrorOriginal;
+  });
+
+  it('debería llamar al repositorio exactamente una vez', async () => {
+    const usuariosMock = [{ id: 1, nombre: 'Test', correo: 'test@example.com' }];
+    consultarUsuariosRepositorio.mockResolvedValue(usuariosMock);
+
+    await consultarUsuarios(mockPeticion, mockRespuesta);
+
+    expect(consultarUsuariosRepositorio).toHaveBeenCalledTimes(1);
+  });
+
+  it('debería verificar que status y json sean llamados exactamente una vez en caso exitoso', async () => {
+    const usuariosMock = [{ id: 1, nombre: 'Test', correo: 'test@example.com' }];
+    consultarUsuariosRepositorio.mockResolvedValue(usuariosMock);
+
+    await consultarUsuarios(mockPeticion, mockRespuesta);
+
+    expect(mockRespuesta.status).toHaveBeenCalledTimes(1);
+    expect(mockRespuesta.json).toHaveBeenCalledTimes(1);
+  });
 });
