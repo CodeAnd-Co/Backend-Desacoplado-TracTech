@@ -2,7 +2,7 @@
 // RF3 Usuario cierra sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF3
 
 const { verify } = require('jsonwebtoken');
-const listaNegra = require('./listaNegra');
+const listaNegra = require('../servicios/listaNegra');
 
 /**
  * Middleware para verificar el token JWT en la cabecera de autorización.

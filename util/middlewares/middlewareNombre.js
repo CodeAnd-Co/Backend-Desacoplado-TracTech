@@ -1,4 +1,4 @@
-const conexion = require('../util/bd');
+const conexion = require('../servicios/bd');
 
 /**
  * Middleware para obtener información del usuario basándose en su ID obtenido del token JWT.

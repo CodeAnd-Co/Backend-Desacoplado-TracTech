@@ -8,80 +8,140 @@
  * @see https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
  */
 
-// Prueba de la conexión a la base de datos
-jest.mock('../../util/bd', () => {
-    return {
-      query: jest.fn()
+// Mock del modelo antes de las importaciones
+jest.mock('../../usuarios/data/modelos/crearUsuarioModelo.js');
+
+const { crearUsuarioRepositorio } = require('../../usuarios/data/repositorios/crearUsuarioRepositorio.js');
+const modelo = require('../../usuarios/data/modelos/crearUsuarioModelo.js');
+
+describe('crearUsuarioRepositorio', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Mock de variables de entorno necesarias para las validaciones
+    process.env.LONGITUD_MAXIMA_NOMBRE_USUARIO = '100';
+    process.env.LONGITUD_MAXIMA_CORREO = '100';
+  });
+
+  it('debería insertar un usuario y devolver su ID', async () => {
+    const usuarioPrueba = {
+      nombre: 'Juan',
+      correo: 'juan@example.com',
+      contrasenia: '123456',
+      idRol: 2
     };
-  });
-  
-  const conexion = require('../../util/bd');
-  const { crearUsuarioRepositorio } = require('../../usuarios/data/repositorios/usuarios.repositorio.js');
-  
-  describe('crearUsuarioRepositorio', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-  
-    it('debería insertar un usuario y devolver su ID', async () => {
-      const usuarioPrueba = {
-        nombre: 'Juan',
-        correo: 'juan@example.com',
-        contrasenia: '123456',
-        idRol: 2
-      };
-  
-      const resultadoPrueba = { insertId: 1 };
-  
-      // Simula la respuesta de la base de datos
-      conexion.query.mockImplementation((sql, params, callback) => {
-        callback(null, resultadoPrueba);
-      });
-  
-      const idUsuario = await crearUsuarioRepositorio(
-        usuarioPrueba.nombre,
-        usuarioPrueba.correo,
-        usuarioPrueba.contrasenia,
-        usuarioPrueba.idRol
-      );
-  
-      expect(conexion.query).toHaveBeenCalledWith(
-        'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)',
-        [usuarioPrueba.nombre, usuarioPrueba.correo, usuarioPrueba.contrasenia, usuarioPrueba.idRol],
-        expect.any(Function)
-      );
-  
-      expect(idUsuario).toBe(resultadoPrueba.insertId);
-    });
-  
-    it('debería manejar errores al intentar insertar un usuario', async () => {
-      const usuarioPrueba = {
-        nombre: 'Juan',
-        correo: 'juan@example.com',
-        contrasenia: '123456',
-        idRol: 2
-      };
-  
-      const errorPrueba = new Error('Error de base de datos');
-  
-      // Simula un error en la base de datos
-      conexion.query.mockImplementation((sql, params, callback) => {
-        callback(errorPrueba, null);
-      });
-  
-      await expect(
-        crearUsuarioRepositorio(
-          usuarioPrueba.nombre,
-          usuarioPrueba.correo,
-          usuarioPrueba.contrasenia,
-          usuarioPrueba.idRol
-        )
-      ).rejects.toThrow('Error de base de datos');
-  
-      expect(conexion.query).toHaveBeenCalledWith(
-        'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)',
-        [usuarioPrueba.nombre, usuarioPrueba.correo, usuarioPrueba.contrasenia, usuarioPrueba.idRol],
-        expect.any(Function)
-      );
+
+    const idUsuarioEsperado = 1;
+
+    // Mock del modelo para simular éxito
+    modelo.crearUsuario.mockResolvedValue(idUsuarioEsperado);
+
+    const resultado = await crearUsuarioRepositorio(
+      usuarioPrueba.nombre,
+      usuarioPrueba.correo,
+      usuarioPrueba.contrasenia,
+      usuarioPrueba.idRol
+    );
+
+    expect(modelo.crearUsuario).toHaveBeenCalledWith(
+      usuarioPrueba.nombre,
+      usuarioPrueba.correo,
+      usuarioPrueba.contrasenia,
+      usuarioPrueba.idRol
+    );
+
+    expect(resultado).toEqual({
+      estado: 201,
+      mensaje: 'Usuario creado con éxito',
+      idUsuario: idUsuarioEsperado
     });
   });
+
+  it('debería manejar errores al intentar insertar un usuario', async () => {
+    const usuarioPrueba = {
+      nombre: 'Juan',
+      correo: 'juan@example.com',
+      contrasenia: '123456',
+      idRol: 2
+    };
+
+    const errorPrueba = new Error('Error de base de datos');
+
+    // Mock del modelo para simular error
+    modelo.crearUsuario.mockRejectedValue(errorPrueba);
+
+    const resultado = await crearUsuarioRepositorio(
+      usuarioPrueba.nombre,
+      usuarioPrueba.correo,
+      usuarioPrueba.contrasenia,
+      usuarioPrueba.idRol
+    );
+
+    expect(modelo.crearUsuario).toHaveBeenCalledWith(
+      usuarioPrueba.nombre,
+      usuarioPrueba.correo,
+      usuarioPrueba.contrasenia,
+      usuarioPrueba.idRol
+    );
+
+    expect(resultado).toEqual({
+      estado: 500,
+      mensaje: 'Error de conexión, intente más tarde'
+    });
+  });
+
+  it('debería manejar error de correo duplicado', async () => {
+    const usuarioPrueba = {
+      nombre: 'Juan',
+      correo: 'juan@example.com',
+      contrasenia: '123456',
+      idRol: 2
+    };
+
+    const errorDuplicado = {
+      estado: 400,
+      mensaje: 'El correo ya está registrado'
+    };
+
+    // Mock del modelo para simular error de duplicado
+    modelo.crearUsuario.mockRejectedValue(errorDuplicado);
+
+    const resultado = await crearUsuarioRepositorio(
+      usuarioPrueba.nombre,
+      usuarioPrueba.correo,
+      usuarioPrueba.contrasenia,
+      usuarioPrueba.idRol
+    );
+
+    expect(resultado).toEqual({
+      estado: 400,
+      mensaje: 'El correo ya está registrado'
+    });
+  });
+
+  it('debería validar campos requeridos', async () => {
+    const resultado = await crearUsuarioRepositorio('', '', '', '');
+
+    expect(resultado).toEqual({
+      estado: 400,
+      mensaje: 'Un campo requerido está vacío'
+    });
+  });
+
+  it('debería validar que idRol sea un número válido', async () => {
+    const resultado = await crearUsuarioRepositorio('Juan', 'juan@test.com', '123456', 'invalid');
+
+    expect(resultado).toEqual({
+      estado: 400,
+      mensaje: 'El idRol no es un número'
+    });
+  });
+
+  it('debería validar rango de idRol', async () => {
+    const resultado = await crearUsuarioRepositorio('Juan', 'juan@test.com', '123456', 5);
+
+    expect(resultado).toEqual({
+      estado: 400,
+      mensaje: 'El idRol no es válido'
+    });
+  });
+});

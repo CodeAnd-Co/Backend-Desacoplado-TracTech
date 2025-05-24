@@ -3,10 +3,10 @@
 
 const express = require('express');
 const ruteador = express.Router();
-const verificarToken = require('../../util/middlewareAutenticacion');
+const verificarToken = require('../../util/middlewares/middlewareAutenticacion');
 
 const consultarRolesControlador = require('../controladores/consultarRoles.controlador');
-const { verificarPermisos, checarPermisos } = require('../../util/middlewarePermisos');
+const { verificarPermisos, checarPermisos } = require('../../util/middlewares/middlewarePermisos');
 
 ruteador.get(
   '/',

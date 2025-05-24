@@ -1,49 +1,53 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
 
-const bcrypt = require('bcrypt');
-const { crearUsuarioRepositorio, existeCorreoRegistrado } = require('../data/repositorios/usuarios.repositorio.js');
-const { validarYLimpiarUsuario }  = require('./validacionesCompartidas.js');
+const bcrypt = require('bcrypt'); // Importa bcrypt
+const { crearUsuarioRepositorio } = require('../data/repositorios/crearUsuarioRepositorio.js');
 
 /**
- * Controlador para crear un nuevo usuario.
- * Valida y sanitiza con esCrear = true, cifra la contraseña
- * y llama al repositorio para insertarlo en BD.
- *
- * @async
- * @function crearUsuarioControlador
- * @param {import('express').Request}  peticion  - Datos de entrada: { nombre, correo, contrasenia, idRol }
- * @param {import('express').Response} respuesta - Objeto de respuesta de Express
+ * Controlador para crear un nuevo usuario
+ * @param {object} peticion - Objeto de petición de Express
+ * @param {object} respuesta - Objeto de respuesta de Express
+ * @returns {object} Respuesta JSON con el ID del nuevo usuario o mensaje de error
+ * @throws {Error} Error interno del servidor al procesar la petición
  */
 exports.crearUsuarioControlador = async (peticion, respuesta) => {
   try {
-    // Validamos y limpiamos todos los campos obligatorios
-    const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body, true);
-    if (error) {
-      return respuesta.status(400).json({ mensaje: error });
+    const { nombre, correo, contrasenia, idRolFK } = peticion.body;
+    
+    if (!nombre || !correo || !contrasenia || !idRolFK) {
+      return respuesta.status(400).json({
+        mensaje: 'Un campo requerido está vacío',
+      });
     }
-
-    const { nombre, correo, contrasenia, idRol } = datosSanitizados;
-
-    // Checar si el correo ya existe
-    const existeCorreo = await existeCorreoRegistrado(correo);
-    if (existeCorreo) {
-      return respuesta.status(409).json({ mensaje: 'Ya existe un usuario con ese correo.' });
+    
+    
+    if (contrasenia.length > process.env.LONGITUD_MAXIMA_CONTRASENIA) {
+      return respuesta.status(400).json({
+        mensaje: `La contraseña no puede exceder los ${process.env.LONGITUD_MAXIMA_CONTRASENIA} caracteres`,
+      });
     }
+    
+    // Cifrar la contraseña antes de guardarla
+    const rondasSalteadas = 12;
+    const contraseniaCifrada = await bcrypt.hash(contrasenia, rondasSalteadas);
 
-    // Ciframos la contraseña
-    const rondasDeCifrado = 12;
-    const contraseniaCifrada = await bcrypt.hash(contrasenia, rondasDeCifrado);
-
-    const idInsertado = await crearUsuarioRepositorio(
-      nombre,
-      correo,
-      contraseniaCifrada,
-      idRol
-    );
-
-    return respuesta.status(201).json({ mensaje: 'Usuario creado exitosamente', id: idInsertado });
+    // Llamar al repositorio con la contraseña cifrada
+    const resultado = await crearUsuarioRepositorio(nombre, correo, contraseniaCifrada, idRolFK);
+    
+    // Siempre retornar con el status y mensaje del repositorio
+    return respuesta.status(resultado.estado).json({
+      mensaje: resultado.mensaje,
+      ...(resultado.idUsuario && { idUsuario: resultado.idUsuario })
+    });
 
   } catch (error) {
-    return respuesta.status(500).json({ mensaje: error });
+    if (error.estado && error.mensaje) {
+      return respuesta.status(error.estado).json({
+        mensaje: error.mensaje,
+      });
+    }
+    respuesta.status(500).json({
+      mensaje: 'Error interno del servidor, intente más tarde',
+    });
   }
 };

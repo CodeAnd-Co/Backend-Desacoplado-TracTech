@@ -1,8 +1,9 @@
 // RF41 Administrador modifica usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF41
 
-const { modificarUsuario: modificarUsuarioRepositorio, existeCorreoRegistrado } = require('../data/repositorios/usuarios.repositorio.js');
-const { validarYLimpiarUsuario } = require('./validacionesCompartidas.js');
+const { modificarUsuario } = require('../data/repositorios/modificarUsuarioRepositorio.js');
+const { validarYLimpiarUsuario } = require('../../util/servicios/validarUsuario.js');
 const bcrypt = require('bcrypt');
+
 
 /**
  * Esta función valida y sanitiza los datos recibidos desde el cuerpo de la petición HTTP.
@@ -17,41 +18,48 @@ const bcrypt = require('bcrypt');
  */
 exports.modificarUsuario = async (peticion, respuesta) => {
     try {
+      if (!peticion.body) {
+        return respuesta.status(400).json({ 
+          mensaje: 'No se recibieron datos para modificar el usuario'
+        });
+      }
+
         const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body);
 
         if (error) {
+          console.error('Error de validación:', error);
             return respuesta.status(400).json({ mensaje: error });
         }
       
         const { idUsuario, nombre, correo, contrasenia, idRol } = datosSanitizados;
 
         const cambios = {};
-        if (nombre) {
-            cambios.nombre = nombre;
-        }
-        if (correo) {
-            // Checar si el correo ya existe
-            const existe = await existeCorreoRegistrado(correo, idUsuario);
-            if (existe) {
-                return respuesta.status(409).json({ mensaje: 'Ya existe un usuario con ese correo.' });
-            }
-            cambios.correo = correo;
-        }
-
+        if (nombre) cambios.nombre = nombre;
+        if (correo) cambios.correo = correo;
         if (contrasenia) {
-          // Ciframos la contraseña
-          const rondasDeCifrado = await bcrypt.hash(contrasenia, 12);
-          cambios.contrasenia = rondasDeCifrado;
+          // 12 iteraciones para el hash
+          const contraseniaHasheada = await bcrypt.hash(contrasenia, 12);
+          cambios.contrasenia = contraseniaHasheada;
         }
-        if (idRol) {
-            cambios.idRol = idRol;
-        }
+        if (idRol) cambios.idRol = idRol;
 
-        await modificarUsuarioRepositorio(idUsuario, cambios);
+        const datos = await modificarUsuario(idUsuario, cambios);
+        if (datos && datos.estado) {
+          return respuesta.status(datos.estado).json({ mensaje: datos.mensaje });
+        }
     
         return respuesta.status(200).json({ mensaje: 'Usuario modificado exitosamente' });
 
     } catch (error) {
+      if (error.estado && error.mensaje) {
+        return respuesta.status(error.estado).json({ mensaje: error.mensaje });
+      }
+      if (error.code === 'ER_DUP_ENTRY') {
+        return respuesta.status(400).json({ mensaje: 'El correo ya está en uso' });
+      }
+      
         return respuesta.status(500).json({ mensaje: error });
     }
 }
+
+
