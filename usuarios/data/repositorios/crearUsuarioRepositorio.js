@@ -36,8 +36,7 @@ async function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
   }
 
   try {
-    const datos = await modelo.crearUsuario(nombre, correo, contrasenia, idRol);   
-    
+    const datos = await modelo.crearUsuario(nombre, correo, contrasenia, idRol);      
     return {
       estado: 201,
       mensaje: 'Usuario creado con éxito',
@@ -52,9 +51,7 @@ async function crearUsuarioRepositorio(nombre, correo, contrasenia, idRol) {
         mensaje: error.mensaje,
       };
     }
-    
-    // Para otros errores no esperados
-    console.error('Error en repositorio:', error);
+
     return {
       estado: 500,
       mensaje: 'Error de conexión, intente más tarde',
