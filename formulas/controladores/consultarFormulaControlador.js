@@ -20,7 +20,7 @@ exports.consultarFormula = async (pet, res) => {
         }
         return resultado;
     });
-    if (!datos) {
+    if (datos.length() === 0) {
         return res.status(500).json({
             mensaje: 'Error al consultar las fórmulas: no se encontraron fórmulas',
         });
