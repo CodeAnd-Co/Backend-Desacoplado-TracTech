@@ -3,6 +3,8 @@ const ruteador = express.Router();
 
 const seleccionarPlantillaControlador = require('../controladores/seleccionarPlantillaControlador');
 
-ruteador.post('/', seleccionarPlantillaControlador.seleccionarPlantilla);
+ruteador.post(
+    '/', 
+    seleccionarPlantillaControlador.seleccionarPlantilla);
 
 module.exports = ruteador;
