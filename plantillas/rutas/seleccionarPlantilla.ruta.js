@@ -5,6 +5,7 @@ const seleccionarPlantillaControlador = require('../controladores/seleccionarPla
 
 ruteador.post(
     '/', 
-    seleccionarPlantillaControlador.seleccionarPlantilla);
+    seleccionarPlantillaControlador.seleccionarPlantilla
+);
 
 module.exports = ruteador;

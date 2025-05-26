@@ -88,6 +88,7 @@ const ruteador = express.Router();
  */
 ruteador.post(
     '/', 
-    iniciarSesionControlador.iniciarSesion);
+    iniciarSesionControlador.iniciarSesion
+);
 
 module.exports = ruteador;
