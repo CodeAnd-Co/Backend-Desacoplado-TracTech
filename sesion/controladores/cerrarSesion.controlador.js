@@ -1,6 +1,6 @@
 // RF3 Usuario cierra sesión - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF3
 
-const listaNegra = require('../../util/listaNegra'); // Importar la lista negra para almacenar tokens revocados temporalmente
+const listaNegra = require('../../util/servicios/listaNegra'); // Importar la lista negra para almacenar tokens revocados temporalmente
 
 /**
  * Controlador para cerrar sesión.
