@@ -54,9 +54,9 @@ app.use('/plantillas', plantillasRutas);
 app.use('/formulas', formulasRutas);
 app.use('/usuarios', usuariosRutas);
 
-const verificarToken = require('./util/middlewareAutenticacion');
-const { verificarPermisos } = require('./util/middlewarePermisos');
-const { obtenerNombreUsuario }  = require('./util/middlewareNombre');
+const verificarToken = require('./util/middlewares/middlewareAutenticacion');
+const { verificarPermisos } = require('./util/middlewares/middlewarePermisos');
+const { obtenerNombreUsuario }  = require('./util/middlewares/middlewareNombre');
 
 app.get('/', verificarToken, verificarPermisos, obtenerNombreUsuario, (pet, res) => {
   res.status(200).json({
