@@ -37,7 +37,6 @@ exports.verificarEstado = async (peticion, respuesta) => {
             });
         }        // Buscar el dispositivo en el repositorio
         let dispositivo = await DispositivoRepositorio.obtenerPorId(dispositivoIdSanitizado);
-        console.log('Dispositivo encontrado:', dispositivo);
 
         // Obtener el ID del usuario desde el token (si está autenticado)
         const idUsuario = peticion.usuario?.id || null;

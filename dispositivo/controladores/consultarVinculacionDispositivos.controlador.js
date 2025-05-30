@@ -9,7 +9,6 @@ exports.consultarVinculaciones = async (peticion, respuesta) => {
     try {
         // Obtener todas las vinculaciones
         const vinculaciones = await DispositivoRepositorio.obtenerVinculaciones();
-        console.log('Vinculaciones obtenidas:', vinculaciones);
 
         // Formatear la respuesta
         const vinculacionesFormateadas = vinculaciones.map(vinculacion => ({

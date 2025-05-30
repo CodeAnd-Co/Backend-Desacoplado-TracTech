@@ -40,7 +40,6 @@ exports.eliminarUsuario = async (peticion, respuesta) => {
             // Si el usuario fue eliminado exitosamente, liberar sus dispositivos
             try {
                 const dispositivosLiberados = await DispositivoRepositorio.liberarDispositivosDeUsuario(parseInt(id));
-                console.log(`Se liberaron ${dispositivosLiberados} dispositivos del usuario ${id}`);
                   respuesta.status(200).json({
                     mensaje: 'Usuario eliminado exitosamente',
                     dispositivosLiberados
