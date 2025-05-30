@@ -8,11 +8,11 @@ const validator = require('validator');
 function validarYLimpiarUsuario(datos) {
     const numeroMinimoID = 1;
     const tamanioMinimoNombre = 1;
-    const tamanioMaximoNombre = 50;
+    const tamanioMaximoNombre = 45;
     const tamanioMinimoCorreo = 5;
     const tamanioMaximoCorreo = 50;
     const tamanioMinimoContrasenia = 8;
-    const tamanioMaximoContrasenia = 50;
+    const tamanioMaximoContrasenia = 512;
   
       const { idUsuario, nombre, correo, contrasenia, idRol } = datos;
       if(!idUsuario || !nombre || !correo || !contrasenia || !idRol){
