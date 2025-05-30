@@ -27,7 +27,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Vinculaciones obtenidas exitosamente"
+ *                   example: 'Vinculaciones obtenidas exitosamente'
  *                 total:
  *                   type: number
  *                   example: 10
@@ -41,7 +41,7 @@ const ruteador = express.Router();
  *                         properties:
  *                           id:
  *                             type: string
- *                             example: "abc123def456ghi789"
+ *                             example: 'abc123def456ghi789'
  *                           estado:
  *                             type: boolean
  *                             example: true
@@ -63,10 +63,10 @@ const ruteador = express.Router();
  *                             example: 1
  *                           nombre:
  *                             type: string
- *                             example: "Juan Pérez"
+ *                             example: 'Juan Pérez'
  *                           correo:
  *                             type: string
- *                             example: "juan@example.com"
+ *                             example: 'juan@example.com'
  *                       estaVinculado:
  *                         type: boolean
  *                         example: true
@@ -107,7 +107,7 @@ ruteador.get('/', verificarToken, verificarPermisos, consultarVinculaciones);
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Dispositivos del usuario obtenidos exitosamente"
+ *                   example: 'Dispositivos del usuario obtenidos exitosamente'
  *                 idUsuario:
  *                   type: number
  *                   example: 1
@@ -121,7 +121,7 @@ ruteador.get('/', verificarToken, verificarPermisos, consultarVinculaciones);
  *                     properties:
  *                       id:
  *                         type: string
- *                         example: "abc123def456ghi789"
+ *                         example: 'abc123def456ghi789'
  *                       estado:
  *                         type: boolean
  *                         example: true

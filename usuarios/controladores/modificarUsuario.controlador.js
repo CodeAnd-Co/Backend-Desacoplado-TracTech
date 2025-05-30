@@ -26,11 +26,11 @@ exports.modificarUsuario = async (peticion, respuesta) => {
 
     const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body);
 
-    if (error) {
-      return respuesta.status(400).json({ mensaje: error });
-    }
-
-    const { idUsuario, nombre, correo, contrasenia, idRol } = datosSanitizados;
+        if (error) {
+            return respuesta.status(400).json({ mensaje: error });
+        }
+      
+        const { idUsuario, nombre, correo, contrasenia, idRol } = datosSanitizados;
 
     const cambios = {};
     if (nombre) cambios.nombre = nombre;

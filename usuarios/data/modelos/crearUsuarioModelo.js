@@ -1,4 +1,4 @@
-const conexion = require("../../../util/servicios/bd");
+const conexion = require('../../../util/servicios/bd');
 
 function crearUsuario(nombre, correo, contrasenia, idRol) {
     const consulta = 'INSERT INTO usuario (Nombre, Correo, Contrasenia, idRol_FK) VALUES (?, ?, ?, ?)';

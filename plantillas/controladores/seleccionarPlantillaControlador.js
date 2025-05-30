@@ -29,8 +29,7 @@ exports.seleccionarPlantilla = async (req, res) => {
       mensaje: 'Consulta de plantilla exitosa',
       plantilla: plantillaConsultada[0], // Se devuelve el primer resultado
     });
-  } catch (error) {
-    console.error('Error al seleccionar plantilla:', error);
+  } catch {
     res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 };

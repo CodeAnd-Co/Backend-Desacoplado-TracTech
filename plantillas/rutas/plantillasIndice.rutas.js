@@ -19,7 +19,7 @@ ruteador.use('/guardar', guardarPlantilla);
 
 ruteador.get('/', (pet, res) => {
     res.status(200).json({
-        message: '¡Bienvenido a plantillas!',
+        mensaje: '¡Bienvenido a plantillas!',
     });
 });
 

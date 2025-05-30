@@ -27,7 +27,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Consulta de usuarios exitosa"
+ *                   example: 'Consulta de usuarios exitosa'
  *                 usuarios:
  *                   type: array
  *                   items:
@@ -40,12 +40,12 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *                       Nombre:
  *                         type: string
  *                         description: Nombre completo del usuario
- *                         example: "Juan Carlos Pérez"
+ *                         example: 'Juan Carlos Pérez'
  *                       Correo:
  *                         type: string
  *                         format: email
  *                         description: Correo electrónico del usuario
- *                         example: "juan.perez@example.com"
+ *                         example: 'juan.perez@example.com'
  *                       Rol:
  *                         type: integer
  *                         description: ID del rol asignado al usuario
@@ -59,7 +59,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       403:
  *         description: Permisos insuficientes
  *         content:
@@ -69,7 +69,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No tienes permisos para realizar esta acción"
+ *                   example: 'No tienes permisos para realizar esta acción'
  *       404:
  *         description: No se encontraron usuarios
  *         content:
@@ -79,7 +79,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No se encontraron usuarios"
+ *                   example: 'No se encontraron usuarios'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -89,7 +89,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error interno del servidor"
+ *                   example: 'Error interno del servidor'
  */
 ruteador.get(
   '/',

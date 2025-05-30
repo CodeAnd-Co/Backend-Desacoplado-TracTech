@@ -9,7 +9,6 @@ exports.consultarVinculaciones = async (peticion, respuesta) => {
     try {
         // Obtener todas las vinculaciones
         const vinculaciones = await DispositivoRepositorio.obtenerVinculaciones();
-        console.log('Vinculaciones obtenidas:', vinculaciones);
 
         // Formatear la respuesta
         const vinculacionesFormateadas = vinculaciones.map(vinculacion => ({
@@ -31,8 +30,7 @@ exports.consultarVinculaciones = async (peticion, respuesta) => {
             vinculaciones: vinculacionesFormateadas
         });
 
-    } catch (error) {
-        console.error('Error al consultar vinculaciones:', error);
+    } catch {
         respuesta.status(500).json({ 
             mensaje: 'Error interno del servidor',
             vinculaciones: []
@@ -70,8 +68,7 @@ exports.consultarDispositivosDeUsuario = async (peticion, respuesta) => {
             dispositivos: dispositivosFormateados
         });
 
-    } catch (error) {
-        console.error('Error al consultar dispositivos del usuario:', error);
+    } catch {
         respuesta.status(500).json({ 
             mensaje: 'Error interno del servidor',
             dispositivos: []

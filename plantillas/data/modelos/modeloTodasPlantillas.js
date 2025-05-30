@@ -24,7 +24,6 @@ class TodasPlantillas {
     return new Promise((resolve, reject) => {
       conexion.query(query, (err, resultados) => {
         if (err) {
-          console.error('Error al consultar plantillas:', err);
           return reject(err);
         }
         

@@ -63,8 +63,7 @@ exports.habilitarDispositivo = async (peticion, respuesta) => {
             }
         });
 
-    } catch (error) {
-        console.error('Error al habilitar dispositivo:', error);
+    } catch {
         respuesta.status(500).json({ 
             mensaje: 'Error interno del servidor',
             exito: false 

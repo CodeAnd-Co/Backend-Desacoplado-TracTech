@@ -41,7 +41,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Fórmula eliminada con éxito"
+ *                   example: 'Fórmula eliminada con éxito'
  *       400:
  *         description: ID de la fórmula inválido o faltante
  *         content:
@@ -51,7 +51,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "El id de la fórmula es requerido"
+ *                   example: 'El id de la fórmula es requerido'
  *       404:
  *         description: Fórmula no encontrada
  *         content:
@@ -61,7 +61,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No se encontró la fórmula o no se realizaron cambios"
+ *                   example: 'No se encontró la fórmula o no se realizaron cambios'
  *       401:
  *         description: Token de autenticación inválido o faltante
  *         content:
@@ -71,7 +71,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       403:
  *         description: Permisos insuficientes
  *         content:
@@ -81,7 +81,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No tienes permisos para realizar esta acción"
+ *                   example: 'No tienes permisos para realizar esta acción'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -91,7 +91,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error interno del servidor, intente más tarde"
+ *                   example: 'Error interno del servidor, intente más tarde'
  */
 ruteador.delete(
     '/', 

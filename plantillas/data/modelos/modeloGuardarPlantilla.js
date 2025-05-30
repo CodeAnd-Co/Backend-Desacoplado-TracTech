@@ -12,12 +12,12 @@ class PlantillaReporte {
      * @param {string|null} props.numeroDestino - Número telefónico de destino
      */
     constructor({
-      idPlantillaReporte = "",
+      idPlantillaReporte = '',
       Nombre,
       Datos,
-      FrecuenciaEnvio = "",
-      CorreoDestino = "",
-      NumeroDestino = ""
+      FrecuenciaEnvio = '',
+      CorreoDestino = '',
+      NumeroDestino = ''
     }) {
       this.idPlantillaReporte = idPlantillaReporte;
       this.Nombre = Nombre;
@@ -46,7 +46,6 @@ class PlantillaReporte {
       return new Promise((resolver, rechazar) => {
         conexion.query(consulta, valores, (error, resultado) => {
           if (error) {
-            console.error('Error al insertar la plantilla:', error);
             return rechazar(error);
           }
 

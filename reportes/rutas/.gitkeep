@@ -1,9 +1,9 @@
 const express = require('express');
 const ruteador = express.Router();
 
-ruteador.get("/", (pet, res) => {
+ruteador.get('/', (pet, res) => {
     res.status(200).json({
-        message: "¡Bienvenido a formulas!",
+        mensaje: '¡Bienvenido a formulas!',
     });
 });
 

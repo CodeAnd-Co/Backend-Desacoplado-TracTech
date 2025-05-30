@@ -30,12 +30,12 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               nombre:
  *                 type: string
  *                 description: Nombre de la fórmula
- *                 example: "Fórmula de rendimiento"
+ *                 example: 'Fórmula de rendimiento'
  *                 maxLength: 30
  *               formula:
  *                 type: string
  *                 description: Expresión matemática de la fórmula
- *                 example: "(velocidad * tiempo) / area"
+ *                 example: '(velocidad * tiempo) / area'
  *                 maxLength: 512
  *     responses:
  *       200:
@@ -47,7 +47,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Fórmula guardada con éxito"
+ *                   example: 'Fórmula guardada con éxito'
  *       400:
  *         description: Datos inválidos o faltantes
  *         content:
@@ -59,11 +59,11 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *                   type: string
  *                   examples:
  *                     missing_data:
- *                       value: "Faltan datos requeridos"
+ *                       value: 'Faltan datos requeridos'
  *                     name_too_long:
- *                       value: "El nombre no puede exceder los 30 caracteres"
+ *                       value: 'El nombre no puede exceder los 30 caracteres'
  *                     formula_too_long:
- *                       value: "La fórmula no puede exceder los 512 caracteres"
+ *                       value: 'La fórmula no puede exceder los 512 caracteres'
  *       401:
  *         description: Token de autenticación inválido o faltante
  *         content:
@@ -73,7 +73,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       403:
  *         description: Permisos insuficientes
  *         content:
@@ -83,7 +83,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No tienes permisos para realizar esta acción"
+ *                   example: 'No tienes permisos para realizar esta acción'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -93,7 +93,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error interno del servidor, intente más tarde"
+ *                   example: 'Error interno del servidor, intente más tarde'
  */
 ruteador.post(
     '/',

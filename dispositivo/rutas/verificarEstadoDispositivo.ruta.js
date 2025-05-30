@@ -28,7 +28,7 @@ const ruteador = express.Router();
  *               dispositivoId:
  *                 type: string
  *                 description: ID único del dispositivo
- *                 example: "abc123def456ghi789"
+ *                 example: 'abc123def456ghi789'
  *                 minLength: 10
  *     responses:
  *       200:
@@ -40,7 +40,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Dispositivo activo"
+ *                   example: 'Dispositivo activo'
  *                 estado:
  *                   type: boolean
  *                   example: true

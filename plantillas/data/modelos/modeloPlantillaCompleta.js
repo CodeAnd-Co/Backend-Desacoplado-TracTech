@@ -121,8 +121,7 @@ class PlantillaCompleta {
                               // Parsear los parámetros JSON
                               try {
                                 itemContenido.parametros = JSON.parse(grafica.Parametros);
-                              } catch (error) {
-                                console.warn('Error al parsear JSON de parámetros de gráfica:', error);
+                              } catch {
                                 itemContenido.parametros = {};
                               }
                             }

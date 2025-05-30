@@ -27,7 +27,7 @@ const ruteador = Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Sesión cerrada correctamente"
+ *                   example: 'Sesión cerrada correctamente'
  *       400:
  *         description: Token no proporcionado
  *         content:
@@ -37,7 +37,7 @@ const ruteador = Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no proporcionado"
+ *                   example: 'Token no proporcionado'
  *       401:
  *         description: Token de autenticación inválido o expirado
  *         content:
@@ -47,7 +47,7 @@ const ruteador = Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -57,7 +57,7 @@ const ruteador = Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error interno del servidor"
+ *                   example: 'Error interno del servidor'
  */
 ruteador.post(
     '/', 

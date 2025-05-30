@@ -11,8 +11,8 @@ const ruteador = express.Router();
  * @swagger
  * /dispositivo/deshabilitar:
  *   post:
- *     summary: Deshabilitar un dispositivo
- *     description: Deshabilita un dispositivo en el sistema para que no pueda ser utilizado.
+ *     summary: Deshabilitar dispositivo de un usuario
+ *     description: Deshabilita el dispositivo vinculado a un usuario específico en el sistema y lo desvincula para permitir su reasignación.
  *     tags:
  *       - Dispositivos
  *     security:
@@ -24,16 +24,16 @@ const ruteador = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - dispositivoId
+ *               - idUsuario
  *             properties:
- *               dispositivoId:
- *                 type: string
- *                 description: ID único del dispositivo
- *                 example: "abc123def456ghi789"
- *                 minLength: 10
+ *               idUsuario:
+ *                 type: integer
+ *                 description: ID único del usuario cuyo dispositivo se desea deshabilitar
+ *                 example: 123
+ *                 minimum: 1
  *     responses:
  *       200:
- *         description: Dispositivo deshabilitado exitosamente
+ *         description: Dispositivo deshabilitado y desvinculado exitosamente
  *       400:
  *         description: Datos de entrada inválidos
  *       401:
@@ -41,7 +41,7 @@ const ruteador = express.Router();
  *       403:
  *         description: Sin permisos para realizar esta acción
  *       404:
- *         description: Dispositivo no encontrado
+ *         description: Usuario no encontrado o no tiene dispositivo vinculado
  *       500:
  *         description: Error interno del servidor
  */
