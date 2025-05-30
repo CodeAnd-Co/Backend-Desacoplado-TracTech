@@ -1,8 +1,9 @@
 // RF41 Administrador modifica usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF41
 
-const { modificarUsuario: modificarUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { modificarUsuario } = require('../data/repositorios/modificarUsuarioRepositorio.js');
+const { validarYLimpiarUsuario } = require('../../util/servicios/validarUsuario.js');
 const bcrypt = require('bcrypt');
-const validator = require('validator');
+
 
 /**
  * Esta función valida y sanitiza los datos recibidos desde el cuerpo de la petición HTTP.
@@ -16,8 +17,14 @@ const validator = require('validator');
  * @returns {Promise<void>} No retorna directamente, pero responde al cliente con el estado de la operación:
  */
 exports.modificarUsuario = async (peticion, respuesta) => {
-    try {
-        const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body);
+  try {
+    if (!peticion.body) {
+      return respuesta.status(400).json({
+        mensaje: 'No se recibieron datos para modificar el usuario'
+      });
+    }
+
+    const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body);
 
         if (error) {
             return respuesta.status(400).json({ mensaje: error });
@@ -25,121 +32,31 @@ exports.modificarUsuario = async (peticion, respuesta) => {
       
         const { idUsuario, nombre, correo, contrasenia, idRol } = datosSanitizados;
 
-        const cambios = {};
-        if (nombre) cambios.nombre = nombre;
-        if (correo) cambios.correo = correo;
-        if (contrasenia) {
-          // 12 iteraciones para el hash
-          const contraseniaHasheada = await bcrypt.hash(contrasenia, 12);
-          cambios.contrasenia = contraseniaHasheada;
-        }
-        if (idRol) cambios.idRol = idRol;
-
-        await modificarUsuarioRepositorio(idUsuario, cambios);
-    
-        return respuesta.status(200).json({ mensaje: 'Usuario modificado exitosamente' });
-
-    } catch (error) {
-        return respuesta.status(500).json({ mensaje: error });
+    const cambios = {};
+    if (nombre) cambios.nombre = nombre;
+    if (correo) cambios.correo = correo;
+    if (contrasenia) {
+      // 12 iteraciones para el hash
+      const contraseniaHasheada = await bcrypt.hash(contrasenia, 12);
+      cambios.contrasenia = contraseniaHasheada;
     }
-}
+    if (idRol) cambios.idRol = idRol;
 
-/**
- * Valida y sanitiza los datos para modificar un usuario
- * @param {object} datos - Datos del usuario
- * @returns {{ error: string|null, datosSanitizados: object|null }}
- */
-function validarYLimpiarUsuario(datos) {
-  const numeroMinimoID = 1;
-  const tamanioMinimoNombre = 1;
-  const tamanioMaximoNombre = 50;
-  const tamanioMinimoCorreo = 5;
-  const tamanioMaximoCorreo = 50;
-  const tamanioMinimoContrasenia = 8;
-  const tamanioMaximoContrasenia = 50;
-
-    const { idUsuario, nombre, correo, contrasenia, idRol } = datos;
-
-    if(!Number.isInteger(idUsuario) || idUsuario < numeroMinimoID) {
-      return {
-        error: 'El identificador de usuario debe ser un número entero mayor o igual a 1.',
-        datosSanitizados: null
-      };
+    const datos = await modificarUsuario(idUsuario, cambios);
+    if (datos && datos.estado) {
+      return respuesta.status(datos.estado).json({ mensaje: datos.mensaje });
     }
 
-    // Validar si hay al menos un campo para modificar
-    const existeNombre = typeof nombre  === 'string' && nombre.trim()  !== '';
-    const existeCorreo = typeof correo === 'string' && correo.trim() !== '';
-    const existeContrasenia = typeof contrasenia === 'string' && contrasenia.trim() !== '';
-    const existeRol = idRol != null;
+    return respuesta.status(200).json({ mensaje: 'Usuario modificado exitosamente' });
 
-    if(!existeNombre && !existeCorreo && !existeContrasenia && !existeRol) {
-      return {
-        error: 'Debes enviar al menos uno de estos campos para modificar: nombre, correo, contraseña o rol.',
-        datosSanitizados: null
-      };
+  } catch (error) {
+    if (error.estado && error.mensaje) {
+      return respuesta.status(error.estado).json({ mensaje: error.mensaje });
+    }
+    if (error.code === 'ER_DUP_ENTRY') {
+      return respuesta.status(400).json({ mensaje: 'El correo ya está en uso' });
     }
 
-    const datosSanitizados = { idUsuario };
-
-    if(existeNombre) {
-      const nombreRecortado = nombre.trim();
-      if(nombreRecortado.length < tamanioMinimoNombre || nombreRecortado.length > tamanioMaximoNombre) {
-        return {
-          error: `El nombre debe tener entre ${tamanioMinimoNombre} y ${tamanioMaximoNombre} caracteres.`,
-          datosSanitizados: null
-        };
-      }
-
-      const regexNombre = /^[A-Za-zÀ-ÖØ-öø-ÿ][A-Za-zÀ-ÖØ-öø-ÿ. ]*$/;
-      if (!regexNombre.test(nombreRecortado)) {
-        return {
-          error: 'El nombre solo puede contener letras (incluidos acentos), espacios y puntos.',
-          datosSanitizados: null
-        };
-      }
-
-      datosSanitizados.nombre = validator.escape(nombreRecortado);
-    }
-
-    if(existeCorreo) {
-      const correoRecortado = correo.trim();
-      if(correoRecortado.length < tamanioMinimoCorreo || correoRecortado.length > tamanioMaximoCorreo) {
-        return {
-          error: `El correo debe tener entre ${tamanioMinimoCorreo} y ${tamanioMaximoCorreo} caracteres.`,
-          datosSanitizados: null
-        };
-      }
-
-      if(!validator.isEmail(correoRecortado)) {
-        return {
-          error: 'El correo electrónico no tiene un formato válido (p. ej. usuario@dominio.com).',
-          datosSanitizados: null
-        };
-      }
-      datosSanitizados.correo = validator.normalizeEmail(correoRecortado);
-    }
-
-    if(existeContrasenia) {
-      const contraseniaRecortada = contrasenia.trim();
-      if(contraseniaRecortada.length < tamanioMinimoContrasenia || contraseniaRecortada.length > tamanioMaximoContrasenia) {
-        return {
-          error: `La contraseña debe tener entre ${tamanioMinimoContrasenia} y ${tamanioMaximoContrasenia} caracteres.`,
-          datosSanitizados: null
-        };
-      }
-      datosSanitizados.contrasenia = contraseniaRecortada;
-    }
-
-    if(existeRol) {
-      if(!Number.isInteger(idRol) || idRol <= numeroMinimoID) {
-        return {
-          error: 'El identificador de rol debe ser un número entero mayor o igual a 1.',
-          datosSanitizados: null
-        };
-      }
-      datosSanitizados.idRol = idRol;
-    }
-
-    return { error: null, datosSanitizados };
+    return respuesta.status(500).json({ mensaje: error });
+  }
 }

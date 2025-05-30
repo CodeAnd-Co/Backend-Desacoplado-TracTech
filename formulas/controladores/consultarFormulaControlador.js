@@ -1,6 +1,6 @@
-// RF76 - Consulta fórmulas - http...
+// RF76 - Consulta fórmulas - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF76
 
-const conexion = require('../../util/bd.js');
+const { consultarFormulaRepositorio} = require('../data/repositorios/consultarFormulaRepositorio.js');
 
 /**
  * @async
@@ -12,17 +12,17 @@ const conexion = require('../../util/bd.js');
  * @throws {Error} Si ocurre un error al consultar las fórmulas.
  */
 exports.consultarFormula = async (pet, res) => {
-    const datos = await consultarFormula((err, resultado) => {
+    const datos = await consultarFormulaRepositorio((err, resultado) => {
         if (err) {
             return res.status(500).json({
-                mensaje: 'Error al consultar las fórmulas',
+                mensaje: 'Error de conexión, intente más tarde',
             });
         }
         return resultado;
     });
-    if (!datos) {
+    if (datos.length === 0) {
         return res.status(500).json({
-            mensaje: 'Error al consultar las fórmulas',
+            mensaje: 'Error al consultar las fórmulas: no se encontraron fórmulas',
         });
     }
     res.status(200).json({
@@ -32,23 +32,3 @@ exports.consultarFormula = async (pet, res) => {
 
 }
 
-/**
- * @async
- * @function consultarFormula
- * @description Función para consultar todas las fórmulas de la base de datos.
- * @returns {Promise<Object>} Promesa que resuelve con el resultado de la consulta.
- * @throws {Error} Si ocurre un error al ejecutar la consulta.
- */
-async function consultarFormula() {
-    return new Promise((resolver, rechazar) => {
-        // Consulta SQL para obtener todas las fórmulas de la base de datos
-        const consulta = 'SELECT * FROM formula';
-        // Ejecuta la consulta
-        conexion.query(consulta, (err, resultado) => {
-            if (err) {
-                return rechazar(err);
-            }
-            resolver(resultado); // Regresa el resultado de la consulta
-        });
-    });
-}

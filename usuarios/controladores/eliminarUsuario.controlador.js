@@ -1,6 +1,7 @@
 // RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
-const { eliminarUsuario: eliminarUsuarioRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { eliminarUsuario: eliminarUsuarioRepositorio } = require('../data/repositorios/eliminarUsuarioRepositorio.js');
+const DispositivoRepositorio = require('../../dispositivo/data/repositorios/dispositivoRepositorio.js');
 
 /**
  * Controlador para eliminar un usuario.
@@ -24,26 +25,41 @@ exports.eliminarUsuario = async (peticion, respuesta) => {
     
         if (!id) {
             return respuesta.status(500).json({
-                mensaje: 'Error interno del servidor',
+                mensaje: 'No se ha proporcionado el ID del usuario',
+            });
+        }        // Llamar al repositorio para eliminar el usuario
+        const resultado = await eliminarUsuarioRepositorio(id);
+
+        if (resultado && resultado.estado){
+            return respuesta.status(resultado.estado).json({
+                mensaje: resultado.mensaje,
             });
         }
-    
-        // Llamar al repositorio para eliminar el usuario
-        const resultado = await eliminarUsuarioRepositorio(id);
     
         if (resultado) {
-            respuesta.status(200).json({
-                mensaje: 'Usuario eliminado exitosamente',
-            });
-        } else {
-            respuesta.status(404).json({
-                mensaje: 'Usuario no encontrado',
+            // Si el usuario fue eliminado exitosamente, liberar sus dispositivos
+            try {
+                const dispositivosLiberados = await DispositivoRepositorio.liberarDispositivosDeUsuario(parseInt(id));
+                  respuesta.status(200).json({
+                    mensaje: 'Usuario eliminado exitosamente',
+                    dispositivosLiberados
+                });
+            } catch  {
+                // Aunque falle la liberación de dispositivos, el usuario ya fue eliminado
+                respuesta.status(200).json({
+                    mensaje: 'Usuario eliminado exitosamente (advertencia: algunos dispositivos podrían no haberse liberado)',
+                    dispositivosLiberados: 0
+                });
+            }
+        } 
+    } catch (error) {
+        if (error.estado && error.mensaje) {
+            return respuesta.status(error.estado).json({
+                mensaje: error.mensaje
             });
         }
-    } catch (error) {
-        console.error('Error al eliminar usuario:', error);
         respuesta.status(500).json({
-            mensaje: 'Error interno del servidor',
+            mensaje: 'Error interno del servidor'
         });
     }
 };

@@ -1,5 +1,5 @@
 // RF39: Administrador crea usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF39
-const { consultarRoles: consultarRolesRepositorio } = require('../data/repositorios/usuarios.repositorio.js');
+const { consultarRoles } = require('../data/repositorios/consultarRolesRepositorio.js');
 
 /**
  * Controlador para consultar todos los roles de usuarios
@@ -10,11 +10,16 @@ const { consultarRoles: consultarRolesRepositorio } = require('../data/repositor
  */
 exports.consultarRoles = async (peticion, respuesta) => {
   try {
-    const roles = await consultarRolesRepositorio();
+    const roles = await consultarRoles();
 
     if (!roles || roles.length === 0) {
       return respuesta.status(404).json({
         mensaje: 'No se encontraron roles',
+      });
+    }
+    if (roles && roles.estado) {
+      return respuesta.status(roles.estado).json({
+        mensaje: roles.mensaje,
       });
     }
 
@@ -23,8 +28,7 @@ exports.consultarRoles = async (peticion, respuesta) => {
       roles,
     });
 
-  } catch (error) {
-    console.error('Error al consultar roles:', error);
+  } catch {
     respuesta.status(500).json({
       mensaje: 'Error interno del servidor',
     });

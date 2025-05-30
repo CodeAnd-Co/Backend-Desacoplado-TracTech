@@ -1,4 +1,4 @@
-const conexion = require('../util/bd');
+const conexion = require('../servicios/bd');
 
 /**
  * Middleware para obtener información del usuario basándose en su ID obtenido del token JWT.
@@ -22,7 +22,6 @@ const obtenerNombreUsuario = (peticion, respuesta, siguiente) => {
     conexion.query(consulta, [idUsuario], (error, resultados) => {
       if (error) {
         // Si ocurre un error al ejecutar la consulta, retornar error 500
-        console.error('Error al consultar información del usuario:', error);
         return respuesta.status(500).json({ mensaje: 'Error interno del servidor' });
       }
 
@@ -37,9 +36,8 @@ const obtenerNombreUsuario = (peticion, respuesta, siguiente) => {
       // Llamar al siguiente middleware en la cadena
       siguiente();
     });
-  } catch (error) {
+  } catch {
     // Capturar cualquier error inesperado y devolver error 500
-    console.error('Error al obtener información del usuario:', error);
     return respuesta.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 }

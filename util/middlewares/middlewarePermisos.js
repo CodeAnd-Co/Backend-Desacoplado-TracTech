@@ -1,4 +1,4 @@
-const conexion = require("../util/bd");
+const conexion = require('../servicios/bd');
 
 /**
  * Middleware para verificar los permisos de un usuario basándose en su ID obtenido del token JWT.
@@ -22,8 +22,7 @@ const verificarPermisos = (peticion, respuesta, siguiente) => {
     conexion.query(consulta, [idUsuario], (error, resultados) => {
       if (error) {
         // Si ocurre un error al ejecutar el stored procedure, retornar error 500
-        console.error('Error al ejecutar el stored procedure:', error);
-        return respuesta.status(500).json({ message: "Error interno del servidor" });
+        return respuesta.status(500).json({ mensaje: 'Error interno del servidor' });
       }
 
       // Asignar los permisos obtenidos al objeto de solicitud
@@ -32,10 +31,9 @@ const verificarPermisos = (peticion, respuesta, siguiente) => {
       // Llamar al siguiente middleware en la cadena
       siguiente();
     });
-  } catch (error) {
+  } catch {
     // Capturar cualquier error inesperado y devolver error 500
-    console.error('Error al verificar permisos:', error);
-    return respuesta.status(500).json({ message: "Error interno del servidor" });
+    return respuesta.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 }
 
@@ -50,7 +48,7 @@ const checarPermisos = (permiso) => {
     return (peticion, respuesta, siguiente) => {
     if (!peticion.permisos.includes(permiso)) {
       return respuesta.status(404).json({
-        message: "Página no encontrada",
+        mensaje: 'Página no encontrada',
       });
     }
     siguiente();
