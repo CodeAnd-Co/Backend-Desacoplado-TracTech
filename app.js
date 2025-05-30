@@ -22,14 +22,14 @@ const opciones = {
         url: "http://localhost:3000",
       },
     ],
-  },
-  apis: [
+  },  apis: [
     "./sesion/rutas/*.js",
     "./reportes/rutas/*.js", 
     "./plantillas/rutas/*.js",
     "./formulas/rutas/*.js",
-    "./usuarios/rutas/*.js"
-  ], 
+    "./usuarios/rutas/*.js",
+    "./dispositivo/rutas/*.js"
+  ],
 };
 
 const specs = swaggerJsDoc(opciones);
@@ -47,12 +47,14 @@ const reportesRutas = require('./reportes/rutas/reportesIndice.rutas');
 const plantillasRutas = require('./plantillas/rutas/plantillasIndice.rutas');
 const formulasRutas = require('./formulas/rutas/formulasIndice.rutas');
 const usuariosRutas = require('./usuarios/rutas/usuariosIndice.rutas');
+const dispositivoRutas = require('./dispositivo/rutas/dispositivoIndice.rutas');
 
 app.use('/sesion', sesionRutas);
 app.use('/reportes', reportesRutas);
 app.use('/plantillas', plantillasRutas);
 app.use('/formulas', formulasRutas);
 app.use('/usuarios', usuariosRutas);
+app.use('/dispositivo', dispositivoRutas);
 
 const verificarToken = require('./util/middlewares/middlewareAutenticacion');
 const { verificarPermisos } = require('./util/middlewares/middlewarePermisos');
