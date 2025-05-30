@@ -15,7 +15,7 @@ function validarYLimpiarUsuario(datos) {
   const tamanioMaximoContrasenia = 50;
 
   const { idUsuario, nombre, correo, contrasenia, idRol } = datos;
-  if (!idUsuario || !nombre || !correo || !contrasenia || !idRol) {
+  if (!idUsuario || !nombre || !correo || contrasenia == undefined || !idRol) {
     return {
       error: 'Faltan datos requeridos en la solicitud',
       datosSanitizados: null
