@@ -36,7 +36,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Usuario eliminado exitosamente"
+ *                   example: 'Usuario eliminado exitosamente'
  *       400:
  *         description: ID del usuario inválido
  *         content:
@@ -46,7 +46,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "El ID del usuario debe ser un número"
+ *                   example: 'El ID del usuario debe ser un número'
  *       401:
  *         description: Token de autenticación inválido o faltante
  *         content:
@@ -56,7 +56,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       403:
  *         description: Permisos insuficientes
  *         content:
@@ -66,7 +66,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No tienes permisos para realizar esta acción"
+ *                   example: 'No tienes permisos para realizar esta acción'
  *       404:
  *         description: Usuario no encontrado
  *         content:
@@ -76,7 +76,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "El usuario no existe"
+ *                   example: 'El usuario no existe'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -88,9 +88,9 @@ const ruteador = express.Router();
  *                   type: string
  *                   examples:
  *                     no_id:
- *                       value: "No se ha proporcionado el ID del usuario"
+ *                       value: 'No se ha proporcionado el ID del usuario'
  *                     server_error:
- *                       value: "Error interno del servidor"
+ *                       value: 'Error interno del servidor'
  */
 ruteador.delete(
   '/:id',

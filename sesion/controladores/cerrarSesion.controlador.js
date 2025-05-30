@@ -24,8 +24,7 @@ exports.cerrarSesion = (peticion, respuesta) => {
 
         // Responder exitosamente que la sesión fue cerrada
         return respuesta.status(200).json({ mensaje: 'Sesión cerrada correctamente' });
-    } catch (error) {
-        console.error('Error al cerrar sesión:', error);
+    } catch {
 
         // Responder con error interno en caso de fallo
         return respuesta.status(500).json({ mensaje: 'Error interno del servidor' });

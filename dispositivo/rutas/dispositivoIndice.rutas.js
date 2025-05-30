@@ -15,9 +15,9 @@ ruteador.use('/deshabilitar', deshabilitarDispositivoRuta);
 ruteador.use('/listar', listarDispositivosRuta);
 ruteador.use('/vinculaciones', consultarVinculacionesRuta);
 
-ruteador.get("/", (pet, res) => {
+ruteador.get('/', (pet, res) => {
     res.status(200).json({
-        message: "¡Bienvenido a dispositivos!",
+        mensaje: '¡Bienvenido a dispositivos!',
     });
 });
 

@@ -34,18 +34,18 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               nombre:
  *                 type: string
  *                 description: Nuevo nombre del usuario (opcional)
- *                 example: "Juan Carlos Pérez"
+ *                 example: 'Juan Carlos Pérez'
  *                 maxLength: 100
  *               correo:
  *                 type: string
  *                 format: email
  *                 description: Nuevo correo del usuario (opcional)
- *                 example: "juan.perez@example.com"
+ *                 example: 'juan.perez@example.com'
  *                 maxLength: 100
  *               contrasenia:
  *                 type: string
  *                 description: Nueva contraseña del usuario (opcional)
- *                 example: "nuevaContrasena123"
+ *                 example: 'nuevaContrasena123'
  *                 minLength: 1
  *               idRol:
  *                 type: integer
@@ -63,7 +63,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Usuario modificado exitosamente"
+ *                   example: 'Usuario modificado exitosamente'
  *       400:
  *         description: Datos inválidos o faltantes
  *         content:
@@ -74,11 +74,11 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *                 mensaje:
  *                   type: string
  *                   enum:
- *                     - "No se recibieron datos para modificar el usuario"
- *                     - "El ID del usuario es requerido"
- *                     - "El ID del usuario no es válido"
- *                     - "No se proporcionaron campos para actualizar"
- *                     - "El correo ya está en uso"
+ *                     - 'No se recibieron datos para modificar el usuario'
+ *                     - 'El ID del usuario es requerido'
+ *                     - 'El ID del usuario no es válido'
+ *                     - 'No se proporcionaron campos para actualizar'
+ *                     - 'El correo ya está en uso'
  *       401:
  *         description: Token de autenticación inválido o faltante
  *         content:
@@ -88,7 +88,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       403:
  *         description: Permisos insuficientes
  *         content:
@@ -98,7 +98,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No tienes permisos para realizar esta acción"
+ *                   example: 'No tienes permisos para realizar esta acción'
  *       404:
  *         description: Usuario no encontrado
  *         content:
@@ -108,7 +108,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "El usuario no existe"
+ *                   example: 'El usuario no existe'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -118,7 +118,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error al modificar el usuario"
+ *                   example: 'Error al modificar el usuario'
  */
 ruteador.put(
   '/',

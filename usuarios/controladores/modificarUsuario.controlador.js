@@ -27,7 +27,6 @@ exports.modificarUsuario = async (peticion, respuesta) => {
         const { error, datosSanitizados } = validarYLimpiarUsuario(peticion.body);
 
         if (error) {
-          console.error('Error de validación:', error);
             return respuesta.status(400).json({ mensaje: error });
         }
       

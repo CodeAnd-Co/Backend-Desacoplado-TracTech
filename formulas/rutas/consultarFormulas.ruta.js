@@ -27,7 +27,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Fórmulas consultadas con éxito"
+ *                   example: 'Fórmulas consultadas con éxito'
  *                 datos:
  *                   type: array
  *                   items:
@@ -40,11 +40,11 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *                       Nombre:
  *                         type: string
  *                         description: Nombre de la fórmula
- *                         example: "Fórmula de rendimiento"
+ *                         example: 'Fórmula de rendimiento'
  *                       Datos:
  *                         type: string
  *                         description: Expresión matemática de la fórmula
- *                         example: "=([@Velocidad] * [@Tiempo]) / [@Area"
+ *                         example: '=([@Velocidad] * [@Tiempo]) / [@Area'
  *       401:
  *         description: Token de autenticación inválido o faltante
  *         content:
@@ -54,7 +54,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       403:
  *         description: Permisos insuficientes
  *         content:
@@ -64,7 +64,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No tienes permisos para realizar esta acción"
+ *                   example: 'No tienes permisos para realizar esta acción'
  *       404:
  *         description: No se encontraron fórmulas
  *         content:
@@ -74,7 +74,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error al consultar las fórmulas: no se encontraron fórmulas"
+ *                   example: 'Error al consultar las fórmulas: no se encontraron fórmulas'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -84,7 +84,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error de conexión, intente más tarde"
+ *                   example: 'Error de conexión, intente más tarde'
  */
 ruteador.get('/', 
     verificarToken,

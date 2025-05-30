@@ -28,8 +28,7 @@ exports.consultarRoles = async (peticion, respuesta) => {
       roles,
     });
 
-  } catch (error) {
-    console.error('Error al consultar roles:', error);
+  } catch {
     respuesta.status(500).json({
       mensaje: 'Error interno del servidor',
     });

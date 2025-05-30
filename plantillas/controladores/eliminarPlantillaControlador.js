@@ -13,8 +13,7 @@ exports.eliminarPlantilla = async (req, res) => {
   try {
     await eliminarPlantillaRepositorio(idPlantilla);
     res.status(200).json({ mensaje: 'Eliminación exitosa' });
-  } catch (error) {
-    console.error('Error al eliminar plantilla:', error);
+  } catch {
     res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 };

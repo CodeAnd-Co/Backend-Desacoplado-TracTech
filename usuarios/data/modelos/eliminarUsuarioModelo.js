@@ -1,6 +1,6 @@
 // RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
-const conexion = require("../../../util/servicios/bd");
+const conexion = require('../../../util/servicios/bd');
 
 function eliminarUsuario(id) {
     const consulta = 'DELETE FROM usuario WHERE idUsuario = ?';

@@ -13,8 +13,6 @@ class SeleccionarPlantilla {
       // Se ejecuta la consulta con el valor de idPlantilla como parámetro para evitar inyecciones SQL
       conexion.query(consulta, [idPlantilla], (err, resultados) => {
         if (err) {
-          // En caso de error, se muestra en consola y se rechaza la promesa
-          console.error('Error al ejecutar la consulta:', err);
           return rechazar(err);
         }
 

@@ -27,11 +27,11 @@ const ruteador = express.Router();
  *                 type: string
  *                 format: email
  *                 description: Correo electrónico del usuario
- *                 example: "usuario@example.com"
+ *                 example: 'usuario@example.com'
  *               contrasenia:
  *                 type: string
  *                 description: Contraseña del usuario
- *                 example: "miContrasena123"
+ *                 example: 'miContrasena123'
  *                 minLength: 1
  *     responses:
  *       200:
@@ -43,11 +43,11 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Usuario inició sesión con éxito"
+ *                   example: 'Usuario inició sesión con éxito'
  *                 token:
  *                   type: string
  *                   description: Token JWT para autenticación
- *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                   example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
  *       400:
  *         description: Datos inválidos o faltantes
  *         content:
@@ -58,13 +58,13 @@ const ruteador = express.Router();
  *                 mensaje:
  *                   type: string
  *                   enum:
- *                     - "Faltan datos requeridos"
- *                     - "Correo inválido"
+ *                     - 'Faltan datos requeridos'
+ *                     - 'Correo inválido'
  *                   examples:
  *                     missing_data:
- *                       value: "Faltan datos requeridos"
+ *                       value: 'Faltan datos requeridos'
  *                     invalid_email:
- *                       value: "Correo inválido"
+ *                       value: 'Correo inválido'
  *       401:
  *         description: Credenciales incorrectas
  *         content:
@@ -74,7 +74,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Usuario o contraseña incorrectos"
+ *                   example: 'Usuario o contraseña incorrectos'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -84,7 +84,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error interno del servidor"
+ *                   example: 'Error interno del servidor'
  */
 ruteador.post(
     '/', 

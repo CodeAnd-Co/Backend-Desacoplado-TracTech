@@ -25,8 +25,7 @@ exports.listarDispositivos = async (peticion, respuesta) => {
             dispositivos: dispositivosFormateados
         });
 
-    } catch (error) {
-        console.error('Error al listar dispositivos:', error);
+    } catch {
         respuesta.status(500).json({ 
             mensaje: 'Error interno del servidor',
             dispositivos: []

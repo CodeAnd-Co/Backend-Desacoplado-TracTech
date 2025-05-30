@@ -23,7 +23,6 @@ class DispositivoRepositorio {
                 
                 conexion.execute(query, [id], (error, resultados) => {
                     if (error) {
-                        console.error('Error al obtener dispositivo:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
@@ -45,8 +44,7 @@ class DispositivoRepositorio {
                     
                     resolve(dispositivo);
                 });
-            } catch (error) {
-                console.error('Error al obtener dispositivo:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
@@ -68,12 +66,10 @@ class DispositivoRepositorio {
                     
                     conexion.execute(verificarUsuarioQuery, [idUsuario], (error, resultados) => {
                         if (error) {
-                            console.error('Error al verificar usuario:', error);
                             return reject(new Error('Error al acceder a la base de datos'));
                         }
                         
                         if (resultados.length === 0) {
-                            console.warn(`Usuario con ID ${idUsuario} no encontrado. Registrando dispositivo sin vinculación.`);
                             // Continuar sin vinculación
                             this._ejecutarRegistroOActualizacion(id, null, resolve, reject);
                         } else {
@@ -85,8 +81,7 @@ class DispositivoRepositorio {
                     // No hay usuario, proceder sin vinculación
                     this._ejecutarRegistroOActualizacion(id, null, resolve, reject);
                 }
-            } catch (error) {
-                console.error('Error al registrar/actualizar dispositivo:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
@@ -111,7 +106,6 @@ class DispositivoRepositorio {
         
         conexion.execute(query, [id, idUsuario], (error) => {
             if (error) {
-                console.error('Error al registrar/actualizar dispositivo:', error);
                 return reject(new Error('Error al acceder a la base de datos'));
             }
             
@@ -144,7 +138,6 @@ class DispositivoRepositorio {
                 
                 conexion.execute(query, [id], (error, resultado) => {
                     if (error) {
-                        console.error('Error al habilitar dispositivo:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
@@ -155,15 +148,12 @@ class DispositivoRepositorio {
                     const dispositivo = new DispositivoModelo(id, true);
                     resolve(dispositivo);
                 });
-            } catch (error) {
-                console.error('Error al habilitar dispositivo:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
-    }
-
-    /**
-     * Deshabilita un dispositivo en la base de datos
+    }    /**
+     * Deshabilita un dispositivo en la base de datos y lo desvincula del usuario
      * @param {string} id - ID del dispositivo
      * @returns {DispositivoModelo}
      */
@@ -172,13 +162,12 @@ class DispositivoRepositorio {
             try {
                 const query = `
                     UPDATE dispositivos 
-                    SET estado = FALSE
+                    SET estado = FALSE, id_usuario_FK = NULL
                     WHERE id = ?
                 `;
                 
                 conexion.execute(query, [id], (error, resultado) => {
                     if (error) {
-                        console.error('Error al deshabilitar dispositivo:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
@@ -186,15 +175,15 @@ class DispositivoRepositorio {
                         return reject(new Error('Dispositivo no encontrado'));
                     }
                     
-                    const dispositivo = new DispositivoModelo(id, false);
+                    // Dispositivo deshabilitado y desvinculado
+                    const dispositivo = new DispositivoModelo(id, false, null);
                     resolve(dispositivo);
                 });
-            } catch (error) {
-                console.error('Error al deshabilitar dispositivo:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
-    }    /**
+    }/**
      * Obtiene todos los dispositivos de la base de datos
      * @returns {DispositivoModelo[]}
      */
@@ -209,7 +198,6 @@ class DispositivoRepositorio {
                 
                 conexion.execute(query, [], (error, resultados) => {
                     if (error) {
-                        console.error('Error al obtener dispositivos:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
@@ -222,8 +210,7 @@ class DispositivoRepositorio {
                     
                     resolve(dispositivos);
                 });
-            } catch (error) {
-                console.error('Error al obtener dispositivos:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
@@ -244,7 +231,6 @@ class DispositivoRepositorio {
                 
                 conexion.execute(query, [estado], (error, resultados) => {
                     if (error) {
-                        console.error('Error al obtener dispositivos por estado:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
@@ -257,8 +243,7 @@ class DispositivoRepositorio {
                     
                     resolve(dispositivos);
                 });
-            } catch (error) {
-                console.error('Error al obtener dispositivos por estado:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
@@ -279,21 +264,17 @@ class DispositivoRepositorio {
                 
                 conexion.execute(query, [id], (error, resultado) => {
                     if (error) {
-                        console.error('Error al eliminar dispositivo:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
                     resolve(resultado.affectedRows > 0);
                 });
-            } catch (error) {
-                console.error('Error al eliminar dispositivo:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
-    }
-
-    /**
-     * Vincula un dispositivo a un usuario
+    }    /**
+     * Vincula un dispositivo a un usuario (sin cambiar su estado)
      * @param {string} dispositivoId - ID del dispositivo
      * @param {number} idUsuario - ID del usuario
      * @returns {DispositivoModelo}
@@ -308,7 +289,6 @@ class DispositivoRepositorio {
                 
                 conexion.execute(verificarUsuarioQuery, [idUsuario], (error, resultados) => {
                     if (error) {
-                        console.error('Error al verificar usuario:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
@@ -325,7 +305,6 @@ class DispositivoRepositorio {
                     
                     conexion.execute(query, [idUsuario, dispositivoId], (error, resultado) => {
                         if (error) {
-                            console.error('Error al vincular dispositivo:', error);
                             return reject(new Error('Error al acceder a la base de datos'));
                         }
                         
@@ -339,8 +318,7 @@ class DispositivoRepositorio {
                             .catch(err => reject(err));
                     });
                 });
-            } catch (error) {
-                console.error('Error al vincular dispositivo:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
@@ -362,14 +340,12 @@ class DispositivoRepositorio {
                 
                 conexion.execute(query, [idUsuario], (error, resultado) => {
                     if (error) {
-                        console.error('Error al liberar dispositivos del usuario:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
                     resolve(resultado.affectedRows);
                 });
-            } catch (error) {
-                console.error('Error al liberar dispositivos del usuario:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
@@ -391,7 +367,6 @@ class DispositivoRepositorio {
                 
                 conexion.execute(query, [idUsuario], (error, resultados) => {
                     if (error) {
-                        console.error('Error al obtener dispositivos del usuario:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
@@ -408,8 +383,7 @@ class DispositivoRepositorio {
                     
                     resolve(dispositivos);
                 });
-            } catch (error) {
-                console.error('Error al obtener dispositivos del usuario:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
@@ -431,7 +405,6 @@ class DispositivoRepositorio {
                 
                 conexion.execute(query, [], (error, resultados) => {
                     if (error) {
-                        console.error('Error al obtener vinculaciones:', error);
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
@@ -450,8 +423,7 @@ class DispositivoRepositorio {
                     
                     resolve(vinculaciones);
                 });
-            } catch (error) {
-                console.error('Error al obtener vinculaciones:', error);
+            } catch {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });

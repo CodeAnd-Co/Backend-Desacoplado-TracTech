@@ -37,7 +37,6 @@ exports.verificarEstado = async (peticion, respuesta) => {
             });
         }        // Buscar el dispositivo en el repositorio
         let dispositivo = await DispositivoRepositorio.obtenerPorId(dispositivoIdSanitizado);
-        console.log('Dispositivo encontrado:', dispositivo);
 
         // Obtener el ID del usuario desde el token (si está autenticado)
         const idUsuario = peticion.usuario?.id || null;
@@ -46,8 +45,9 @@ exports.verificarEstado = async (peticion, respuesta) => {
         if (!dispositivo) {
             dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado, idUsuario);
         } else {
-            // Si el dispositivo existe pero no está vinculado y tenemos un usuario autenticado
-            if (!dispositivo.estaVinculado() && idUsuario) {
+            // Si el dispositivo existe, verificar si puede ser vinculado
+            // Solo se vincula si: está HABILITADO, NO está vinculado y tenemos un usuario autenticado
+            if (dispositivo.estado && !dispositivo.estaVinculado() && idUsuario) {
                 dispositivo = await DispositivoRepositorio.vincularDispositivo(dispositivoIdSanitizado, idUsuario);
             }
         }
@@ -60,8 +60,7 @@ exports.verificarEstado = async (peticion, respuesta) => {
             idUsuario: dispositivo.idUsuario
         });
 
-    } catch (error) {
-        console.error('Error al verificar estado del dispositivo:', error);
+    } catch {
         respuesta.status(500).json({ 
             mensaje: 'Error interno del servidor',
             estado: false 

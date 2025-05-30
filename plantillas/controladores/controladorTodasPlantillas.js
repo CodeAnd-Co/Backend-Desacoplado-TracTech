@@ -19,8 +19,7 @@ exports.consultarTodasPlantillas = async (req, res) => {
       plantillas 
     });
     
-  } catch (error) {
-    console.error('Error al consultar todas las plantillas:', error);
+  } catch {
     res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 };

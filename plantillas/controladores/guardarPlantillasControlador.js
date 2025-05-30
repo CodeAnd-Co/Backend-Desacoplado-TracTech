@@ -17,7 +17,7 @@ function mapChartTypeToEnum(jsType) {
     case 'radar':     return 'Radar';
     case 'polarArea': return 'Polar';
     default:
-      throw new Error(`Tipo de gráfica inválido: "${jsType}"`);
+      throw new Error(`Tipo de gráfica inválido: '${jsType}'`);
   }
 }
 
@@ -77,8 +77,7 @@ exports.guardarPlantilla = async (req, res) => {
 
     return res.status(201).json({ mensaje: 'OK', id: idPlantillaReporte });
 
-  } catch (error) {
-    console.error('Error interno al guardar plantilla:', error);
+  } catch {
     return res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
 };

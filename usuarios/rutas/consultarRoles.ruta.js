@@ -27,7 +27,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Consulta de roles exitosa"
+ *                   example: 'Consulta de roles exitosa'
  *                 roles:
  *                   type: array
  *                   items:
@@ -40,7 +40,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *                       Nombre:
  *                         type: string
  *                         description: Nombre del rol
- *                         example: "Operador"
+ *                         example: 'Operador'
  *       401:
  *         description: Token de autenticación inválido o faltante
  *         content:
@@ -50,7 +50,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       403:
  *         description: Permisos insuficientes
  *         content:
@@ -60,7 +60,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No tienes permisos para realizar esta acción"
+ *                   example: 'No tienes permisos para realizar esta acción'
  *       404:
  *         description: No se encontraron roles
  *         content:
@@ -70,7 +70,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No se encontraron roles"
+ *                   example: 'No se encontraron roles'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -80,7 +80,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error interno del servidor"
+ *                   example: 'Error interno del servidor'
  */
 ruteador.get(
   '/',

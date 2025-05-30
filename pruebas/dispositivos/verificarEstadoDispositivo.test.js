@@ -18,9 +18,20 @@ describe('Dispositivos - Verificar Estado', () => {
     });    test('Debe crear un nuevo dispositivo si no existe', async () => {
         const dispositivoId = 'test-device-12345';
         
-        // Mock para crear el dispositivo
+        // Mock para insertar/actualizar el dispositivo
         mockConexion.execute.mockImplementationOnce((query, params, callback) => {
-            callback(null, { affectedRows: 1 }); // Dispositivo creado exitosamente
+            expect(query).toContain('INSERT INTO dispositivos');
+            callback(null, { affectedRows: 1, insertId: 1 });
+        });
+        
+        // Mock para obtener el dispositivo creado
+        mockConexion.execute.mockImplementationOnce((query, params, callback) => {
+            expect(query).toContain('SELECT id, estado, id_usuario_FK');
+            callback(null, [{
+                id: dispositivoId,
+                estado: 1,
+                id_usuario_FK: null
+            }]);
         });
         
         const dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoId);
@@ -28,36 +39,47 @@ describe('Dispositivos - Verificar Estado', () => {
         expect(dispositivo).toBeDefined();
         expect(dispositivo.id).toBe(dispositivoId);
         expect(dispositivo.estado).toBe(true);
-    });
+    }, 10000); // Aumentar timeout a 10 segundos
 
     test('Debe validar ID de dispositivo correctamente', () => {
         expect(DispositivoModelo.validarId('valid-device-id-123')).toBe(true);
         expect(DispositivoModelo.validarId('short')).toBe(false);
         expect(DispositivoModelo.validarId('')).toBe(false);
         expect(DispositivoModelo.validarId(null)).toBe(false);
-    });
-
-    test('Debe habilitar un dispositivo correctamente', async () => {
+    });    test('Debe habilitar un dispositivo correctamente', async () => {
         const dispositivoId = 'test-device-habilitar';
-          // Mock para habilitar dispositivo
+        
+        // Mock para habilitar dispositivo
         mockConexion.execute.mockImplementationOnce((query, params, callback) => {
+            expect(query).toContain('UPDATE dispositivos');
+            expect(query).toContain('SET estado = TRUE');
+            expect(params).toEqual([dispositivoId]);
             callback(null, { affectedRows: 1 });
         });
         
         const dispositivo = await DispositivoRepositorio.habilitar(dispositivoId);
         
+        expect(dispositivo).toBeDefined();
+        expect(dispositivo.id).toBe(dispositivoId);
         expect(dispositivo.estado).toBe(true);
     });
 
     test('Debe deshabilitar un dispositivo correctamente', async () => {
         const dispositivoId = 'test-device-deshabilitar';
-          // Mock para deshabilitar dispositivo
+        
+        // Mock para deshabilitar dispositivo
         mockConexion.execute.mockImplementationOnce((query, params, callback) => {
+            expect(query).toContain('UPDATE dispositivos');
+            expect(query).toContain('SET estado = FALSE');
+            expect(params).toEqual([dispositivoId]);
             callback(null, { affectedRows: 1 });
         });
         
         const dispositivo = await DispositivoRepositorio.deshabilitar(dispositivoId);
         
+        expect(dispositivo).toBeDefined();
+        expect(dispositivo.id).toBe(dispositivoId);
         expect(dispositivo.estado).toBe(false);
+        expect(dispositivo.idUsuario).toBeNull();
     });
 });

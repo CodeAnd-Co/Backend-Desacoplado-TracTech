@@ -25,8 +25,7 @@ exports.iniciarSesion = async (peticion, respuesta) => {
         }
         const token = generarToken(usuario);
         respuesta.status(200).json({ mensaje: 'Usuario inició sesión con éxito', token });
-    } catch (err) {
-        console.error('Error al iniciar sesión:', err);
+    } catch  {
         respuesta.status(500).json({ mensaje: 'Error interno del servidor' });
     }
 };

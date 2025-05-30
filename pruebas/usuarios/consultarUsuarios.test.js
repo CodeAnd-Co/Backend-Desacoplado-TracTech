@@ -119,7 +119,6 @@ describe('consultarUsuarios', () => {
     expect(mockRespuesta.json).toHaveBeenCalledWith({
       mensaje: 'Error interno del servidor'
     });
-    expect(console.error).toHaveBeenCalledWith('Error al consultar usuarios:', errorConexion);
 
     console.error = consoleErrorOriginal;
   });

@@ -32,18 +32,18 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               nombre:
  *                 type: string
  *                 description: Nombre completo del usuario
- *                 example: "Juan Carlos Pérez"
+ *                 example: 'Juan Carlos Pérez'
  *                 maxLength: 100
  *               correo:
  *                 type: string
  *                 format: email
  *                 description: Correo electrónico único del usuario
- *                 example: "juan.perez@example.com"
+ *                 example: 'juan.perez@example.com'
  *                 maxLength: 100
  *               contrasenia:
  *                 type: string
  *                 description: Contraseña del usuario
- *                 example: "miContrasena123"
+ *                 example: 'miContrasena123'
  *                 minLength: 1
  *               idRolFK:
  *                 type: integer
@@ -61,7 +61,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Usuario creado con éxito"
+ *                   example: 'Usuario creado con éxito'
  *                 idUsuario:
  *                   type: integer
  *                   description: ID del usuario creado
@@ -76,12 +76,12 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *                 mensaje:
  *                   type: string
  *                   enum:
- *                     - "Un campo requerido está vacío"
- *                     - "El idRol no es un número"
- *                     - "El idRol no es válido"
- *                     - "El nombre no puede exceder los 100 caracteres"
- *                     - "El correo no puede exceder los 100 caracteres"
- *                     - "El correo ya está registrado"
+ *                     - 'Un campo requerido está vacío'
+ *                     - 'El idRol no es un número'
+ *                     - 'El idRol no es válido'
+ *                     - 'El nombre no puede exceder los 100 caracteres'
+ *                     - 'El correo no puede exceder los 100 caracteres'
+ *                     - 'El correo ya está registrado'
  *       401:
  *         description: Token de autenticación inválido o faltante
  *         content:
@@ -91,7 +91,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Token no válido"
+ *                   example: 'Token no válido'
  *       403:
  *         description: Permisos insuficientes
  *         content:
@@ -101,7 +101,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No tienes permisos para realizar esta acción"
+ *                   example: 'No tienes permisos para realizar esta acción'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -111,7 +111,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error de conexión, intente más tarde"
+ *                   example: 'Error de conexión, intente más tarde'
  */
 ruteador.post(
   '/',

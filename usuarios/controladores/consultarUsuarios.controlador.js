@@ -24,8 +24,7 @@ exports.consultarUsuarios = async (peticion, respuesta) => {
       usuarios,
     });
     
-  } catch (error) {
-    console.error('Error al consultar usuarios:', error);
+  } catch {
     respuesta.status(500).json({
       mensaje: 'Error interno del servidor',
     });

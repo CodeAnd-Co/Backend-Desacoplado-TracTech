@@ -35,11 +35,11 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               nombre:
  *                 type: string
  *                 description: Nuevo nombre de la fórmula
- *                 example: "Fórmula de rendimiento v2"
+ *                 example: 'Fórmula de rendimiento v2'
  *               formula:
  *                 type: string
  *                 description: Nueva fórmula
- *                 example: "(velocidad * tiempo) / area"
+ *                 example: '(velocidad * tiempo) / area'
  *     responses:
  *       200:
  *         description: Fórmula modificada con éxito
@@ -50,7 +50,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Fórmula modificada con éxito"
+ *                   example: 'Fórmula modificada con éxito'
  *       400:
  *         description: Datos inválidos o faltantes
  *         content:
@@ -60,7 +60,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Faltan datos requeridos"
+ *                   example: 'Faltan datos requeridos'
  *       404:
  *         description: Fórmula no encontrada
  *         content:
@@ -70,7 +70,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "No se encontró la fórmula o no se realizaron cambios"
+ *                   example: 'No se encontró la fórmula o no se realizaron cambios'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -80,7 +80,7 @@ const { verificarPermisos, checarPermisos } = require('../../util/middlewares/mi
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error interno del servidor, intente más tarde"
+ *                   example: 'Error interno del servidor, intente más tarde'
  */
 ruteador.put(
     '/',

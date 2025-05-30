@@ -27,7 +27,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Dispositivos obtenidos exitosamente"
+ *                   example: 'Dispositivos obtenidos exitosamente'
  *                 total:
  *                   type: number
  *                   example: 5
@@ -38,7 +38,7 @@ const ruteador = express.Router();
  *                     properties:
  *                       id:
  *                         type: string
- *                         example: "abc123def456ghi789"
+ *                         example: 'abc123def456ghi789'
  *                       estado:
  *                         type: boolean
  *                         example: true
@@ -68,7 +68,7 @@ const ruteador = express.Router();
  *               properties:
  *                 mensaje:
  *                   type: string
- *                   example: "Error interno del servidor"
+ *                   example: 'Error interno del servidor'
  *                 dispositivos:
  *                   type: array
  *                   example: []

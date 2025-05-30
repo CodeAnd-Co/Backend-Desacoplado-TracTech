@@ -1,4 +1,4 @@
-const conexion = require("../../../util/servicios/bd");
+const conexion = require('../../../util/servicios/bd');
 
 function consultarUsuarios(rolAExcluir) {
     const consulta = `
