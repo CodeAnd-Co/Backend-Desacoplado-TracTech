@@ -1,6 +1,7 @@
 // RF43 Administrador elimina usuario - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF43
 
 const { eliminarUsuario: eliminarUsuarioRepositorio } = require('../data/repositorios/eliminarUsuarioRepositorio.js');
+const DispositivoRepositorio = require('../../dispositivo/data/repositorios/dispositivoRepositorio.js');
 
 /**
  * Controlador para eliminar un usuario.
@@ -26,9 +27,7 @@ exports.eliminarUsuario = async (peticion, respuesta) => {
             return respuesta.status(500).json({
                 mensaje: 'No se ha proporcionado el ID del usuario',
             });
-        }
-    
-        // Llamar al repositorio para eliminar el usuario
+        }        // Llamar al repositorio para eliminar el usuario
         const resultado = await eliminarUsuarioRepositorio(id);
 
         if (resultado && resultado.estado){
@@ -38,18 +37,30 @@ exports.eliminarUsuario = async (peticion, respuesta) => {
         }
     
         if (resultado) {
-            respuesta.status(200).json({
-                mensaje: 'Usuario eliminado exitosamente',
-            });
+            // Si el usuario fue eliminado exitosamente, liberar sus dispositivos
+            try {
+                const dispositivosLiberados = await DispositivoRepositorio.liberarDispositivosDeUsuario(parseInt(id));
+                console.log(`Se liberaron ${dispositivosLiberados} dispositivos del usuario ${id}`);
+                  respuesta.status(200).json({
+                    mensaje: 'Usuario eliminado exitosamente',
+                    dispositivosLiberados
+                });
+            } catch (errorDispositivos) {
+                console.error('Error al liberar dispositivos del usuario:', errorDispositivos);                // Aunque falle la liberación de dispositivos, el usuario ya fue eliminado
+                respuesta.status(200).json({
+                    mensaje: 'Usuario eliminado exitosamente (advertencia: algunos dispositivos podrían no haberse liberado)',
+                    dispositivosLiberados: 0
+                });
+            }
         } 
     } catch (error) {
         if (error.estado && error.mensaje) {
             return respuesta.status(error.estado).json({
-                mensaje: error.mensaje,
+                mensaje: error.mensaje
             });
         }
         respuesta.status(500).json({
-            mensaje: 'Error interno del servidor',
+            mensaje: 'Error interno del servidor'
         });
     }
 };

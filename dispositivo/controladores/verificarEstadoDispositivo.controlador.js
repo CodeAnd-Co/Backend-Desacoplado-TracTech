@@ -39,16 +39,25 @@ exports.verificarEstado = async (peticion, respuesta) => {
         let dispositivo = await DispositivoRepositorio.obtenerPorId(dispositivoIdSanitizado);
         console.log('Dispositivo encontrado:', dispositivo);
 
+        // Obtener el ID del usuario desde el token (si está autenticado)
+        const idUsuario = peticion.usuario?.id || null;
+
         // Si el dispositivo no existe, lo registramos como nuevo y activo
         if (!dispositivo) {
-            dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado);
+            dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado, idUsuario);
+        } else {
+            // Si el dispositivo existe pero no está vinculado y tenemos un usuario autenticado
+            if (!dispositivo.estaVinculado() && idUsuario) {
+                dispositivo = await DispositivoRepositorio.vincularDispositivo(dispositivoIdSanitizado, idUsuario);
+            }
         }
-        // Si existe, solo verificamos su estado actual (no lo modificamos)
 
         // Devolver el estado del dispositivo
         respuesta.status(200).json({
             mensaje: dispositivo.estado ? 'Dispositivo activo' : 'Dispositivo deshabilitado',
             estado: dispositivo.estado,
+            vinculado: dispositivo.estaVinculado(),
+            idUsuario: dispositivo.idUsuario
         });
 
     } catch (error) {

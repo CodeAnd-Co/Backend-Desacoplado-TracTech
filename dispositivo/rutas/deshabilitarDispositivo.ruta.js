@@ -12,7 +12,7 @@ const ruteador = express.Router();
  * /dispositivo/deshabilitar:
  *   post:
  *     summary: Deshabilitar un dispositivo
- *     description: Deshabilita un dispositivo específico para que no pueda acceder al sistema.
+ *     description: Deshabilita un dispositivo en el sistema para que no pueda ser utilizado.
  *     tags:
  *       - Dispositivos
  *     security:
@@ -28,63 +28,20 @@ const ruteador = express.Router();
  *             properties:
  *               dispositivoId:
  *                 type: string
- *                 description: ID único del dispositivo a deshabilitar
+ *                 description: ID único del dispositivo
  *                 example: "abc123def456ghi789"
  *                 minLength: 10
- *
  *     responses:
  *       200:
  *         description: Dispositivo deshabilitado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 mensaje:
- *                   type: string
- *                   example: "Dispositivo deshabilitado exitosamente"
- *                 exito:
- *                   type: boolean
- *                   example: true
- *                 dispositivo:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: "abc123def456ghi789"
- *                     activo:
- *                       type: boolean
- *                       example: false
  *       400:
  *         description: Datos de entrada inválidos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 mensaje:
- *                   type: string
- *                   example: "El ID del dispositivo es requerido"
- *                 exito:
- *                   type: boolean
- *                   example: false
  *       401:
  *         description: Token de autenticación inválido
  *       403:
  *         description: Sin permisos para realizar esta acción
  *       404:
  *         description: Dispositivo no encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 mensaje:
- *                   type: string
- *                   example: "Dispositivo no encontrado"
- *                 exito:
- *                   type: boolean
- *                   example: false
  *       500:
  *         description: Error interno del servidor
  */

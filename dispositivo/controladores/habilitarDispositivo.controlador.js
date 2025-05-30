@@ -38,16 +38,10 @@ exports.habilitarDispositivo = async (peticion, respuesta) => {
         }
 
         // Buscar el dispositivo
-        let dispositivo = await DispositivoRepositorio.obtenerPorId(dispositivoIdSanitizado);        // Si el dispositivo no existe, lo creamos y lo habilitamos
+        let dispositivo = await DispositivoRepositorio.obtenerPorId(dispositivoIdSanitizado);
+        // Si el dispositivo no existe, lo creamos y lo habilitamos
         if (!dispositivo) {
-            const metadata = {
-                userAgent: peticion.headers['user-agent'] || 'Unknown',
-                ip: peticion.ip || peticion.connection.remoteAddress,
-                fechaPrimerAcceso: new Date(),
-                habilitadoPor: peticion.usuario || 'Sistema'
-            };
-            
-            dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado, metadata);
+            dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado);
         } else {
             // Habilitar dispositivo existente
             dispositivo = await DispositivoRepositorio.habilitar(dispositivoIdSanitizado, peticion.usuario || 'Sistema');
@@ -66,7 +60,6 @@ exports.habilitarDispositivo = async (peticion, respuesta) => {
             dispositivo: {
                 id: dispositivo.id,
                 estado: dispositivo.estado,
-                fechaUltimaActividad: dispositivo.fechaUltimaActividad
             }
         });
 

@@ -10,8 +10,8 @@ const ruteador = express.Router();
  * @swagger
  * /dispositivo/estado:
  *   post:
- *     summary: Verificar estado de un dispositivo
- *     description: Verifica si un dispositivo está activo o deshabilitado en el sistema.
+ *     summary: Verificar el estado de un dispositivo
+ *     description: Verifica si un dispositivo está activo y lo registra/vincula automáticamente si es necesario.
  *     tags:
  *       - Dispositivos
  *     security:
@@ -32,7 +32,7 @@ const ruteador = express.Router();
  *                 minLength: 10
  *     responses:
  *       200:
- *         description: Estado del dispositivo verificado exitosamente
+ *         description: Estado del dispositivo obtenido exitosamente
  *         content:
  *           application/json:
  *             schema:
@@ -41,37 +41,22 @@ const ruteador = express.Router();
  *                 mensaje:
  *                   type: string
  *                   example: "Dispositivo activo"
- *                 activo:
+ *                 estado:
  *                   type: boolean
  *                   example: true
+ *                 vinculado:
+ *                   type: boolean
+ *                   example: true
+ *                 idUsuario:
+ *                   type: number
+ *                   nullable: true
+ *                   example: 1
  *       400:
  *         description: Datos de entrada inválidos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 mensaje:
- *                   type: string
- *                   example: "El ID del dispositivo es requerido"
- *                 activo:
- *                   type: boolean
- *                   example: false
  *       401:
  *         description: Token de autenticación inválido
  *       500:
  *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 mensaje:
- *                   type: string
- *                   example: "Error interno del servidor"
- *                 activo:
- *                   type: boolean
- *                   example: false
  */
 ruteador.post('/', verificarToken, verificarEstadoControlador.verificarEstado);
 

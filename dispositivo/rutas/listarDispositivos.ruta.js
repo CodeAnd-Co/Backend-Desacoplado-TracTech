@@ -42,6 +42,19 @@ const ruteador = express.Router();
  *                       estado:
  *                         type: boolean
  *                         example: true
+ *                       fechaRegistro:
+ *                         type: string
+ *                         format: date-time
+ *                       fechaUltimaActividad:
+ *                         type: string
+ *                         format: date-time
+ *                       fechaVinculacion:
+ *                         type: string
+ *                         format: date-time
+ *                         nullable: true
+ *                       metadata:
+ *                         type: object
+ *                         nullable: true
  *       401:
  *         description: Token de autenticación inválido
  *       403:

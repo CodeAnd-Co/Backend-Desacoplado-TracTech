@@ -12,7 +12,7 @@ const ruteador = express.Router();
  * /dispositivo/habilitar:
  *   post:
  *     summary: Habilitar un dispositivo
- *     description: Habilita un dispositivo específico para que pueda acceder al sistema.
+ *     description: Habilita un dispositivo en el sistema para que pueda ser utilizado.
  *     tags:
  *       - Dispositivos
  *     security:
@@ -28,45 +28,14 @@ const ruteador = express.Router();
  *             properties:
  *               dispositivoId:
  *                 type: string
- *                 description: ID único del dispositivo a habilitar
+ *                 description: ID único del dispositivo
  *                 example: "abc123def456ghi789"
  *                 minLength: 10
  *     responses:
  *       200:
  *         description: Dispositivo habilitado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 mensaje:
- *                   type: string
- *                   example: "Dispositivo habilitado exitosamente"
- *                 exito:
- *                   type: boolean
- *                   example: true
- *                 dispositivo:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: "abc123def456ghi789"
- *                     activo:
- *                       type: boolean
- *                       example: true
  *       400:
  *         description: Datos de entrada inválidos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 mensaje:
- *                   type: string
- *                   example: "El ID del dispositivo es requerido"
- *                 exito:
- *                   type: boolean
- *                   example: false
  *       401:
  *         description: Token de autenticación inválido
  *       403:
