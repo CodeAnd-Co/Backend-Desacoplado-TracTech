@@ -15,8 +15,10 @@ async function consultarUsuarios() {
         }
         return usuarios;
     } catch (error) {
-        console.error('Error en consultarUsuariosRepositorio:', error);
-        throw error;
+        return {
+            estado: 500,
+            mensaje: 'Hubo un error al procesar el listado de usuarios',
+        };
     }
 }
 
