@@ -14,7 +14,7 @@ async function consultarUsuarios() {
             };
         }
         return usuarios;
-    } catch (error) {
+    } catch {
         return {
             estado: 500,
             mensaje: 'Hubo un error al procesar el listado de usuarios',
