@@ -54,8 +54,9 @@ exports.verificarEstado = async (peticion, respuesta) => {
                     // Si está vinculado a otro usuario, denegar acceso
                     if (!dispositivo.estaVinculadoA(idUsuario)) {
                         return respuesta.status(403).json({
-                            mensaje: 'Este dispositivo ya está vinculado a otro usuario',
-                            estado: false
+                            mensaje: 'Este dispositivo pertenece a otro usuario',
+                            estado: false,
+                            codigo: 'DISPOSITIVO_AJENO'
                         });
                     }
                 } else {
@@ -63,7 +64,8 @@ exports.verificarEstado = async (peticion, respuesta) => {
                     if (dispositivosUsuario.length > 0) {
                         return respuesta.status(403).json({
                             mensaje: 'Ya tienes un dispositivo vinculado. Solo puedes usar un dispositivo por cuenta.',
-                            estado: false
+                            estado: false,
+                            codigo: 'MULTIPLES_DISPOSITIVOS'
                         });
                     }
                     
@@ -77,7 +79,8 @@ exports.verificarEstado = async (peticion, respuesta) => {
                 if (dispositivosUsuario.length > 0) {
                     return respuesta.status(403).json({
                         mensaje: 'Ya tienes un dispositivo vinculado. Solo puedes usar un dispositivo por cuenta.',
-                        estado: false
+                        estado: false,
+                        codigo: 'MULTIPLES_DISPOSITIVOS'
                     });
                 }
                 
