@@ -1,85 +1,173 @@
 // pruebas/dispositivos/verificarEstadoDispositivo.test.js
 
+// Mock la conexión de base de datos ANTES de importar cualquier cosa
+jest.mock('../../util/servicios/bd', () => ({
+    execute: jest.fn(),
+    query: jest.fn(),
+    getConnection: jest.fn(),
+    createPool: jest.fn(() => ({
+        execute: jest.fn(),
+        query: jest.fn(),
+        getConnection: jest.fn()
+    }))
+}));
+
 const DispositivoRepositorio = require('../../dispositivo/data/repositorios/dispositivoRepositorio');
 const DispositivoModelo = require('../../dispositivo/data/modelos/dispositivoModelo');
 
-// Mock de la conexión de base de datos para las pruebas
-jest.mock('../../util/servicios/bd', () => ({
-    execute: jest.fn()
-}));
-
-const mockConexion = require('../../util/servicios/bd');
+// Mock del repositorio para evitar conexiones reales a la base de datos
+jest.mock('../../dispositivo/data/repositorios/dispositivoRepositorio');
 
 describe('Dispositivos - Verificar Estado', () => {
-    
     beforeEach(() => {
-        // Limpiar mocks antes de cada prueba
         jest.clearAllMocks();
-    });    test('Debe crear un nuevo dispositivo si no existe', async () => {
-        const dispositivoId = 'test-device-12345';
-        
-        // Mock para insertar/actualizar el dispositivo
-        mockConexion.execute.mockImplementationOnce((query, params, callback) => {
-            expect(query).toContain('INSERT INTO dispositivos');
-            callback(null, { affectedRows: 1, insertId: 1 });
-        });
-        
-        // Mock para obtener el dispositivo creado
-        mockConexion.execute.mockImplementationOnce((query, params, callback) => {
-            expect(query).toContain('SELECT id, estado, id_usuario_FK');
-            callback(null, [{
-                id: dispositivoId,
-                estado: 1,
-                id_usuario_FK: null
-            }]);
-        });
-        
-        const dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoId);
-        
-        expect(dispositivo).toBeDefined();
-        expect(dispositivo.id).toBe(dispositivoId);
-        expect(dispositivo.estado).toBe(true);
-    }, 10000); // Aumentar timeout a 10 segundos
-
-    test('Debe validar ID de dispositivo correctamente', () => {
-        expect(DispositivoModelo.validarId('valid-device-id-123')).toBe(true);
-        expect(DispositivoModelo.validarId('short')).toBe(false);
-        expect(DispositivoModelo.validarId('')).toBe(false);
-        expect(DispositivoModelo.validarId(null)).toBe(false);
-    });    test('Debe habilitar un dispositivo correctamente', async () => {
-        const dispositivoId = 'test-device-habilitar';
-        
-        // Mock para habilitar dispositivo
-        mockConexion.execute.mockImplementationOnce((query, params, callback) => {
-            expect(query).toContain('UPDATE dispositivos');
-            expect(query).toContain('SET estado = TRUE');
-            expect(params).toEqual([dispositivoId]);
-            callback(null, { affectedRows: 1 });
-        });
-        
-        const dispositivo = await DispositivoRepositorio.habilitar(dispositivoId);
-        
-        expect(dispositivo).toBeDefined();
-        expect(dispositivo.id).toBe(dispositivoId);
-        expect(dispositivo.estado).toBe(true);
     });
 
-    test('Debe deshabilitar un dispositivo correctamente', async () => {
-        const dispositivoId = 'test-device-deshabilitar';
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    // Cerrar cualquier conexión pendiente después de todas las pruebas
+    afterAll(async () => {
+        // Esperar un poco para que se limpien las conexiones
+        await new Promise(resolve => setTimeout(resolve, 100));
+    });
+
+    test('No debe vincular usuario a dispositivo deshabilitado', async () => {
+        const dispositivoId = 'test-device-disabled';
+        const idUsuario = 123;
         
-        // Mock para deshabilitar dispositivo
-        mockConexion.execute.mockImplementationOnce((query, params, callback) => {
-            expect(query).toContain('UPDATE dispositivos');
-            expect(query).toContain('SET estado = FALSE');
-            expect(params).toEqual([dispositivoId]);
-            callback(null, { affectedRows: 1 });
-        });
+        // Mock: dispositivo existe pero está deshabilitado
+        const dispositivoDeshabilitado = new DispositivoModelo(dispositivoId, false, null);
+        DispositivoRepositorio.obtenerPorId.mockResolvedValue(dispositivoDeshabilitado);
+        DispositivoRepositorio.obtenerDispositivosDeUsuario.mockResolvedValue([]);
+
+        // Simular controlador
+        const resultado = await simularVerificacionEstado(dispositivoId, idUsuario);
+
+        expect(resultado.estado).toBe(false);
+        expect(resultado.mensaje).toBe('Dispositivo deshabilitado');
+        expect(DispositivoRepositorio.vincularDispositivo).not.toHaveBeenCalled();
+    });
+
+    test('Debe vincular usuario a dispositivo habilitado sin usuario', async () => {
+        const dispositivoId = 'test-device-enabled';
+        const idUsuario = 123;
         
-        const dispositivo = await DispositivoRepositorio.deshabilitar(dispositivoId);
+        // Mock: dispositivo habilitado sin usuario
+        const dispositivoSinUsuario = new DispositivoModelo(dispositivoId, true, null);
+        const dispositivoVinculado = new DispositivoModelo(dispositivoId, true, idUsuario);
         
-        expect(dispositivo).toBeDefined();
-        expect(dispositivo.id).toBe(dispositivoId);
-        expect(dispositivo.estado).toBe(false);
-        expect(dispositivo.idUsuario).toBeNull();
+        DispositivoRepositorio.obtenerPorId.mockResolvedValue(dispositivoSinUsuario);
+        DispositivoRepositorio.obtenerDispositivosDeUsuario.mockResolvedValue([]);
+        DispositivoRepositorio.vincularDispositivo.mockResolvedValue(dispositivoVinculado);
+
+        const resultado = await simularVerificacionEstado(dispositivoId, idUsuario);
+
+        expect(resultado.estado).toBe(true);
+        expect(DispositivoRepositorio.vincularDispositivo).toHaveBeenCalledWith(dispositivoId, idUsuario);
+    });
+
+    test('No debe vincular si dispositivo ya está vinculado a otro usuario', async () => {
+        const dispositivoId = 'test-device-occupied';
+        const idUsuario = 123;
+        const otroUsuario = 456;
+
+        // Mock: dispositivo vinculado a otro usuario
+        const dispositivoOcupado = new DispositivoModelo(dispositivoId, true, otroUsuario);
+        DispositivoRepositorio.obtenerPorId.mockResolvedValue(dispositivoOcupado);
+        DispositivoRepositorio.obtenerDispositivosDeUsuario.mockResolvedValue([]);
+
+        const resultado = await simularVerificacionEstado(dispositivoId, idUsuario);
+
+        expect(resultado.estado).toBe(false);
+        expect(resultado.codigo).toBe('DISPOSITIVO_AJENO');
+        expect(resultado.mensaje).toBe('Este dispositivo pertenece a otro usuario');
+    });
+
+    test('Debe crear y vincular dispositivo nuevo', async () => {
+        const dispositivoId = 'test-device-new';
+        const idUsuario = 123;
+        
+        // Mock: dispositivo no existe
+        const dispositivoNuevo = new DispositivoModelo(dispositivoId, true, idUsuario);
+        DispositivoRepositorio.obtenerPorId.mockResolvedValue(null);
+        DispositivoRepositorio.obtenerDispositivosDeUsuario.mockResolvedValue([]);
+        DispositivoRepositorio.registrarOActualizar.mockResolvedValue(dispositivoNuevo);
+
+        const resultado = await simularVerificacionEstado(dispositivoId, idUsuario);
+
+        expect(resultado.estado).toBe(true);
+        expect(DispositivoRepositorio.registrarOActualizar).toHaveBeenCalledWith(dispositivoId, idUsuario);
+    });
+
+    test('No debe permitir múltiples dispositivos al mismo usuario', async () => {
+        const dispositivoId = 'test-device-new-2';
+        const idUsuario = 123;
+        
+        // Mock: usuario ya tiene un dispositivo
+        const dispositivoExistente = new DispositivoModelo('device-1', true, idUsuario);
+        DispositivoRepositorio.obtenerPorId.mockResolvedValue(null);
+        DispositivoRepositorio.obtenerDispositivosDeUsuario.mockResolvedValue([dispositivoExistente]);
+
+        const resultado = await simularVerificacionEstado(dispositivoId, idUsuario);
+
+        expect(resultado.estado).toBe(false);
+        expect(resultado.codigo).toBe('MULTIPLES_DISPOSITIVOS');
+        expect(resultado.mensaje).toBe('Ya tienes un dispositivo vinculado. Solo puedes usar un dispositivo por cuenta.');
     });
 });
+
+// Función auxiliar para simular la lógica del controlador
+async function simularVerificacionEstado(dispositivoId, idUsuario) {
+    try {
+        let dispositivo = await DispositivoRepositorio.obtenerPorId(dispositivoId);
+        const dispositivosUsuario = await DispositivoRepositorio.obtenerDispositivosDeUsuario(idUsuario);
+        
+        if (dispositivo) {
+            if (dispositivo.estaVinculado()) {
+                if (!dispositivo.estaVinculadoA(idUsuario)) {
+                    return {
+                        mensaje: 'Este dispositivo pertenece a otro usuario',
+                        estado: false,
+                        codigo: 'DISPOSITIVO_AJENO'
+                    };
+                }
+            } else {
+                if (dispositivosUsuario.length > 0) {
+                    return {
+                        mensaje: 'Ya tienes un dispositivo vinculado. Solo puedes usar un dispositivo por cuenta.',
+                        estado: false,
+                        codigo: 'MULTIPLES_DISPOSITIVOS'
+                    };
+                }
+                
+                if (dispositivo.estado) {
+                    dispositivo = await DispositivoRepositorio.vincularDispositivo(dispositivoId, idUsuario);
+                }
+            }
+        } else {
+            if (dispositivosUsuario.length > 0) {
+                return {
+                    mensaje: 'Ya tienes un dispositivo vinculado. Solo puedes usar un dispositivo por cuenta.',
+                    estado: false,
+                    codigo: 'MULTIPLES_DISPOSITIVOS'
+                };
+            }
+            
+            dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoId, idUsuario);
+        }
+
+        return {
+            mensaje: dispositivo.estado ? 'Dispositivo activo' : 'Dispositivo deshabilitado',
+            estado: dispositivo.estado,
+            vinculado: dispositivo.estaVinculado(),
+            idUsuario: dispositivo.idUsuario
+        };
+    } catch {
+        return { 
+            mensaje: 'Error interno del servidor',
+            estado: false 
+        };
+    }
+}

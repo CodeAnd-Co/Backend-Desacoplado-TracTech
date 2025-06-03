@@ -428,6 +428,33 @@ class DispositivoRepositorio {
             }
         });
     }
+
+    /**
+     * Verifica si un usuario ya tiene dispositivos vinculados
+     * @param {number} idUsuario - ID del usuario
+     * @returns {boolean} - true si ya tiene dispositivos vinculados
+     */
+    static async usuarioTieneDispositivosVinculados(idUsuario) {
+        return new Promise((resolve, reject) => {
+            try {
+                const query = `
+                    SELECT COUNT(*) as total
+                    FROM dispositivos 
+                    WHERE id_usuario_FK = ?
+                `;
+                
+                conexion.execute(query, [idUsuario], (error, resultados) => {
+                    if (error) {
+                        return reject(new Error('Error al acceder a la base de datos'));
+                    }
+                    
+                    resolve(resultados[0].total > 0);
+                });
+            } catch {
+                reject(new Error('Error al acceder a la base de datos'));
+            }
+        });
+    }
 }
 
 module.exports = DispositivoRepositorio;
