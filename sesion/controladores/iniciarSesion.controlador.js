@@ -13,7 +13,7 @@ exports.iniciarSesion = async (peticion, respuesta) => {
         return respuesta.status(400).json({ mensaje: 'Faltan datos requeridos' });
     }
     if (!validador.isEmail(correo)) {
-        return respuesta.status(400).json({ mensaje: 'Correo inválido' });
+        return respuesta.status(400).json({ mensaje: 'Usuario o contraseña incorrectos' });
     }
     const correoSanitizado = validador.normalizeEmail(correo);
     const contraseniaSanitizada = validador.escape(contrasenia);
