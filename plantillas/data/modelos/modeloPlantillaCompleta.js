@@ -39,13 +39,13 @@ class PlantillaCompleta {
                WHERE IdPlantilla = ? 
                ORDER BY OrdenContenido ASC`,
               [idPlantilla],
-              (error, contenidoResult) => {
+              (error, contenidoResultado) => {
                 if (error) {
                   conexionDb.release();
                   return reject(error);
                 }
                 
-                const contenidos = contenidoResult;
+                const contenidos = contenidoResultado;
                 const contenidoIds = contenidos.map(constante => constante.IdContenido);
                 
                 if (contenidoIds.length === 0) {
