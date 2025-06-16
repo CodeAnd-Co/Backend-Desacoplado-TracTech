@@ -19,18 +19,18 @@ class PlantillaCompleta {
            JOIN plantillareporte pr ON p.idPlantilla = pr.IdPlantilla
            WHERE pr.idPlantillaReporte = ?`,
           [idPlantilla],
-          (error, plantillaResult) => {
+          (error, plantillaResultado) => {
             if (error) {
               conexionDb.release();
               return reject(error);
             }
             
-            if (plantillaResult.length === 0) {
+            if (plantillaResultado.length === 0) {
               conexionDb.release();
               return resolve(null); // Plantilla no encontrada
             }
             
-            const plantillaData = plantillaResult[0];
+            const plantillaData = plantillaResultado[0];
             
             // 2. Obtener contenidos de la plantilla ordenados
             conexionDb.query(
