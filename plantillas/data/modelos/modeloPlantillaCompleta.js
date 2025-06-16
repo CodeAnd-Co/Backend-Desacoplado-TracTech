@@ -79,7 +79,7 @@ class PlantillaCompleta {
                        WHERE c.IdPlantilla = ?
                        ORDER BY c.OrdenContenido ASC`,
                       [idPlantilla],
-                      (err, textosResult) => {
+                      (err, textosResultado) => {
                         conn.release();
                         
                         if (err) {
@@ -126,7 +126,7 @@ class PlantillaCompleta {
                               }
                             }
                           } else if (tipoContenido === 'Texto') {
-                            const texto = textosResult.find(texto => texto.IdContenido === idContenido);
+                            const texto = textosResultado.find(texto => texto.IdContenido === idContenido);
                             if (texto) {
                               itemContenido.tipoTexto = texto.TipoTexto;
                               itemContenido.alineacion = texto.Alineacion;
