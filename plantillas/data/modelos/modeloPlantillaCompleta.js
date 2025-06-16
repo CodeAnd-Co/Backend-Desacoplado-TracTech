@@ -9,11 +9,11 @@ class PlantillaCompleta {
    */
   static async obtenerPlantillaCompleta(idPlantilla) {
     return new Promise((resolve, reject) => {
-      conexion.getConnection((error, conn) => {
+      conexion.getConnection((error, conexionDb) => {
         if (error) return reject(error);
         
         // 1. Obtener datos básicos de la plantilla
-        conn.query(
+        conexionDb.query(
           `SELECT p.*, pr.* 
            FROM plantilla p
            JOIN plantillareporte pr ON p.idPlantilla = pr.IdPlantilla
@@ -21,19 +21,19 @@ class PlantillaCompleta {
           [idPlantilla],
           (error, plantillaResult) => {
             if (error) {
-              conn.release();
+              conexionDb.release();
               return reject(error);
             }
             
             if (plantillaResult.length === 0) {
-              conn.release();
+              conexionDb.release();
               return resolve(null); // Plantilla no encontrada
             }
             
             const plantillaData = plantillaResult[0];
             
             // 2. Obtener contenidos de la plantilla ordenados
-            conn.query(
+            conexionDb.query(
               `SELECT * 
                FROM contenido 
                WHERE IdPlantilla = ? 
@@ -41,7 +41,7 @@ class PlantillaCompleta {
               [idPlantilla],
               (error, contenidoResult) => {
                 if (error) {
-                  conn.release();
+                  conexionDb.release();
                   return reject(error);
                 }
                 
@@ -50,7 +50,7 @@ class PlantillaCompleta {
                 
                 if (contenidoIds.length === 0) {
                   // No hay contenidos, devolver solo la plantilla
-                  conn.release();
+                  conexionDb.release();
                   return resolve({
                     plantilla: plantillaData,
                     contenidos: []
@@ -58,7 +58,7 @@ class PlantillaCompleta {
                 }
                 
                 // 3. Obtener datos de gráficas
-                conn.query(
+                conexionDb.query(
                   `SELECT g.*, c.OrdenContenido, c.TipoContenido 
                    FROM grafica g
                    JOIN contenido c ON g.IdContenido = c.IdContenido
@@ -67,12 +67,12 @@ class PlantillaCompleta {
                   [idPlantilla],
                   (error, graficasResult) => {
                     if (error) {
-                      conn.release();
+                      conexionDb.release();
                       return reject(error);
                     }
                     
                     // 4. Obtener datos de textos
-                    conn.query(
+                    conexionDb.query(
                       `SELECT t.*, c.OrdenContenido, c.TipoContenido 
                        FROM texto t
                        JOIN contenido c ON t.IdContenido = c.IdContenido
@@ -80,7 +80,7 @@ class PlantillaCompleta {
                        ORDER BY c.OrdenContenido ASC`,
                       [idPlantilla],
                       (error, textosResultado) => {
-                        conn.release();
+                        conexionDb.release();
                         
                         if (error) {
                           return reject(error);
