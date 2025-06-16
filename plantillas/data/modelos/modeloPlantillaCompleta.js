@@ -9,8 +9,8 @@ class PlantillaCompleta {
    */
   static async obtenerPlantillaCompleta(idPlantilla) {
     return new Promise((resolve, reject) => {
-      conexion.getConnection((err, conn) => {
-        if (err) return reject(err);
+      conexion.getConnection((error, conn) => {
+        if (error) return reject(error);
         
         // 1. Obtener datos básicos de la plantilla
         conn.query(
@@ -19,10 +19,10 @@ class PlantillaCompleta {
            JOIN plantillareporte pr ON p.idPlantilla = pr.IdPlantilla
            WHERE pr.idPlantillaReporte = ?`,
           [idPlantilla],
-          (err, plantillaResult) => {
-            if (err) {
+          (error, plantillaResult) => {
+            if (error) {
               conn.release();
-              return reject(err);
+              return reject(error);
             }
             
             if (plantillaResult.length === 0) {
@@ -39,10 +39,10 @@ class PlantillaCompleta {
                WHERE IdPlantilla = ? 
                ORDER BY OrdenContenido ASC`,
               [idPlantilla],
-              (err, contenidoResult) => {
-                if (err) {
+              (error, contenidoResult) => {
+                if (error) {
                   conn.release();
-                  return reject(err);
+                  return reject(error);
                 }
                 
                 const contenidos = contenidoResult;
@@ -65,10 +65,10 @@ class PlantillaCompleta {
                    WHERE c.IdPlantilla = ?
                    ORDER BY c.OrdenContenido ASC`,
                   [idPlantilla],
-                  (err, graficasResult) => {
-                    if (err) {
+                  (error, graficasResult) => {
+                    if (error) {
                       conn.release();
-                      return reject(err);
+                      return reject(error);
                     }
                     
                     // 4. Obtener datos de textos
@@ -79,11 +79,11 @@ class PlantillaCompleta {
                        WHERE c.IdPlantilla = ?
                        ORDER BY c.OrdenContenido ASC`,
                       [idPlantilla],
-                      (err, textosResultado) => {
+                      (error, textosResultado) => {
                         conn.release();
                         
-                        if (err) {
-                          return reject(err);
+                        if (error) {
+                          return reject(error);
                         }
                         
                         // 5. Construir resultado
