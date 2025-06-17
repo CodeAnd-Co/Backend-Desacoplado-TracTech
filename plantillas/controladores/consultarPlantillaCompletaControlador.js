@@ -1,3 +1,5 @@
+//RF32 Usuario consulta plantillas de reporte. - https://codeandco-wiki.netlify.app/docs/next/proyectos/tractores/documentacion/requisitos/RF32
+
 const { obtenerPlantillaCompletaRepositorio } = require('../data/repositorios/repositorioPlantillaCompleta.js');
 
 /**
