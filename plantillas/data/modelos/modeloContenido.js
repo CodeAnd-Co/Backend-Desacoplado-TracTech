@@ -1,3 +1,5 @@
+//RF34 Usuario guarda plantilla de reporte. - https://codeandco-wiki.netlify.app/docs/next/proyectos/tractores/documentacion/requisitos/RF34
+
 const conexion = require('../../../util/servicios/bd.js');
 
 class Contenido{
