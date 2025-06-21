@@ -1,8 +1,8 @@
 const express = require('express');
 const ruteador = express.Router();
 
-const consultarPlantillaCompletaControlador = require('../controladores/consultarPlantillaCompletaControlador');
+const controladorTodasPlantillas = require('../controladores/controladorTodasPlantillas');
 
-ruteador.get('/', consultarPlantillaCompletaControlador.consultarPlantillaCompleta);
+ruteador.get('/', controladorTodasPlantillas.consultarTodasPlantillas);
 
 module.exports = ruteador;
