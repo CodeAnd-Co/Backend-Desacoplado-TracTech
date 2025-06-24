@@ -183,17 +183,18 @@ class DispositivoRepositorio {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
-    }/**
-     * Obtiene todos los dispositivos de la base de datos
+    }    /**
+     * Obtiene todos los dispositivos de la base de datos con información del usuario
      * @returns {DispositivoModelo[]}
      */
     static async obtenerTodos() {
         return new Promise((resolve, reject) => {
             try {
                 const query = `
-                    SELECT id, estado, id_usuario_FK
-                    FROM dispositivos 
-                    ORDER BY id
+                    SELECT d.id, d.estado, d.id_usuario_FK, u.Nombre as nombre_usuario
+                    FROM dispositivos d
+                    LEFT JOIN usuario u ON d.id_usuario_FK = u.idUsuario
+                    ORDER BY d.id
                 `;
                 
                 conexion.execute(query, [], (error, resultados) => {
@@ -201,12 +202,16 @@ class DispositivoRepositorio {
                         return reject(new Error('Error al acceder a la base de datos'));
                     }
                     
-                    const dispositivos = resultados.map(fila => 
-                        new DispositivoModelo(
+                    const dispositivos = resultados.map(fila => {
+                        const dispositivo = new DispositivoModelo(
                             fila.id, 
                             Boolean(fila.estado),
                             fila.id_usuario_FK
-                        ));
+                        );
+                        // Agregar el nombre del usuario al dispositivo
+                        dispositivo.nombreUsuario = fila.nombre_usuario || null;
+                        return dispositivo;
+                    });
                     
                     resolve(dispositivos);
                 });
@@ -214,7 +219,7 @@ class DispositivoRepositorio {
                 reject(new Error('Error al acceder a la base de datos'));
             }
         });
-    }    /**
+    }/**
      * Obtiene dispositivos filtrados por estado
      * @param {boolean} estado - true para activos, false para inactivos
      * @returns {DispositivoModelo[]}
