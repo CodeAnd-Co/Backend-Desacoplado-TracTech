@@ -1,6 +1,6 @@
 // dispositivo/controladores/consultarVinculacionDispositivos.controlador.js
 
-const DispositivoRepositorio = require('../data/repositorios/dispositivoRepositorio');
+const consultarDispositivosRepositorio = require('../data/repositorios/consultarDispositivosRepositorio');
 
 /**
  * Controlador para consultar las vinculaciones entre dispositivos y usuarios
@@ -8,13 +8,20 @@ const DispositivoRepositorio = require('../data/repositorios/dispositivoReposito
 exports.consultarVinculaciones = async (peticion, respuesta) => {
     try {
         // Obtener todas las vinculaciones
-        const vinculaciones = await DispositivoRepositorio.obtenerVinculaciones();
+        const resultado = await consultarDispositivosRepositorio.obtenerVinculaciones();
+
+        if (resultado.estado !== 200) {
+            return respuesta.status(resultado.estado).json({
+                mensaje: resultado.mensaje,
+                vinculaciones: []
+            });
+        }
 
         // Formatear la respuesta
-        const vinculacionesFormateadas = vinculaciones.map(vinculacion => ({
+        const vinculacionesFormateadas = resultado.datos.map(vinculacion => ({
             dispositivo: {
                 id: vinculacion.dispositivo.id,
-                estado: vinculacion.dispositivo.estado,
+                estado: vinculacion.dispositivo.activo,
             },
             usuario: vinculacion.usuario ? {
                 id: vinculacion.usuario.id,
@@ -43,9 +50,7 @@ exports.consultarVinculaciones = async (peticion, respuesta) => {
  */
 exports.consultarDispositivosDeUsuario = async (peticion, respuesta) => {
     try {
-        const { idUsuario } = peticion.params;
-
-        if (!idUsuario || isNaN(idUsuario)) {
+        const { idUsuario } = peticion.params;        if (!idUsuario || isNaN(idUsuario)) {
             return respuesta.status(400).json({
                 mensaje: 'ID de usuario inválido',
                 dispositivos: []
@@ -53,12 +58,19 @@ exports.consultarDispositivosDeUsuario = async (peticion, respuesta) => {
         }
 
         // Obtener dispositivos del usuario
-        const dispositivos = await DispositivoRepositorio.obtenerDispositivosDeUsuario(parseInt(idUsuario));
+        const resultado = await consultarDispositivosRepositorio.obtenerDispositivosDeUsuario(parseInt(idUsuario));
+
+        if (resultado.estado !== 200) {
+            return respuesta.status(resultado.estado).json({
+                mensaje: resultado.mensaje,
+                dispositivos: []
+            });
+        }
 
         // Formatear la respuesta
-        const dispositivosFormateados = dispositivos.map(dispositivo => ({
+        const dispositivosFormateados = resultado.datos.map(dispositivo => ({
             id: dispositivo.id,
-            estado: dispositivo.estado
+            estado: dispositivo.activo
         }));
 
         respuesta.status(200).json({

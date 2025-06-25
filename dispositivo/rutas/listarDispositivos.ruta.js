@@ -42,23 +42,37 @@ const ruteador = express.Router();
  *                       estado:
  *                         type: boolean
  *                         example: true
- *                       fechaRegistro:
- *                         type: string
- *                         format: date-time
- *                       fechaUltimaActividad:
- *                         type: string
- *                         format: date-time
- *                       fechaVinculacion:
- *                         type: string
- *                         format: date-time
- *                         nullable: true
  *                       metadata:
  *                         type: object
  *                         nullable: true
+ *                       idUsuario:
+ *                         type: number
+ *                         nullable: true
+ *                         example: 123
+ *                       nombreUsuario:
+ *                         type: string
+ *                         nullable: true
+ *                         example: 'Juan Pérez'
  *       401:
  *         description: Token de autenticación inválido
  *       403:
  *         description: Sin permisos para realizar esta acción
+ *       503:
+ *         description: Servicio temporalmente no disponible - Problemas de conexión a la base de datos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: 'Servicio temporalmente no disponible. Verifique su conexión a internet e intente nuevamente.'
+ *                 dispositivos:
+ *                   type: array
+ *                   example: []
+ *                 error:
+ *                   type: string
+ *                   example: 'CONEXION_BD_FALLIDA'
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -72,6 +86,9 @@ const ruteador = express.Router();
  *                 dispositivos:
  *                   type: array
  *                   example: []
+ *                 error:
+ *                   type: string
+ *                   example: 'ERROR_INTERNO'
  */
 ruteador.get('/', verificarToken, verificarPermisos, listarDispositivosControlador.listarDispositivos);
 
