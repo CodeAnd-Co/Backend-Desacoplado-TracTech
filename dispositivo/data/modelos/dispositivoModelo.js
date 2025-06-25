@@ -25,7 +25,7 @@ class DispositivoModelo {
      * Valida si el ID del dispositivo es válido
      */
     static validarId(id) {
-        return Boolean(id && typeof id === 'string' && id.length >= 10);
+        return Boolean(id && typeof id === 'string');
     }
 
     /**

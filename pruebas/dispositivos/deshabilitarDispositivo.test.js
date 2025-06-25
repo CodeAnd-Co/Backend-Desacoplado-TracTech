@@ -1,6 +1,7 @@
 // pruebas/dispositivos/deshabilitarDispositivo.test.js
 
-const DispositivoRepositorio = require('../../dispositivo/data/repositorios/dispositivoRepositorio');
+const consultarDispositivosRepositorio = require('../../dispositivo/data/repositorios/consultarDispositivosRepositorio');
+const deshabilitarDispositivoRepositorio = require('../../dispositivo/data/repositorios/deshabilitarDispositivoRepositorio');
 const { deshabilitarDispositivo } = require('../../dispositivo/controladores/deshabilitarDispositivo.controlador');
 
 // Mock de la conexión de base de datos para las pruebas
@@ -31,26 +32,35 @@ describe('Dispositivos - Deshabilitar por Usuario', () => {
         };
 
         // Mock para obtener dispositivos del usuario
-        jest.spyOn(DispositivoRepositorio, 'obtenerDispositivosDeUsuario').mockResolvedValue([
-            { id: dispositivoId, estado: true, idUsuario }
-        ]);        // Mock para deshabilitar el dispositivo
-        jest.spyOn(DispositivoRepositorio, 'deshabilitar').mockResolvedValue({
-            id: dispositivoId,
-            estado: false,
-            idUsuario: null // Ahora está desvinculado
+        jest.spyOn(consultarDispositivosRepositorio, 'obtenerDispositivosDeUsuario').mockResolvedValue({
+            estado: 200,
+            datos: [
+                { id: dispositivoId, activo: true, idUsuario }
+            ]
+        });
+
+        // Mock para deshabilitar el dispositivo
+        jest.spyOn(deshabilitarDispositivoRepositorio, 'deshabilitar').mockResolvedValue({
+            estado: 200,
+            mensaje: 'Dispositivo deshabilitado con éxito',
+            datos: {
+                id: dispositivoId,
+                activo: false,
+                idUsuario: null
+            }
         });
 
         await deshabilitarDispositivo(peticion, respuesta);
 
-        expect(DispositivoRepositorio.obtenerDispositivosDeUsuario).toHaveBeenCalledWith(idUsuario);
-        expect(DispositivoRepositorio.deshabilitar).toHaveBeenCalledWith(dispositivoId);
+        expect(consultarDispositivosRepositorio.obtenerDispositivosDeUsuario).toHaveBeenCalledWith(idUsuario);
+        expect(deshabilitarDispositivoRepositorio.deshabilitar).toHaveBeenCalledWith(dispositivoId);
         expect(respuesta.status).toHaveBeenCalledWith(200);
         expect(respuesta.json).toHaveBeenCalledWith({
-            mensaje: 'Dispositivo deshabilitado y desvinculado exitosamente',
+            mensaje: 'Dispositivo deshabilitado con éxito',
             exito: true,
             dispositivo: {
                 id: dispositivoId,
-                estado: false,
+                activo: false,
                 idUsuario: null
             }
         });
@@ -69,13 +79,45 @@ describe('Dispositivos - Deshabilitar por Usuario', () => {
         };
 
         // Mock para obtener dispositivos del usuario (sin dispositivos)
-        jest.spyOn(DispositivoRepositorio, 'obtenerDispositivosDeUsuario').mockResolvedValue([]);
+        jest.spyOn(consultarDispositivosRepositorio, 'obtenerDispositivosDeUsuario').mockResolvedValue({
+            estado: 200,
+            datos: []
+        });
+
+        await deshabilitarDispositivo(peticion, respuesta);
+
+        expect(respuesta.status).toHaveBeenCalledWith(404);        expect(respuesta.json).toHaveBeenCalledWith({
+            mensaje: 'No se encontraron dispositivos vinculados a este usuario',
+            exito: false
+        });
+    });
+
+    test('Debe retornar error 404 cuando el usuario no tiene dispositivos activos', async () => {
+        const idUsuario = 789;
+        const dispositivoId = 'test-device-inactive';
+        
+        const peticion = {
+            body: { idUsuario }
+        };
+        
+        const respuesta = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        };
+
+        // Mock para obtener dispositivos del usuario (solo inactivos)
+        jest.spyOn(consultarDispositivosRepositorio, 'obtenerDispositivosDeUsuario').mockResolvedValue({
+            estado: 200,
+            datos: [
+                { id: dispositivoId, activo: false, idUsuario }
+            ]
+        });
 
         await deshabilitarDispositivo(peticion, respuesta);
 
         expect(respuesta.status).toHaveBeenCalledWith(404);
         expect(respuesta.json).toHaveBeenCalledWith({
-            mensaje: 'No se encontraron dispositivos vinculados a este usuario',
+            mensaje: 'El usuario no tiene dispositivos activos para deshabilitar',
             exito: false
         });
     });

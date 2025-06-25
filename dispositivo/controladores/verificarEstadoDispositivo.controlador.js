@@ -1,6 +1,8 @@
 // dispositivo/controladores/verificarEstadoDispositivo.controlador.js
 
-const DispositivoRepositorio = require('../data/repositorios/dispositivoRepositorio');
+const consultarDispositivosRepositorio = require('../data/repositorios/consultarDispositivosRepositorio');
+const registrarDispositivoRepositorio = require('../data/repositorios/registrarDispositivoRepositorio');
+const vincularDispositivoRepositorio = require('../data/repositorios/vincularDispositivoRepositorio');
 const DispositivoModelo = require('../data/modelos/dispositivoModelo');
 const validator = require('validator');
 
@@ -38,18 +40,26 @@ exports.verificarEstado = async (peticion, respuesta) => {
         }
 
         // Buscar el dispositivo en el repositorio
-        let dispositivo = await DispositivoRepositorio.obtenerPorId(dispositivoIdSanitizado);
+        const busquedaDispositivo = await consultarDispositivosRepositorio.obtenerPorId(dispositivoIdSanitizado);
 
         // Obtener el ID del usuario desde el token (si está autenticado)
         const idUsuario = peticion.usuario?.id || null;
 
+        let dispositivoFinal = null;
+
         // Si hay un usuario autenticado, verificar restricciones de vinculación
         if (idUsuario) {
             // Verificar si el usuario ya tiene dispositivos vinculados
-            const dispositivosUsuario = await DispositivoRepositorio.obtenerDispositivosDeUsuario(idUsuario);
+            const resultadoDispositivosUsuario = await consultarDispositivosRepositorio.obtenerDispositivosDeUsuario(idUsuario);
             
-            if (dispositivo) {
+            if (busquedaDispositivo.estado === 200) {
                 // El dispositivo existe
+                const dispositivo = new DispositivoModelo(
+                    busquedaDispositivo.datos.id,
+                    busquedaDispositivo.datos.activo,
+                    busquedaDispositivo.datos.idUsuario
+                );
+
                 if (dispositivo.estaVinculado()) {
                     // Si está vinculado a otro usuario, denegar acceso
                     if (!dispositivo.estaVinculadoA(idUsuario)) {
@@ -59,9 +69,10 @@ exports.verificarEstado = async (peticion, respuesta) => {
                             codigo: 'DISPOSITIVO_AJENO'
                         });
                     }
+                    dispositivoFinal = dispositivo;
                 } else {
                     // El dispositivo no está vinculado, verificar si el usuario ya tiene otro dispositivo
-                    if (dispositivosUsuario.length > 0) {
+                    if (resultadoDispositivosUsuario.estado === 200 && resultadoDispositivosUsuario.datos.length > 0) {
                         return respuesta.status(403).json({
                             mensaje: 'Ya tienes un dispositivo vinculado. Solo puedes usar un dispositivo por cuenta.',
                             estado: false,
@@ -71,12 +82,23 @@ exports.verificarEstado = async (peticion, respuesta) => {
                     
                     // Si el dispositivo está habilitado y el usuario no tiene otros dispositivos, vincular
                     if (dispositivo.estado) {
-                        dispositivo = await DispositivoRepositorio.vincularDispositivo(dispositivoIdSanitizado, idUsuario);
+                        const resultadoVinculacion = await vincularDispositivoRepositorio.vincularDispositivo(dispositivoIdSanitizado, idUsuario);
+                        if (resultadoVinculacion.estado === 200) {
+                            dispositivoFinal = new DispositivoModelo(
+                                resultadoVinculacion.datos.id,
+                                resultadoVinculacion.datos.activo,
+                                resultadoVinculacion.datos.idUsuario
+                            );
+                        } else {
+                            dispositivoFinal = dispositivo;
+                        }
+                    } else {
+                        dispositivoFinal = dispositivo;
                     }
                 }
             } else {
                 // El dispositivo no existe, verificar si el usuario ya tiene otro dispositivo
-                if (dispositivosUsuario.length > 0) {
+                if (resultadoDispositivosUsuario.estado === 200 && resultadoDispositivosUsuario.datos.length > 0) {
                     return respuesta.status(403).json({
                         mensaje: 'Ya tienes un dispositivo vinculado. Solo puedes usar un dispositivo por cuenta.',
                         estado: false,
@@ -85,21 +107,56 @@ exports.verificarEstado = async (peticion, respuesta) => {
                 }
                 
                 // Registrar nuevo dispositivo y vincular al usuario
-                dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado, idUsuario);
+                const resultadoRegistro = await registrarDispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado, idUsuario);
+                if (resultadoRegistro.estado === 201) {
+                    dispositivoFinal = new DispositivoModelo(
+                        resultadoRegistro.datos.id,
+                        resultadoRegistro.datos.activo,
+                        resultadoRegistro.datos.idUsuario
+                    );
+                } else {
+                    return respuesta.status(resultadoRegistro.estado).json({
+                        mensaje: resultadoRegistro.mensaje,
+                        estado: false
+                    });
+                }
             }
         } else {
             // Usuario no autenticado, solo registrar dispositivo sin vinculación
-            if (!dispositivo) {
-                dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado, null);
+            if (busquedaDispositivo.estado === 404) {
+                const resultadoRegistro = await registrarDispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado, null);
+                if (resultadoRegistro.estado === 201) {
+                    dispositivoFinal = new DispositivoModelo(
+                        resultadoRegistro.datos.id,
+                        resultadoRegistro.datos.activo,
+                        resultadoRegistro.datos.idUsuario
+                    );
+                } else {
+                    return respuesta.status(resultadoRegistro.estado).json({
+                        mensaje: resultadoRegistro.mensaje,
+                        estado: false
+                    });
+                }
+            } else if (busquedaDispositivo.estado === 200) {
+                dispositivoFinal = new DispositivoModelo(
+                    busquedaDispositivo.datos.id,
+                    busquedaDispositivo.datos.activo,
+                    busquedaDispositivo.datos.idUsuario
+                );
+            } else {
+                return respuesta.status(busquedaDispositivo.estado).json({
+                    mensaje: busquedaDispositivo.mensaje,
+                    estado: false
+                });
             }
         }
 
         // Devolver el estado del dispositivo
         respuesta.status(200).json({
-            mensaje: dispositivo.estado ? 'Dispositivo activo' : 'Dispositivo deshabilitado',
-            estado: dispositivo.estado,
-            vinculado: dispositivo.estaVinculado(),
-            idUsuario: dispositivo.idUsuario
+            mensaje: dispositivoFinal.estado ? 'Dispositivo activo' : 'Dispositivo deshabilitado',
+            estado: dispositivoFinal.estado,
+            vinculado: dispositivoFinal.estaVinculado(),
+            idUsuario: dispositivoFinal.idUsuario
         });
 
     } catch  {

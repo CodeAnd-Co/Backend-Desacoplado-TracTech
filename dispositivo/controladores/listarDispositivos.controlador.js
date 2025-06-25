@@ -1,27 +1,26 @@
 // dispositivo/controladores/listarDispositivos.controlador.js
 
-const DispositivoRepositorio = require('../data/repositorios/dispositivoRepositorio');
+const consultarDispositivosRepositorio = require('../data/repositorios/consultarDispositivosRepositorio');
 
 /**
  * Controlador para listar todos los dispositivos
  */
 exports.listarDispositivos = async (peticion, respuesta) => {
-    try {        // Obtener todos los dispositivos del repositorio
-        const dispositivos = await DispositivoRepositorio.obtenerTodos();
+    try {
+        // Obtener todos los dispositivos del repositorio
+        const resultado = await consultarDispositivosRepositorio.obtenerTodos();
 
-        // Formatear la respuesta
-        const dispositivosFormateados = dispositivos.map(dispositivo => ({
-            id: dispositivo.id,
-            estado: dispositivo.estado,
-            metadata: dispositivo.metadata,
-            idUsuario: dispositivo.idUsuario,
-            nombreUsuario: dispositivo.nombreUsuario
-        }));
+        if (resultado.estado !== 200) {
+            return respuesta.status(resultado.estado).json({
+                mensaje: resultado.mensaje,
+                dispositivos: []
+            });
+        }
 
         respuesta.status(200).json({
             mensaje: 'Dispositivos obtenidos exitosamente',
-            total: dispositivosFormateados.length,
-            dispositivos: dispositivosFormateados
+            total: resultado.datos.length,
+            dispositivos: resultado.datos
         });
     } catch (error) {
         // Verificar si el error es relacionado con la conexión a la base de datos
