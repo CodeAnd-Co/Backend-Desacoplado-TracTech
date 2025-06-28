@@ -1,3 +1,5 @@
+// RF2 Usuario registrado inicia sesión - https://codeandco-wiki.netlify.app/docs/next/proyectos/tractores/documentacion/requisitos/RF2
+
 // sesion/data/modelos/sesionModelo.js
 const conexion = require('../../../util/servicios/bd');
 
