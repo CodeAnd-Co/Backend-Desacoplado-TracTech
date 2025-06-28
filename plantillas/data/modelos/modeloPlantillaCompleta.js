@@ -1,3 +1,5 @@
+//RF32 Usuario consulta plantillas de reporte. - https://codeandco-wiki.netlify.app/docs/next/proyectos/tractores/documentacion/requisitos/RF32
+
 const conexion = require('../../../util/servicios/bd.js');
 
 class PlantillaCompleta {
@@ -9,48 +11,48 @@ class PlantillaCompleta {
    */
   static async obtenerPlantillaCompleta(idPlantilla) {
     return new Promise((resolve, reject) => {
-      conexion.getConnection((err, conn) => {
-        if (err) return reject(err);
+      conexion.getConnection((error, conexionDb) => {
+        if (error) return reject(error);
         
         // 1. Obtener datos básicos de la plantilla
-        conn.query(
+        conexionDb.query(
           `SELECT p.*, pr.* 
            FROM plantilla p
            JOIN plantillareporte pr ON p.idPlantilla = pr.IdPlantilla
            WHERE pr.idPlantillaReporte = ?`,
           [idPlantilla],
-          (err, plantillaResult) => {
-            if (err) {
-              conn.release();
-              return reject(err);
+          (error, plantillaResultado) => {
+            if (error) {
+              conexionDb.release();
+              return reject(error);
             }
             
-            if (plantillaResult.length === 0) {
-              conn.release();
+            if (plantillaResultado.length === 0) {
+              conexionDb.release();
               return resolve(null); // Plantilla no encontrada
             }
             
-            const plantillaData = plantillaResult[0];
+            const plantillaData = plantillaResultado[0];
             
             // 2. Obtener contenidos de la plantilla ordenados
-            conn.query(
+            conexionDb.query(
               `SELECT * 
                FROM contenido 
                WHERE IdPlantilla = ? 
                ORDER BY OrdenContenido ASC`,
               [idPlantilla],
-              (err, contenidoResult) => {
-                if (err) {
-                  conn.release();
-                  return reject(err);
+              (error, contenidoResultado) => {
+                if (error) {
+                  conexionDb.release();
+                  return reject(error);
                 }
                 
-                const contenidos = contenidoResult;
+                const contenidos = contenidoResultado;
                 const contenidoIds = contenidos.map(constante => constante.IdContenido);
                 
                 if (contenidoIds.length === 0) {
                   // No hay contenidos, devolver solo la plantilla
-                  conn.release();
+                  conexionDb.release();
                   return resolve({
                     plantilla: plantillaData,
                     contenidos: []
@@ -58,32 +60,32 @@ class PlantillaCompleta {
                 }
                 
                 // 3. Obtener datos de gráficas
-                conn.query(
+                conexionDb.query(
                   `SELECT g.*, c.OrdenContenido, c.TipoContenido 
                    FROM grafica g
                    JOIN contenido c ON g.IdContenido = c.IdContenido
                    WHERE c.IdPlantilla = ?
                    ORDER BY c.OrdenContenido ASC`,
                   [idPlantilla],
-                  (err, graficasResult) => {
-                    if (err) {
-                      conn.release();
-                      return reject(err);
+                  (error, graficasResult) => {
+                    if (error) {
+                      conexionDb.release();
+                      return reject(error);
                     }
                     
                     // 4. Obtener datos de textos
-                    conn.query(
+                    conexionDb.query(
                       `SELECT t.*, c.OrdenContenido, c.TipoContenido 
                        FROM texto t
                        JOIN contenido c ON t.IdContenido = c.IdContenido
                        WHERE c.IdPlantilla = ?
                        ORDER BY c.OrdenContenido ASC`,
                       [idPlantilla],
-                      (err, textosResult) => {
-                        conn.release();
+                      (error, textosResultado) => {
+                        conexionDb.release();
                         
-                        if (err) {
-                          return reject(err);
+                        if (error) {
+                          return reject(error);
                         }
                         
                         // 5. Construir resultado
@@ -126,7 +128,7 @@ class PlantillaCompleta {
                               }
                             }
                           } else if (tipoContenido === 'Texto') {
-                            const texto = textosResult.find(texto => texto.IdContenido === idContenido);
+                            const texto = textosResultado.find(texto => texto.IdContenido === idContenido);
                             if (texto) {
                               itemContenido.tipoTexto = texto.TipoTexto;
                               itemContenido.alineacion = texto.Alineacion;

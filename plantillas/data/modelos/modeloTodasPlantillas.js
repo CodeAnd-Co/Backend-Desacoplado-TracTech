@@ -5,6 +5,7 @@ class TodasPlantillas {
    * Obtiene un listado de todas las plantillas con información básica
    * @returns {Promise<Array>} - Lista de plantillas con sus datos básicos
    */
+  
   static async obtenerTodasPlantillas() {
     // Consulta SQL que obtiene datos básicos de todas las plantillas
     const query = `

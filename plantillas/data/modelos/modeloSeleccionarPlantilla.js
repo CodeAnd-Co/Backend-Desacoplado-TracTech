@@ -1,3 +1,5 @@
+//RF35 Usuario selecciona plantilla. - https://codeandco-wiki.netlify.app/docs/next/proyectos/tractores/documentacion/requisitos/RF35
+
 const conexion = require('../../../util/servicios/bd.js');
 
 class SeleccionarPlantilla {
