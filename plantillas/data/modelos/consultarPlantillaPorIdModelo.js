@@ -1,17 +1,20 @@
 const conexion = require('../../../util/servicios/bd.js');
+
 /**
  * @async
- * @function consultarPlantillaModelo
- * @description Función para consultar todas las Plantillas de la base de datos.
+ * @function consultarPlantillaPorIdModelo
+ * @param {number} id - ID de la plantilla a consultar.
+ * @description Función para consultar una plantilla específica por su ID.
  * @returns {Promise<Object>} Promesa que resuelve con el resultado de la consulta.
  * @throws {Error} Si ocurre un error al ejecutar la consulta.
  */
-async function consultarPlantillasModelo() {
+async function consultarPlantillaPorIdModelo(id) {
     return new Promise((resolver, rechazar) => {
-        // Consulta SQL para obtener todas las plantillas de la base de datos
-        const consulta = 'SELECT titulo FROM plantilla';
+        // Consulta SQL para obtener una plantilla específica por ID
+        const consulta = 'SELECT * FROM plantilla WHERE id = ?';
+        
         // Ejecuta la consulta
-        conexion.query(consulta, (err, resultado) => {
+        conexion.query(consulta, [id], (err, resultado) => {
             if (err) {
                 return rechazar(err);
             }
@@ -21,5 +24,5 @@ async function consultarPlantillasModelo() {
 }
 
 module.exports = {
-    consultarPlantillasModelo,
+    consultarPlantillaPorIdModelo,
 };
