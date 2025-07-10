@@ -1,4 +1,5 @@
-//RF22 Usuario guarda plantilla de reporte. - https://codeandco-wiki.netlify.app/docs/proyectos/tractores/documentacion/requisitos/RF22
+//RF34 Usuario guarda plantilla de reporte. - https://codeandco-wiki.netlify.app/docs/next/proyectos/tractores/documentacion/requisitos/RF34
+
 const PlantillaReporte = require('../modelos/modeloGuardarPlantilla.js');
 /**
  * Guarda una nueva plantilla en la base de datos

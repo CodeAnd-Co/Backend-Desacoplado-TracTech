@@ -1,6 +1,8 @@
 // dispositivo/controladores/habilitarDispositivo.controlador.js
 
-const DispositivoRepositorio = require('../data/repositorios/dispositivoRepositorio');
+const habilitarDispositivoRepositorio = require('../data/repositorios/habilitarDispositivoRepositorio');
+const consultarDispositivosRepositorio = require('../data/repositorios/consultarDispositivosRepositorio');
+const registrarDispositivoRepositorio = require('../data/repositorios/registrarDispositivoRepositorio');
 const DispositivoModelo = require('../data/modelos/dispositivoModelo');
 const validator = require('validator');
 
@@ -38,29 +40,32 @@ exports.habilitarDispositivo = async (peticion, respuesta) => {
         }
 
         // Buscar el dispositivo
-        let dispositivo = await DispositivoRepositorio.obtenerPorId(dispositivoIdSanitizado);
+        const busquedaDispositivo = await consultarDispositivosRepositorio.obtenerPorId(dispositivoIdSanitizado);
+        
+        let resultado;
+        
         // Si el dispositivo no existe, lo creamos y lo habilitamos
-        if (!dispositivo) {
-            dispositivo = await DispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado);
-        } else {
+        if (busquedaDispositivo.estado === 404) {
+            resultado = await registrarDispositivoRepositorio.registrarOActualizar(dispositivoIdSanitizado);
+        } else if (busquedaDispositivo.estado === 200) {
             // Habilitar dispositivo existente
-            dispositivo = await DispositivoRepositorio.habilitar(dispositivoIdSanitizado, peticion.usuario || 'Sistema');
-        }
-
-        if (!dispositivo) {
-            return respuesta.status(404).json({ 
-                mensaje: 'No se pudo procesar el dispositivo',
+            resultado = await habilitarDispositivoRepositorio.habilitar(dispositivoIdSanitizado);
+        } else {
+            return respuesta.status(busquedaDispositivo.estado).json({
+                mensaje: busquedaDispositivo.mensaje,
+                exito: false
+            });
+        }        if (resultado.estado !== 200 && resultado.estado !== 201) {
+            return respuesta.status(resultado.estado).json({ 
+                mensaje: resultado.mensaje,
                 exito: false 
             });
         }
 
         respuesta.status(200).json({
-            mensaje: 'Dispositivo habilitado exitosamente',
+            mensaje: resultado.mensaje,
             exito: true,
-            dispositivo: {
-                id: dispositivo.id,
-                estado: dispositivo.estado,
-            }
+            dispositivo: resultado.datos
         });
 
     } catch {

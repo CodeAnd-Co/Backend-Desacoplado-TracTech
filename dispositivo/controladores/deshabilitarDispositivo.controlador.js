@@ -1,6 +1,7 @@
 // dispositivo/controladores/deshabilitarDispositivo.controlador.js
 
-const DispositivoRepositorio = require('../data/repositorios/dispositivoRepositorio');
+const deshabilitarDispositivoRepositorio = require('../data/repositorios/deshabilitarDispositivoRepositorio');
+const consultarDispositivosRepositorio = require('../data/repositorios/consultarDispositivosRepositorio');
 
 /**
  * Controlador para deshabilitar dispositivo vinculado a un usuario
@@ -34,10 +35,10 @@ exports.deshabilitarDispositivo = async (peticion, respuesta) => {
         }
 
         // Buscar los dispositivos vinculados al usuario
-        const dispositivos = await DispositivoRepositorio.obtenerDispositivosDeUsuario(idUsuarioSanitizado);
+        const resultadoDispositivos = await consultarDispositivosRepositorio.obtenerDispositivosDeUsuario(idUsuarioSanitizado);
 
         // Verificar si el usuario tiene dispositivos vinculados
-        if (!dispositivos || dispositivos.length === 0) {
+        if (resultadoDispositivos.estado !== 200 || !resultadoDispositivos.datos || resultadoDispositivos.datos.length === 0) {
             return respuesta.status(404).json({ 
                 mensaje: 'No se encontraron dispositivos vinculados a este usuario',
                 exito: false 
@@ -45,8 +46,7 @@ exports.deshabilitarDispositivo = async (peticion, respuesta) => {
         }
 
         // Tomar el primer dispositivo activo (asumiendo un dispositivo por usuario)
-        const dispositivoActivo = dispositivos.find(dispositivo => dispositivo.estado === true);
-        
+        const dispositivoActivo = resultadoDispositivos.datos.find(dispositivo => dispositivo.activo === true);        
         if (!dispositivoActivo) {
             return respuesta.status(404).json({ 
                 mensaje: 'El usuario no tiene dispositivos activos para deshabilitar',
@@ -55,20 +55,19 @@ exports.deshabilitarDispositivo = async (peticion, respuesta) => {
         }
 
         // Deshabilitar el dispositivo
-        const dispositivoDeshabilitado = await DispositivoRepositorio.deshabilitar(dispositivoActivo.id);
-        if (!dispositivoDeshabilitado) {
-            return respuesta.status(500).json({ 
-                mensaje: 'Error al deshabilitar el dispositivo',
+        const resultado = await deshabilitarDispositivoRepositorio.deshabilitar(dispositivoActivo.id);
+        
+        if (resultado.estado !== 200) {
+            return respuesta.status(resultado.estado).json({ 
+                mensaje: resultado.mensaje,
                 exito: false 
             });
-        }        respuesta.status(200).json({
-            mensaje: 'Dispositivo deshabilitado y desvinculado exitosamente',
+        }
+
+        respuesta.status(200).json({
+            mensaje: resultado.mensaje,
             exito: true,
-            dispositivo: {
-                id: dispositivoDeshabilitado.id,
-                estado: dispositivoDeshabilitado.estado,
-                idUsuario: null // Ahora está desvinculado
-            }
+            dispositivo: resultado.datos
         });
 
     } catch{
