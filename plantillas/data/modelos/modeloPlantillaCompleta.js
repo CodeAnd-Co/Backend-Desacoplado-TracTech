@@ -59,7 +59,7 @@ class PlantillaCompleta {
                   });
                 }
                 
-                // 3. Obtener datos de gráficas
+                // 3. Obtener datos de gráficas con información completa
                 conexionDb.query(
                   `SELECT g.*, c.OrdenContenido, c.TipoContenido 
                    FROM grafica g
@@ -117,15 +117,69 @@ class PlantillaCompleta {
                                 'Polar': 'polarArea'
                               };
                               
+                              // Campos básicos (compatibilidad hacia atrás)
                               itemContenido.nombreGrafica = grafica.NombreGrafica;
                               itemContenido.tipoGrafica = tipoGraficaMap[grafica.TipoGrafica] || grafica.TipoGrafica;
-                              
-                              // Parsear los parámetros JSON
+
+                              // Parsear los parámetros JSON básicos
                               try {
-                                itemContenido.parametros = JSON.parse(grafica.Parametros);
+                                itemContenido.parametros = JSON.parse(grafica.Parametros || '{}');
                               } catch {
                                 itemContenido.parametros = {};
                               }
+
+                              // Nuevos campos del sistema mejorado
+                              itemContenido.color = grafica.Color || '#A61930';
+                              itemContenido.tractorSeleccionado = grafica.TractorSeleccionado;
+
+                              // Estructura de datos mejorada
+                              itemContenido.datos = {
+                                tipoOrigen: grafica.TipoOrigen || 'columna'
+                              };
+
+                              // Parsear columna de origen
+                              try {
+                                itemContenido.datos.columna = JSON.parse(grafica.ColumnaOrigen || '{}');
+                              } catch {
+                                itemContenido.datos.columna = {};
+                              }
+
+                              // Parsear fórmula aplicada
+                              try {
+                                itemContenido.datos.formula = JSON.parse(grafica.FormulaAplicada || '{}');
+                              } catch {
+                                itemContenido.datos.formula = {};
+                              }
+
+                              // Parsear filtros
+                              try {
+                                itemContenido.datos.filtros = JSON.parse(grafica.Filtros || '[]');
+                              } catch {
+                                itemContenido.datos.filtros = [];
+                              }
+
+                              // Parsear parámetros de fórmula
+                              try {
+                                itemContenido.datos.parametrosFormula = JSON.parse(grafica.ParametrosFormula || '[]');
+                              } catch {
+                                itemContenido.datos.parametrosFormula = [];
+                              }
+
+                              // Parsear configuración avanzada
+                              try {
+                                itemContenido.configuracionAvanzada = JSON.parse(grafica.ConfiguracionAvanzada || '{}');
+                              } catch {
+                                itemContenido.configuracionAvanzada = {};
+                              }
+
+                              // Agregar metadatos adicionales para compatibilidad
+                              itemContenido.configuracionAvanzada = {
+                                ...itemContenido.configuracionAvanzada,
+                                estadoGrafica: 'activa',
+                                tieneDatos: !!(itemContenido.datos.columna?.nombre || itemContenido.datos.formula?.nombre),
+                                colorPersonalizado: itemContenido.color,
+                                tractorEspecifico: itemContenido.tractorSeleccionado
+                              };
                             }
                           } else if (tipoContenido === 'Texto') {
                             const texto = textosResultado.find(texto => texto.IdContenido === idContenido);

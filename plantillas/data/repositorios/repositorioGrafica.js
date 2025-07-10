@@ -2,8 +2,25 @@
 
 const Grafica= require('../modelos/modeloGráfica');
 
+/**
+ * Inserta una nueva gráfica con información completa del sistema mejorado
+ * @param {Object} props - Propiedades de la gráfica (incluye campos nuevos)
+ * @returns {Promise<number>} - ID de la gráfica insertada
+ */
 async function insertarGraficaRepositorio(props) {
   return Grafica.insertar(props);
 }
 
-module.exports = { insertarGraficaRepositorio };
+/**
+ * Obtiene información completa de una gráfica
+ * @param {number} idGrafica - ID de la gráfica
+ * @returns {Promise<Object>} - Datos completos de la gráfica
+ */
+async function obtenerGraficaCompletaRepositorio(idGrafica) {
+  return Grafica.obtenerCompleta(idGrafica);
+}
+
+module.exports = { 
+  insertarGraficaRepositorio,
+  obtenerGraficaCompletaRepositorio 
+};
