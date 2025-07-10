@@ -1,26 +1,26 @@
-const { consultarPlantillaPorIdRepositorio } = require('../data/repositorios/consultarPlantillaPorIdRepositorio.js');
+const { consultarPlantillaPorTituloRepositorio } = require('../data/repositorios/consultarPlantillaPorIdRepositorio.js');
 
 /**
  * @async
- * @function consultarPlantillaPorId
+ * @function consultarPlantillaPorTitulo
  * @param {Object} pet - Petición HTTP.
  * @param {Object} res - Respuesta HTTP.
- * @description Controlador para consultar una plantilla específica por su ID.
+ * @description Controlador para consultar una plantilla específica por su título.
  * @returns {Promise<void>} Promesa que resuelve cuando se envía la respuesta.
  * @throws {Error} Si ocurre un error al consultar la plantilla.
  */
-exports.consultarPlantillaPorId = async (pet, res) => {
+exports.consultarPlantillaPorTitulo = async (pet, res) => {
     try {
-        const { id } = pet.params;
+        const { titulo } = pet.params;
         
-        // Validar que se proporcione el ID
-        if (!id) {
+        // Validar que se proporcione el título
+        if (!titulo) {
             return res.status(400).json({
-                mensaje: 'ID de plantilla es requerido',
+                mensaje: 'Título de plantilla es requerido',
             });
         }
 
-        const datos = await consultarPlantillaPorIdRepositorio(id);
+        const datos = await consultarPlantillaPorTituloRepositorio(titulo);
         
         if (datos.mensaje) {
             return res.status(500).json({

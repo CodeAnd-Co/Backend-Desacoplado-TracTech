@@ -1,7 +1,7 @@
-const { eliminarPlantillaModelo } = require('../modelos/eliminarPlantillaModelo.js');
+const { eliminarPlantillaPorTituloModelo } = require('../modelos/eliminarPlantillaModelo.js');
 
-async function eliminarPlantillaRepositorio(id) {
-    const datos = await eliminarPlantillaModelo(id);
+async function eliminarPlantillaPorTituloRepositorio(titulo) {
+    const datos = await eliminarPlantillaPorTituloModelo(titulo);
     
     if (!datos) {
         return {
@@ -12,5 +12,5 @@ async function eliminarPlantillaRepositorio(id) {
 }
 
 module.exports = {
-    eliminarPlantillaRepositorio,
+    eliminarPlantillaPorTituloRepositorio,
 };

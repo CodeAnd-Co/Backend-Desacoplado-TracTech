@@ -1,7 +1,7 @@
-const { consultarPlantillaPorIdModelo } = require('../modelos/consultarPlantillaPorIdModelo.js');
+const { consultarPlantillaPorTituloModelo } = require('../modelos/consultarPlantillaPorIdModelo.js');
 
-async function consultarPlantillaPorIdRepositorio(id) {
-    const datos = await consultarPlantillaPorIdModelo(id);
+async function consultarPlantillaPorTituloRepositorio(titulo) {
+    const datos = await consultarPlantillaPorTituloModelo(titulo);
     
     if (!datos) {
         return {
@@ -12,5 +12,5 @@ async function consultarPlantillaPorIdRepositorio(id) {
 }
 
 module.exports = {
-    consultarPlantillaPorIdRepositorio,
+    consultarPlantillaPorTituloRepositorio,
 };

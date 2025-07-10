@@ -1,26 +1,29 @@
-const { eliminarPlantillaRepositorio } = require('../data/repositorios/eliminarPlantillaRepositorio.js');
+const { eliminarPlantillaPorTituloRepositorio } = require('../data/repositorios/eliminarPlantillaRepositorio.js');
 
 /**
  * @async
- * @function eliminarPlantilla
+ * @function eliminarPlantillaPorTitulo
  * @param {Object} pet - Petición HTTP.
  * @param {Object} res - Respuesta HTTP.
- * @description Controlador para eliminar una plantilla de la base de datos.
+ * @description Controlador para eliminar una plantilla de la base de datos por su título.
  * @returns {Promise<void>} Promesa que resuelve cuando se envía la respuesta.
  * @throws {Error} Si ocurre un error al eliminar la plantilla.
  */
-exports.eliminarPlantilla = async (pet, res) => {
+exports.eliminarPlantillaPorTitulo = async (pet, res) => {
     try {
-        const { id } = pet.params;
+        const { titulo } = pet.params;
         
-        // Validar que se proporcione el ID
-        if (!id) {
+        // Validar que se proporcione el título
+        if (!titulo) {
             return res.status(400).json({
-                mensaje: 'ID de plantilla es requerido',
+                mensaje: 'Título de plantilla es requerido',
             });
         }
 
-        const resultado = await eliminarPlantillaRepositorio(id);
+        // Convertir guiones bajos a espacios para la búsqueda en la base de datos
+        const tituloConvertido = titulo.replace(/_/g, ' ');
+
+        const resultado = await eliminarPlantillaPorTituloRepositorio(tituloConvertido);
         
         if (resultado.mensaje) {
             return res.status(500).json({
